@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level-Up Circle Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            height: 100vh;
+            gap: 0;
+        }
+        
+        .controls {
+            background: #1a1a1a;
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 1px solid #333;
+        }
+        
+        .preview {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            padding: 20px;
+            min-height: 0;
+        }
+        
+        canvas {
+            background: #000;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            aspect-ratio: 1;
+            display: block;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #fff;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        .control-group {
+            margin-bottom: 16px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #b0b0b0;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 8px 12px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 14px;
+        }
+        
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #39FF14;
+            box-shadow: 0 0 5px rgba(57, 255, 20, 0.3);
+        }
+        
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button.secondary {
+            background: #2a2a2a;
+            border: 1px solid #444;
+        }
+        
+        button.secondary:hover {
+            background: #3a3a3a;
+            box-shadow: 0 3px 10px rgba(255, 255, 255, 0.1);
+        }
+        
+        button.export {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            font-size: 16px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+        
+        .point-list {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+        }
+        
+        .point-item {
+            display: grid;
+            grid-template-columns: 30px 1fr 70px;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 8px;
+            background: #2a2a2a;
+            border-radius: 6px;
+        }
+        
+        .point-index {
+            color: #888;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .point-label-input {
+            padding: 6px 10px;
+            background: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 13px;
+        }
+        
+        input[type="color"] {
+            width: 100%;
+            height: 32px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #1a1a1a;
+        }
+        
+        .button-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 20px;
+        }
+        
+        h2 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+        
+        .divider {
+            height: 1px;
+            background: #333;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="controls">
+            <h1>🎯 Level-Up Circle</h1>
+            
+            <div class="control-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" value="Level-Up Circle">
+            </div>
+            
+            <div class="control-group">
+                <label for="points">Number of Points (1-36)</label>
+                <input type="number" id="points" min="1" max="36" value="8">
+            </div>
+            
+            <div class="control-group">
+                <label for="exportSize">Export Size</label>
+                <select id="exportSize">
+                    <option value="1080">1080×1080</option>
+                    <option value="2048">2048×2048</option>
+                    <option value="3840" selected>3840×3840</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label for="pointSize">Point Size</label>
+                <input type="number" id="pointSize" min="2" max="60" value="14">
+            </div>
+            
+            <div class="control-group">
+                <label for="labelOffset">Label Spacing (0-100px from points)</label>
+                <input type="number" id="labelOffset" min="0" max="100" value="35">
+            </div>
+            
+            <div style="margin-top: 16px; margin-bottom: 8px; font-size: 12px; color: #999; text-transform: uppercase; letter-spacing: 1px;">Glow Effects</div>
+            
+            <div class="control-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="neonGlowPointsLabels" checked>
+                    <span>Neon Glow Points & Labels</span>
+                </label>
+            </div>
+            
+            <div class="control-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="neonGlowLines" checked>
+                    <span>Neon Glow Circle & Lines</span>
+                </label>
+            </div>
+            
+            <div class="control-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="showConnections" checked>
+                    <span>Show Connection Lines</span>
+                </label>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="button-grid">
+                <button class="secondary" onclick="randomizeColors()" title="Generate bright colors in ROYGBIV order. Alternates between golden angle and equal spacing.">🎨 Random Colors</button>
+                <button class="secondary" onclick="loadExample()">📋 Load Example</button>
+                <button class="secondary" onclick="saveState()">💾 Save State</button>
+                <button class="secondary" onclick="clearState()">🗑️ Clear State</button>
+            </div>
+            
+            <button class="secondary" onclick="redraw()" style="width: 100%; margin-top: 8px;">🔄 Redraw</button>
+            <button class="export" onclick="exportPNG()">📸 Export PNG</button>
+            
+            <div class="point-list">
+                <h2>Point Configuration</h2>
+                <div id="pointList"></div>
+            </div>
+        </div>
+        
+        <div class="preview">
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+    
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // ============================================================
+        // Bright Non-Repeating Color Sequence Algorithm
+        // ============================================================
+        // Generates N bright, visually distinct colors that:
+        // 1. Start at a random hue on the color wheel
+        // 2. Step forward in ROYGBIV order (increasing hue)
+        // 3. Maintain high saturation and optimal lightness for vibrancy
+        // 4. Ensure no adjacent colors are identical
+        // 5. Support two spacing strategies:
+        //    - Equal: 360°/N spacing for even distribution
+        //    - Golden: 137.507764° golden angle for optimal visual separation
+        // ============================================================
+        
+        function hslToHex(h, s, l) {
+            // Convert HSL to RGB then to hex
+            const c = (1 - Math.abs(2 * l - 1)) * s;
+            const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+            const m = l - c / 2;
+            let r = 0, g = 0, b = 0;
+            
+            if (0 <= h && h < 60) {
+                r = c; g = x; b = 0;
+            } else if (60 <= h && h < 120) {
+                r = x; g = c; b = 0;
+            } else if (120 <= h && h < 180) {
+                r = 0; g = c; b = x;
+            } else if (180 <= h && h < 240) {
+                r = 0; g = x; b = c;
+            } else if (240 <= h && h < 300) {
+                r = x; g = 0; b = c;
+            } else if (300 <= h && h < 360) {
+                r = c; g = 0; b = x;
+            }
+            
+            // Convert to 0-255 range
+            r = Math.round((r + m) * 255);
+            g = Math.round((g + m) * 255);
+            b = Math.round((b + m) * 255);
+            
+            // Convert to hex
+            const toHex = (n) => n.toString(16).padStart(2, '0');
+            return '#' + toHex(r) + toHex(g) + toHex(b);
+        }
+        
+        function generateBrightColors(n, options = {}) {
+            // Handle edge cases
+            if (n <= 0) return { colors: [], hslValues: [] };
+            
+            // Default options
+            const spacing = options.spacing || 'equal';
+            const saturation = options.saturation || 0.90;  // High saturation for vibrant colors
+            const lightness = options.lightness || 0.50;    // 50% lightness for maximum vibrancy
+            const seed = options.seed;
+            
+            // Use seed for reproducibility if provided
+            let startHue;
+            if (seed !== undefined) {
+                // Simple seeded random
+                const x = Math.sin(seed) * 10000;
+                startHue = (x - Math.floor(x)) * 360;
+            } else {
+                startHue = Math.random() * 360;
+            }
+            
+            // Calculate hue step based on spacing strategy
+            let hueStep;
+            if (spacing === 'golden') {
+                hueStep = 137.507764; // Golden angle in degrees
+            } else {
+                // Equal spacing - handles edge cases
+                // N=1: step doesn't matter
+                // N=2: gives 180° (opposite colors)
+                // N>2: evenly distributed
+                hueStep = n > 1 ? 360 / n : 0;
+            }
+            
+            // Generate colors
+            const colors = [];
+            const hslValues = [];
+            
+            for (let i = 0; i < n; i++) {
+                let hue = (startHue + i * hueStep) % 360;
+                
+                // Generate hex color
+                let hex = hslToHex(hue, saturation, lightness);
+                
+                // Check for adjacent duplicates (including nudging if needed)
+                if (i > 0 && colors[i - 1] === hex) {
+                    // Nudge hue to avoid duplicate
+                    let attempts = 0;
+                    const maxAttempts = 10;
+                    
+                    while (colors[i - 1] === hex && attempts < maxAttempts) {
+                        hue = (hue + 2) % 360; // Nudge by 2 degrees
+                        hex = hslToHex(hue, saturation, lightness);
+                        attempts++;
+                    }
+                }
+                
+                colors.push(hex);
+                hslValues.push({ h: hue, s: saturation, l: lightness });
+            }
+            
+            return {
+                colors,
+                hslValues
+            };
+        }
+        
+        const defaultLabels = ['MILL5', 'Card Game', 'Webinars', 'Casual Apps', 'Inventing Fire with AI', 'Rich Crane', 'Xmas Store', 'Purdue Course'];
+        
+        let state = {
+            title: 'Level-Up Circle',
+            numPoints: 8,
+            exportSize: 3840,
+            neonGlowPointsLabels: true,  // Separate glow for points and labels
+            neonGlowLines: true,          // Separate glow for circle and connections
+            showConnections: true,
+            pointSize: 14,
+            labelOffset: 35,
+            points: []
+        };
+        
+        function smartWrapLabel(text, ctx, maxWidth) {
+            // Remove any existing \n for consistent processing
+            text = text.replace(/\\n/g, ' ').trim();
+            
+            // Measure text width
+            const fullWidth = ctx.measureText(text).width;
+            
+            // Short labels that fit comfortably should stay single line
+            // Use 80% of max width as threshold for keeping single line
+            if (fullWidth <= maxWidth * 0.8) {
+                return [text];
+            }
+            
+            // Look for natural break points with connecting words
+            // Keep the connector with the second part for better readability
+            const connectingWords = [' with ', ' and ', ' of ', ' for ', ' in ', ' at ', ' on ', ' to ', ' by ', ' from '];
+            for (const connector of connectingWords) {
+                const lowerText = text.toLowerCase();
+                if (lowerText.includes(connector)) {
+                    const index = lowerText.indexOf(connector);
+                    const firstPart = text.slice(0, index).trim();
+                    // Keep connector with second part
+                    const secondPart = text.slice(index + 1).trim(); // +1 to keep the space, making "with AI" not "withAI"
+                    
+                    // Check if both parts fit within max width
+                    const firstWidth = ctx.measureText(firstPart).width;
+                    const secondWidth = ctx.measureText(secondPart).width;
+                    
+                    if (firstWidth <= maxWidth && secondWidth <= maxWidth) {
+                        // Prefer this split if both parts are reasonably balanced
+                        // or if it creates a natural semantic break
+                        return [firstPart, secondPart];
+                    }
+                }
+            }
+            
+            // For two-word phrases, always split between words
+            const words = text.split(' ');
+            if (words.length === 2) {
+                const firstWidth = ctx.measureText(words[0]).width;
+                const secondWidth = ctx.measureText(words[1]).width;
+                
+                // Even if they could fit on one line, split two-word phrases for better balance
+                if (firstWidth <= maxWidth && secondWidth <= maxWidth) {
+                    return [words[0], words[1]];
+                }
+            }
+            
+            // For three-word phrases, try different combinations
+            if (words.length === 3) {
+                // Try 1+2 split
+                const option1First = words[0];
+                const option1Second = words.slice(1).join(' ');
+                
+                // Try 2+1 split
+                const option2First = words.slice(0, 2).join(' ');
+                const option2Second = words[2];
+                
+                // Check which split is more balanced
+                const opt1FirstWidth = ctx.measureText(option1First).width;
+                const opt1SecondWidth = ctx.measureText(option1Second).width;
+                const opt2FirstWidth = ctx.measureText(option2First).width;
+                const opt2SecondWidth = ctx.measureText(option2Second).width;
+                
+                // Choose the split that fits and is most balanced
+                if (opt1FirstWidth <= maxWidth && opt1SecondWidth <= maxWidth) {
+                    const opt1Diff = Math.abs(opt1FirstWidth - opt1SecondWidth);
+                    if (opt2FirstWidth <= maxWidth && opt2SecondWidth <= maxWidth) {
+                        const opt2Diff = Math.abs(opt2FirstWidth - opt2SecondWidth);
+                        if (opt2Diff < opt1Diff) {
+                            return [option2First, option2Second];
+                        }
+                    }
+                    return [option1First, option1Second];
+                } else if (opt2FirstWidth <= maxWidth && opt2SecondWidth <= maxWidth) {
+                    return [option2First, option2Second];
+                }
+            }
+            
+            // For longer phrases, find the most balanced split point
+            if (words.length > 3) {
+                let bestSplit = Math.floor(words.length / 2);
+                let bestBalance = Infinity;
+                
+                for (let i = 1; i < words.length; i++) {
+                    const firstLine = words.slice(0, i).join(' ');
+                    const secondLine = words.slice(i).join(' ');
+                    
+                    const firstWidth = ctx.measureText(firstLine).width;
+                    const secondWidth = ctx.measureText(secondLine).width;
+                    
+                    // Both parts must fit
+                    if (firstWidth <= maxWidth && secondWidth <= maxWidth) {
+                        // Calculate balance (prefer similar line lengths)
+                        const balance = Math.abs(firstWidth - secondWidth);
+                        if (balance < bestBalance) {
+                            bestBalance = balance;
+                            bestSplit = i;
+                        }
+                    }
+                }
+                
+                const firstLine = words.slice(0, bestSplit).join(' ');
+                const secondLine = words.slice(bestSplit).join(' ');
+                
+                if (ctx.measureText(firstLine).width <= maxWidth && 
+                    ctx.measureText(secondLine).width <= maxWidth) {
+                    return [firstLine, secondLine];
+                }
+            }
+            
+            // If no good split found, try to fit in one line if possible
+            if (fullWidth <= maxWidth) {
+                return [text];
+            }
+            
+            // Last resort: use standard wrapping
+            return wrapText(ctx, text, maxWidth);
+        }
+        
+        function wrapText(ctx, text, maxWidth) {
+            // Handle explicit line breaks first
+            const segments = text.split('\\n');
+            const allLines = [];
+            
+            for (const segment of segments) {
+                const words = segment.split(' ');
+                let currentLine = '';
+                
+                for (const word of words) {
+                    const testLine = currentLine ? currentLine + ' ' + word : word;
+                    const metrics = ctx.measureText(testLine);
+                    
+                    if (metrics.width > maxWidth && currentLine) {
+                        allLines.push(currentLine);
+                        currentLine = word;
+                    } else if (metrics.width > maxWidth && !currentLine) {
+                        // Single word exceeds max width - force break it
+                        let tempWord = word;
+                        while (tempWord.length > 0) {
+                            let charCount = tempWord.length;
+                            while (charCount > 0 && ctx.measureText(tempWord.substring(0, charCount)).width > maxWidth) {
+                                charCount--;
+                            }
+                            if (charCount === 0) charCount = 1; // At least one character
+                            allLines.push(tempWord.substring(0, charCount));
+                            tempWord = tempWord.substring(charCount);
+                        }
+                    } else {
+                        currentLine = testLine;
+                    }
+                }
+                
+                if (currentLine) {
+                    allLines.push(currentLine);
+                }
+            }
+            
+            return allLines;
+        }
+        
+        function calculateBoundingBox(ctx, lines, lineHeight, padding) {
+            let maxWidth = 0;
+            for (const line of lines) {
+                const width = ctx.measureText(line).width;
+                if (width > maxWidth) maxWidth = width;
+            }
+            
+            const textWidth = maxWidth;
+            const textHeight = lines.length * lineHeight;
+            
+            return {
+                width: textWidth + 2 * padding,
+                height: textHeight + 2 * padding,
+                textWidth,
+                textHeight
+            };
+        }
+        
+        // Legacy wrapper function - now just calls smartWrapLabel
+        function wrapLabel(text) {
+            // This function is kept for backward compatibility
+            // but now uses the smart wrapping algorithm
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.font = `700 16px Arial, sans-serif`;
+            const lines = smartWrapLabel(text, ctx, 220);
+            return lines.join('\\n');
+        }
+        
+        function initializePoints(count) {
+            // Generate bright colors for initial points
+            const colorResult = generateBrightColors(count, {
+                spacing: 'equal',
+                saturation: 0.85,
+                lightness: 0.50,
+                seed: 42  // Fixed seed for consistent initial colors
+            });
+            
+            const points = [];
+            for (let i = 0; i < count; i++) {
+                points.push({
+                    label: defaultLabels[i] || `Point ${i + 1}`,
+                    color: colorResult.colors[i]
+                });
+            }
+            return points;
+        }
+        
+        function updatePointList() {
+            const container = document.getElementById('pointList');
+            container.innerHTML = '';
+            
+            // Validate number of points
+            state.numPoints = Math.max(1, Math.min(36, state.numPoints));
+            
+            const currentCount = state.points.length;
+            const targetCount = state.numPoints;
+            
+            if (targetCount > currentCount) {
+                // Generate colors for new points using the algorithm
+                const newColors = generateBrightColors(targetCount - currentCount, {
+                    spacing: 'golden',
+                    saturation: 0.85,
+                    lightness: 0.50
+                });
+                
+                for (let i = currentCount; i < targetCount; i++) {
+                    state.points.push({
+                        label: `Point ${i + 1}`,
+                        color: newColors.colors[i - currentCount]
+                    });
+                }
+            } else if (targetCount < currentCount) {
+                state.points = state.points.slice(0, targetCount);
+            }
+            
+            state.points.forEach((point, index) => {
+                const item = document.createElement('div');
+                item.className = 'point-item';
+                item.innerHTML = `
+                    <div class="point-index">${String(index + 1).padStart(2, '0')}</div>
+                    <input type="text" class="point-label-input" value="${point.label}" 
+                           data-index="${index}" onchange="updatePointLabel(${index}, this.value)">
+                    <input type="color" value="${point.color}" 
+                           data-index="${index}" onchange="updatePointColor(${index}, this.value)">
+                `;
+                container.appendChild(item);
+            });
+            
+            redraw();
+        }
+        
+        function updatePointLabel(index, value) {
+            // Validate index
+            if (index >= 0 && index < state.points.length) {
+                // Ensure label is not empty
+                state.points[index].label = value || `Point ${index + 1}`;
+                redraw();
+            }
+        }
+        
+        function updatePointColor(index, value) {
+            // Validate index and color format
+            if (index >= 0 && index < state.points.length) {
+                // Validate hex color format
+                const hexRegex = /^#[0-9A-Fa-f]{6}$/;
+                if (hexRegex.test(value)) {
+                    state.points[index].color = value;
+                } else {
+                    // Fallback to a default color if invalid
+                    state.points[index].color = '#39FF14';
+                }
+                redraw();
+            }
+        }
+        
+        // Bright Non-Repeating Color Sequence Algorithm
+        function hslToHex(h, s, l) {
+            // Convert HSL to RGB then to hex
+            const c = (1 - Math.abs(2 * l - 1)) * s;
+            const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+            const m = l - c / 2;
+            let r = 0, g = 0, b = 0;
+            
+            if (0 <= h && h < 60) {
+                r = c; g = x; b = 0;
+            } else if (60 <= h && h < 120) {
+                r = x; g = c; b = 0;
+            } else if (120 <= h && h < 180) {
+                r = 0; g = c; b = x;
+            } else if (180 <= h && h < 240) {
+                r = 0; g = x; b = c;
+            } else if (240 <= h && h < 300) {
+                r = x; g = 0; b = c;
+            } else if (300 <= h && h < 360) {
+                r = c; g = 0; b = x;
+            }
+            
+            // Convert to 0-255 range
+            r = Math.round((r + m) * 255);
+            g = Math.round((g + m) * 255);
+            b = Math.round((b + m) * 255);
+            
+            // Convert to hex
+            const toHex = (n) => n.toString(16).padStart(2, '0');
+            return '#' + toHex(r) + toHex(g) + toHex(b);
+        }
+        
+        function generateBrightColors(n, options = {}) {
+            // Default options
+            const spacing = options.spacing || 'equal';
+            const saturation = options.saturation || 0.90;  // High saturation for vibrant colors
+            const lightness = options.lightness || 0.50;    // 50% lightness for maximum vibrancy
+            const seed = options.seed;
+            
+            // Use seed for reproducibility if provided
+            let startHue;
+            if (seed !== undefined) {
+                // Simple seeded random
+                const x = Math.sin(seed) * 10000;
+                startHue = (x - Math.floor(x)) * 360;
+            } else {
+                startHue = Math.random() * 360;
+            }
+            
+            // Calculate hue step based on spacing strategy
+            let hueStep;
+            if (spacing === 'golden') {
+                hueStep = 137.507764; // Golden angle in degrees
+            } else {
+                // Equal spacing
+                hueStep = 360 / n;
+            }
+            
+            // Generate colors
+            const colors = [];
+            const hslValues = [];
+            
+            for (let i = 0; i < n; i++) {
+                let hue = (startHue + i * hueStep) % 360;
+                
+                // Generate hex color
+                let hex = hslToHex(hue, saturation, lightness);
+                
+                // Check for adjacent duplicates (including nudging if needed)
+                if (i > 0 && colors[i - 1] === hex) {
+                    // Nudge hue to avoid duplicate
+                    let attempts = 0;
+                    const maxAttempts = 10;
+                    
+                    while (colors[i - 1] === hex && attempts < maxAttempts) {
+                        hue = (hue + 2) % 360; // Nudge by 2 degrees
+                        hex = hslToHex(hue, saturation, lightness);
+                        attempts++;
+                    }
+                }
+                
+                colors.push(hex);
+                hslValues.push({ h: hue, s: saturation, l: lightness });
+            }
+            
+            return {
+                colors,
+                hslValues
+            };
+        }
+        
+        // Track the current color spacing mode
+        let colorSpacingMode = 'golden';
+        
+        function randomizeColors() {
+            // Toggle between golden and equal spacing for variety
+            colorSpacingMode = colorSpacingMode === 'golden' ? 'equal' : 'golden';
+            
+            // Generate bright, visually distinct colors using the algorithm
+            // This ensures colors follow ROYGBIV order around the color wheel
+            // with no adjacent duplicates and high visual contrast
+            const result = generateBrightColors(state.numPoints, {
+                spacing: colorSpacingMode,  // Alternates between golden and equal
+                saturation: 0.85,   // High saturation for vibrant, neon-like colors
+                lightness: 0.50     // 50% lightness for maximum color vibrancy
+            });
+            
+            // Apply the generated colors to points
+            state.points.forEach((point, index) => {
+                point.color = result.colors[index];
+            });
+            
+            updatePointList();
+            
+            // Log for debugging (optional)
+            console.log(`Generated ${state.numPoints} colors using ${colorSpacingMode} spacing`);
+        }
+        
+        function loadExample() {
+            state = {
+                title: 'Level-Up Circle',
+                numPoints: 8,
+                exportSize: 3840,
+                neonGlowPointsLabels: true,
+                neonGlowLines: true,
+                showConnections: true,
+                pointSize: 14,
+                labelOffset: 35, // Updated default
+                points: initializePoints(8)
+            };
+            
+            document.getElementById('title').value = state.title;
+            document.getElementById('points').value = state.numPoints;
+            document.getElementById('exportSize').value = state.exportSize;
+            document.getElementById('neonGlowPointsLabels').checked = state.neonGlowPointsLabels;
+            document.getElementById('neonGlowLines').checked = state.neonGlowLines;
+            document.getElementById('showConnections').checked = state.showConnections;
+            document.getElementById('pointSize').value = state.pointSize;
+            document.getElementById('labelOffset').value = state.labelOffset;
+            
+            updatePointList();
+        }
+        
+        function saveState() {
+            localStorage.setItem('levelUpCircleState', JSON.stringify(state));
+            alert('State saved successfully!');
+        }
+        
+        function clearState() {
+            localStorage.removeItem('levelUpCircleState');
+            // Reset to default state with both glow settings enabled
+            state.neonGlowPointsLabels = true;
+            state.neonGlowLines = true;
+            loadExample();
+            alert('State cleared and example loaded!');
+        }
+        
+        function loadState() {
+            const saved = localStorage.getItem('levelUpCircleState');
+            if (saved) {
+                state = JSON.parse(saved);
+                
+                // Handle backward compatibility - if old neonGlow exists, use it for both
+                if (state.neonGlow !== undefined && state.neonGlowPointsLabels === undefined) {
+                    state.neonGlowPointsLabels = state.neonGlow;
+                    state.neonGlowLines = state.neonGlow;
+                    delete state.neonGlow; // Clean up old property
+                }
+                
+                // Validate loaded state
+                state.numPoints = Math.max(1, Math.min(36, state.numPoints || 8));
+                state.pointSize = Math.max(2, Math.min(60, state.pointSize || 14));
+                state.labelOffset = Math.max(0, Math.min(100, state.labelOffset || 35));
+                state.exportSize = [1080, 2048, 3840].includes(state.exportSize) ? state.exportSize : 3840;
+                state.title = state.title || 'Level-Up Circle';
+                state.neonGlowPointsLabels = state.neonGlowPointsLabels !== undefined ? state.neonGlowPointsLabels : true;
+                state.neonGlowLines = state.neonGlowLines !== undefined ? state.neonGlowLines : true;
+                
+                // Update UI with validated values
+                document.getElementById('title').value = state.title;
+                document.getElementById('points').value = state.numPoints;
+                document.getElementById('exportSize').value = state.exportSize;
+                document.getElementById('neonGlowPointsLabels').checked = state.neonGlowPointsLabels;
+                document.getElementById('neonGlowLines').checked = state.neonGlowLines;
+                document.getElementById('showConnections').checked = state.showConnections;
+                document.getElementById('pointSize').value = state.pointSize;
+                document.getElementById('labelOffset').value = state.labelOffset;
+                updatePointList();
+            } else {
+                loadExample();
+            }
+        }
+        
+        function drawCircle(ctx, size, isExport = false) {
+            // Clear canvas with black background
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, size, size);
+            
+            // Calculate dimensions - sufficient padding for labels
+            const padding = size * 0.26; // 26% padding to accommodate wrapped labels
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const circleRadius = (size - padding * 2) / 2;
+            
+            const scaleFactor = isExport ? size / canvas.width : 1;
+            const pointRadius = state.pointSize * scaleFactor;
+            const labelOffsetScaled = state.labelOffset * scaleFactor;
+            
+            // Font settings - matching specification
+            const fontSize = 16 * scaleFactor;
+            const titleFontSize = 28 * scaleFactor;
+            const lineHeight = 18 * scaleFactor; // Explicit line height as per spec
+            const labelPadding = 6 * scaleFactor; // Padding for bounding box
+            const maxLabelWidth = Math.min(180 * scaleFactor, size * 0.25); // Reduced to encourage wrapping
+            
+            // Draw title with proper spacing
+            ctx.save();
+            ctx.fillStyle = '#fff';
+            ctx.font = `700 ${titleFontSize}px Arial, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            const titleY = padding * 0.45;
+            
+            if (state.neonGlowPointsLabels) {
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 4 * scaleFactor;
+                ctx.strokeText(state.title, centerX, titleY);
+                ctx.shadowColor = '#fff';
+                ctx.shadowBlur = 12 * scaleFactor;
+                ctx.fillText(state.title, centerX, titleY);
+            } else {
+                ctx.fillText(state.title, centerX, titleY);
+            }
+            ctx.restore();
+            
+            // Draw outer ring
+            ctx.save();
+            ctx.strokeStyle = state.neonGlowLines ? '#aaa' : '#888';
+            ctx.lineWidth = state.neonGlowLines ? 2 * scaleFactor : 1 * scaleFactor;
+            if (state.neonGlowLines) {
+                ctx.shadowColor = '#fff';
+                ctx.shadowBlur = 8 * scaleFactor;
+            }
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, circleRadius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+            
+            // Calculate point positions on the circle
+            const positions = [];
+            for (let i = 0; i < state.numPoints; i++) {
+                // Start from top and go clockwise
+                const angle = (i * 2 * Math.PI / state.numPoints) - Math.PI / 2;
+                const x = centerX + circleRadius * Math.cos(angle);
+                const y = centerY + circleRadius * Math.sin(angle);
+                positions.push({ x, y, angle });
+            }
+            
+            // Draw connection lines if enabled
+            if (state.showConnections) {
+                ctx.save();
+                ctx.strokeStyle = state.neonGlowLines ? '#777' : '#666';
+                ctx.lineWidth = 1 * scaleFactor;
+                if (state.neonGlowLines) {
+                    ctx.shadowColor = '#fff';
+                    ctx.shadowBlur = 3 * scaleFactor;
+                }
+                
+                for (let i = 0; i < positions.length; i++) {
+                    for (let j = i + 1; j < positions.length; j++) {
+                        ctx.beginPath();
+                        ctx.moveTo(positions[i].x, positions[i].y);
+                        ctx.lineTo(positions[j].x, positions[j].y);
+                        ctx.stroke();
+                    }
+                }
+                ctx.restore();
+            }
+            
+            // Draw points and labels with radial placement
+            positions.forEach((pos, index) => {
+                const point = state.points[index];
+                
+                // Draw the point
+                ctx.save();
+                ctx.fillStyle = point.color;
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 2 * scaleFactor;
+                if (state.neonGlowPointsLabels) {
+                    ctx.shadowColor = point.color;
+                    ctx.shadowBlur = 15 * scaleFactor;
+                }
+                ctx.beginPath();
+                ctx.arc(pos.x, pos.y, pointRadius, 0, Math.PI * 2);
+                ctx.fill();
+                if (state.neonGlowPointsLabels) {
+                    ctx.shadowBlur = 0;
+                }
+                ctx.stroke();
+                ctx.restore();
+                
+                // LABEL POSITIONING - Using effective outer circle (circle + point radius)
+                // This ensures labels are positioned from the outer edge of points, not the circle line
+                
+                // Prepare for label text measurement
+                ctx.save();
+                ctx.font = `700 ${fontSize}px Arial, sans-serif`; // 700 weight for bold
+                
+                // Wrap text to fit max width
+                const lines = wrapText(ctx, point.label, maxLabelWidth);
+                
+                // Calculate bounding box
+                const bbox = calculateBoundingBox(ctx, lines, lineHeight, labelPadding);
+                
+                // Step 4: Box placement along the radial
+                // The inner edge of the box should be exactly LABEL_OFFSET from the OUTER edge of points
+                // Effective outer circle radius = circleRadius + pointRadius
+                // So box center is at: (R + pointRadius) + LABEL_OFFSET + boxH/2
+                const effectiveOuterRadius = circleRadius + pointRadius;
+                const boxCenterDistance = effectiveOuterRadius + labelOffsetScaled + bbox.height / 2;
+                const boxCenterX = centerX + Math.cos(pos.angle) * boxCenterDistance;
+                const boxCenterY = centerY + Math.sin(pos.angle) * boxCenterDistance;
+                
+                // Determine text alignment and box position based on angle (quadrant)
+                let textAlign = 'center';
+                let boxLeft, boxTop;
+                const cosAngle = Math.cos(pos.angle);
+                
+                if (cosAngle > 0.15) {
+                    // Right side - left align text, box grows to the right
+                    textAlign = 'left';
+                    boxLeft = boxCenterX - bbox.width / 2;
+                } else if (cosAngle < -0.15) {
+                    // Left side - right align text, box grows to the left
+                    textAlign = 'right';
+                    boxLeft = boxCenterX - bbox.width / 2;
+                } else {
+                    // Top/bottom - center align
+                    textAlign = 'center';
+                    boxLeft = boxCenterX - bbox.width / 2;
+                }
+                
+                boxTop = boxCenterY - bbox.height / 2;
+                
+                // Step 5: Draw leader line from point edge to box edge
+                ctx.save();
+                ctx.strokeStyle = point.color;
+                ctx.lineWidth = 0.5 * scaleFactor;
+                ctx.globalAlpha = 0.4;
+                
+                // Apply glow to leader lines if lines glow is enabled
+                if (state.neonGlowLines) {
+                    ctx.shadowColor = point.color;
+                    ctx.shadowBlur = 2 * scaleFactor;
+                }
+                
+                // Line starts just outside the point edge
+                const lineStartRadius = circleRadius + pointRadius + 1 * scaleFactor;
+                // Line ends just before the label box edge
+                const lineEndRadius = boxCenterDistance - bbox.height / 2 - 1 * scaleFactor;
+                
+                ctx.beginPath();
+                ctx.moveTo(
+                    centerX + Math.cos(pos.angle) * lineStartRadius,
+                    centerY + Math.sin(pos.angle) * lineStartRadius
+                );
+                ctx.lineTo(
+                    centerX + Math.cos(pos.angle) * lineEndRadius,
+                    centerY + Math.sin(pos.angle) * lineEndRadius
+                );
+                ctx.stroke();
+                ctx.restore();
+                
+                // Step 6: Label rendering
+                ctx.save();
+                ctx.font = `700 ${fontSize}px Arial, sans-serif`; // 700 weight for bold
+                ctx.textAlign = textAlign;
+                ctx.textBaseline = 'middle';
+                
+                // Calculate text position within the box
+                let textX;
+                if (textAlign === 'left') {
+                    textX = boxLeft + labelPadding;
+                } else if (textAlign === 'right') {
+                    textX = boxLeft + bbox.width - labelPadding;
+                } else {
+                    textX = boxLeft + bbox.width / 2;
+                }
+                
+                // Render each line
+                if (state.neonGlowPointsLabels) {
+                    // Black outline for readability
+                    ctx.strokeStyle = '#000';
+                    ctx.lineWidth = 3 * scaleFactor;
+                    lines.forEach((line, lineIndex) => {
+                        const textY = boxTop + labelPadding + lineIndex * lineHeight + lineHeight / 2;
+                        ctx.strokeText(line, textX, textY);
+                    });
+                    
+                    // Glowing colored text
+                    ctx.fillStyle = point.color;
+                    ctx.shadowColor = point.color;
+                    ctx.shadowBlur = 10 * scaleFactor;
+                    lines.forEach((line, lineIndex) => {
+                        const textY = boxTop + labelPadding + lineIndex * lineHeight + lineHeight / 2;
+                        ctx.fillText(line, textX, textY);
+                    });
+                } else {
+                    ctx.fillStyle = point.color;
+                    lines.forEach((line, lineIndex) => {
+                        const textY = boxTop + labelPadding + lineIndex * lineHeight + lineHeight / 2;
+                        ctx.fillText(line, textX, textY);
+                    });
+                }
+                ctx.restore();
+            });
+        }
+        
+        function redraw() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            const size = Math.min(rect.width - 40, rect.height - 40);
+            canvas.width = size;
+            canvas.height = size;
+            drawCircle(ctx, size);
+        }
+        
+        function exportPNG() {
+            const exportCanvas = document.createElement('canvas');
+            const exportCtx = exportCanvas.getContext('2d');
+            const size = parseInt(state.exportSize);
+            
+            exportCanvas.width = size;
+            exportCanvas.height = size;
+            
+            drawCircle(exportCtx, size, true);
+            
+            exportCanvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `level-up-circle-${size}x${size}.png`;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+        }
+        
+        // Event listeners with validation
+        document.getElementById('title').addEventListener('input', (e) => {
+            state.title = e.target.value || 'Level-Up Circle'; // Default if empty
+            redraw();
+        });
+        
+        document.getElementById('points').addEventListener('input', (e) => {
+            let value = parseInt(e.target.value);
+            
+            // Validate range 1-36
+            if (isNaN(value)) {
+                value = 8; // Default
+            } else if (value < 1) {
+                value = 1;
+                e.target.value = 1;
+            } else if (value > 36) {
+                value = 36;
+                e.target.value = 36;
+            }
+            
+            state.numPoints = value;
+            updatePointList();
+        });
+        
+        document.getElementById('exportSize').addEventListener('change', (e) => {
+            const value = parseInt(e.target.value);
+            // Validate export size is one of the allowed values
+            if ([1080, 2048, 3840].includes(value)) {
+                state.exportSize = value;
+            } else {
+                state.exportSize = 3840; // Default
+                e.target.value = 3840;
+            }
+        });
+        
+        document.getElementById('neonGlowPointsLabels').addEventListener('change', (e) => {
+            state.neonGlowPointsLabels = e.target.checked;
+            redraw();
+        });
+        
+        document.getElementById('neonGlowLines').addEventListener('change', (e) => {
+            state.neonGlowLines = e.target.checked;
+            redraw();
+        });
+        
+        document.getElementById('showConnections').addEventListener('change', (e) => {
+            state.showConnections = e.target.checked;
+            redraw();
+        });
+        
+        document.getElementById('pointSize').addEventListener('input', (e) => {
+            let value = parseInt(e.target.value);
+            
+            // Validate range 2-60
+            if (isNaN(value)) {
+                value = 14; // Default
+            } else if (value < 2) {
+                value = 2;
+                e.target.value = 2;
+            } else if (value > 60) {
+                value = 60;
+                e.target.value = 60;
+            }
+            
+            state.pointSize = value;
+            redraw();
+        });
+        
+        document.getElementById('labelOffset').addEventListener('input', (e) => {
+            let value = parseInt(e.target.value);
+            
+            // Validate range 0-100
+            if (isNaN(value)) {
+                value = 35; // Default
+            } else if (value < 0) {
+                value = 0;
+                e.target.value = 0;
+            } else if (value > 100) {
+                value = 100;
+                e.target.value = 100;
+            }
+            
+            state.labelOffset = value;
+            redraw();
+        });
+        
+        // Add blur handlers to enforce limits when focus leaves the input
+        document.getElementById('points').addEventListener('blur', (e) => {
+            let value = parseInt(e.target.value);
+            if (isNaN(value) || value < 1) {
+                e.target.value = 1;
+                state.numPoints = 1;
+            } else if (value > 36) {
+                e.target.value = 36;
+                state.numPoints = 36;
+            }
+            updatePointList();
+        });
+        
+        document.getElementById('pointSize').addEventListener('blur', (e) => {
+            let value = parseInt(e.target.value);
+            if (isNaN(value) || value < 2) {
+                e.target.value = 2;
+                state.pointSize = 2;
+            } else if (value > 60) {
+                e.target.value = 60;
+                state.pointSize = 60;
+            }
+            redraw();
+        });
+        
+        document.getElementById('labelOffset').addEventListener('blur', (e) => {
+            let value = parseInt(e.target.value);
+            if (isNaN(value) || value < 0) {
+                e.target.value = 0;
+                state.labelOffset = 0;
+            } else if (value > 100) {
+                e.target.value = 100;
+                state.labelOffset = 100;
+            }
+            redraw();
+        });
+        
+        // ResizeObserver for responsive canvas
+        const resizeObserver = new ResizeObserver(() => {
+            requestAnimationFrame(redraw);
+        });
+        resizeObserver.observe(canvas.parentElement);
+        
+        // Initialize
+        loadState();
+    </script>
+</body>
+</html>
