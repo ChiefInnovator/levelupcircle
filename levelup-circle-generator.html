@@ -280,7 +280,7 @@
         </div>
         
         <div class="preview">
-            <canvas id="canvas"></canvas>
+            <canvas id="canvas" role="img" aria-label="Level-Up Circle visualization"></canvas>
         </div>
     </div>
     
@@ -410,6 +410,15 @@
             labelOffset: 35,
             points: []
         };
+        
+        // Debounce utility for performance
+        function debounce(fn, delay) {
+            let timeoutId;
+            return (...args) => {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => fn(...args), delay);
+            };
+        }
         
         function smartWrapLabel(text, ctx, maxWidth) {
             // Remove any existing \n for consistent processing
@@ -688,97 +697,6 @@
             }
         }
         
-        // Bright Non-Repeating Color Sequence Algorithm
-        function hslToHex(h, s, l) {
-            // Convert HSL to RGB then to hex
-            const c = (1 - Math.abs(2 * l - 1)) * s;
-            const x = c * (1 - Math.abs((h / 60) % 2 - 1));
-            const m = l - c / 2;
-            let r = 0, g = 0, b = 0;
-            
-            if (0 <= h && h < 60) {
-                r = c; g = x; b = 0;
-            } else if (60 <= h && h < 120) {
-                r = x; g = c; b = 0;
-            } else if (120 <= h && h < 180) {
-                r = 0; g = c; b = x;
-            } else if (180 <= h && h < 240) {
-                r = 0; g = x; b = c;
-            } else if (240 <= h && h < 300) {
-                r = x; g = 0; b = c;
-            } else if (300 <= h && h < 360) {
-                r = c; g = 0; b = x;
-            }
-            
-            // Convert to 0-255 range
-            r = Math.round((r + m) * 255);
-            g = Math.round((g + m) * 255);
-            b = Math.round((b + m) * 255);
-            
-            // Convert to hex
-            const toHex = (n) => n.toString(16).padStart(2, '0');
-            return '#' + toHex(r) + toHex(g) + toHex(b);
-        }
-        
-        function generateBrightColors(n, options = {}) {
-            // Default options
-            const spacing = options.spacing || 'equal';
-            const saturation = options.saturation || 0.90;  // High saturation for vibrant colors
-            const lightness = options.lightness || 0.50;    // 50% lightness for maximum vibrancy
-            const seed = options.seed;
-            
-            // Use seed for reproducibility if provided
-            let startHue;
-            if (seed !== undefined) {
-                // Simple seeded random
-                const x = Math.sin(seed) * 10000;
-                startHue = (x - Math.floor(x)) * 360;
-            } else {
-                startHue = Math.random() * 360;
-            }
-            
-            // Calculate hue step based on spacing strategy
-            let hueStep;
-            if (spacing === 'golden') {
-                hueStep = 137.507764; // Golden angle in degrees
-            } else {
-                // Equal spacing
-                hueStep = 360 / n;
-            }
-            
-            // Generate colors
-            const colors = [];
-            const hslValues = [];
-            
-            for (let i = 0; i < n; i++) {
-                let hue = (startHue + i * hueStep) % 360;
-                
-                // Generate hex color
-                let hex = hslToHex(hue, saturation, lightness);
-                
-                // Check for adjacent duplicates (including nudging if needed)
-                if (i > 0 && colors[i - 1] === hex) {
-                    // Nudge hue to avoid duplicate
-                    let attempts = 0;
-                    const maxAttempts = 10;
-                    
-                    while (colors[i - 1] === hex && attempts < maxAttempts) {
-                        hue = (hue + 2) % 360; // Nudge by 2 degrees
-                        hex = hslToHex(hue, saturation, lightness);
-                        attempts++;
-                    }
-                }
-                
-                colors.push(hex);
-                hslValues.push({ h: hue, s: saturation, l: lightness });
-            }
-            
-            return {
-                colors,
-                hslValues
-            };
-        }
-        
         // Track the current color spacing mode
         let colorSpacingMode = 'golden';
         
@@ -832,12 +750,21 @@
         }
         
         function saveState() {
-            localStorage.setItem('levelUpCircleState', JSON.stringify(state));
-            alert('State saved successfully!');
+            try {
+                localStorage.setItem('levelUpCircleState', JSON.stringify(state));
+                alert('State saved successfully!');
+            } catch (e) {
+                console.error('Failed to save state:', e);
+                alert('Failed to save state. Storage may be full or unavailable.');
+            }
         }
         
         function clearState() {
-            localStorage.removeItem('levelUpCircleState');
+            try {
+                localStorage.removeItem('levelUpCircleState');
+            } catch (e) {
+                console.error('Failed to clear state:', e);
+            }
             // Reset to default state with both glow settings enabled
             state.neonGlowPointsLabels = true;
             state.neonGlowLines = true;
@@ -846,37 +773,42 @@
         }
         
         function loadState() {
-            const saved = localStorage.getItem('levelUpCircleState');
-            if (saved) {
-                state = JSON.parse(saved);
-                
-                // Handle backward compatibility - if old neonGlow exists, use it for both
-                if (state.neonGlow !== undefined && state.neonGlowPointsLabels === undefined) {
-                    state.neonGlowPointsLabels = state.neonGlow;
-                    state.neonGlowLines = state.neonGlow;
-                    delete state.neonGlow; // Clean up old property
+            try {
+                const saved = localStorage.getItem('levelUpCircleState');
+                if (saved) {
+                    state = JSON.parse(saved);
+                    
+                    // Handle backward compatibility - if old neonGlow exists, use it for both
+                    if (state.neonGlow !== undefined && state.neonGlowPointsLabels === undefined) {
+                        state.neonGlowPointsLabels = state.neonGlow;
+                        state.neonGlowLines = state.neonGlow;
+                        delete state.neonGlow; // Clean up old property
+                    }
+                    
+                    // Validate loaded state
+                    state.numPoints = Math.max(1, Math.min(36, state.numPoints || 8));
+                    state.pointSize = Math.max(2, Math.min(60, state.pointSize || 14));
+                    state.labelOffset = Math.max(0, Math.min(100, state.labelOffset || 35));
+                    state.exportSize = [1080, 2048, 3840].includes(state.exportSize) ? state.exportSize : 3840;
+                    state.title = state.title || 'Level-Up Circle';
+                    state.neonGlowPointsLabels = state.neonGlowPointsLabels !== undefined ? state.neonGlowPointsLabels : true;
+                    state.neonGlowLines = state.neonGlowLines !== undefined ? state.neonGlowLines : true;
+                    
+                    // Update UI with validated values
+                    document.getElementById('title').value = state.title;
+                    document.getElementById('points').value = state.numPoints;
+                    document.getElementById('exportSize').value = state.exportSize;
+                    document.getElementById('neonGlowPointsLabels').checked = state.neonGlowPointsLabels;
+                    document.getElementById('neonGlowLines').checked = state.neonGlowLines;
+                    document.getElementById('showConnections').checked = state.showConnections;
+                    document.getElementById('pointSize').value = state.pointSize;
+                    document.getElementById('labelOffset').value = state.labelOffset;
+                    updatePointList();
+                } else {
+                    loadExample();
                 }
-                
-                // Validate loaded state
-                state.numPoints = Math.max(1, Math.min(36, state.numPoints || 8));
-                state.pointSize = Math.max(2, Math.min(60, state.pointSize || 14));
-                state.labelOffset = Math.max(0, Math.min(100, state.labelOffset || 35));
-                state.exportSize = [1080, 2048, 3840].includes(state.exportSize) ? state.exportSize : 3840;
-                state.title = state.title || 'Level-Up Circle';
-                state.neonGlowPointsLabels = state.neonGlowPointsLabels !== undefined ? state.neonGlowPointsLabels : true;
-                state.neonGlowLines = state.neonGlowLines !== undefined ? state.neonGlowLines : true;
-                
-                // Update UI with validated values
-                document.getElementById('title').value = state.title;
-                document.getElementById('points').value = state.numPoints;
-                document.getElementById('exportSize').value = state.exportSize;
-                document.getElementById('neonGlowPointsLabels').checked = state.neonGlowPointsLabels;
-                document.getElementById('neonGlowLines').checked = state.neonGlowLines;
-                document.getElementById('showConnections').checked = state.showConnections;
-                document.getElementById('pointSize').value = state.pointSize;
-                document.getElementById('labelOffset').value = state.labelOffset;
-                updatePointList();
-            } else {
+            } catch (e) {
+                console.error('Failed to load state:', e);
                 loadExample();
             }
         }
@@ -984,9 +916,6 @@
                 ctx.beginPath();
                 ctx.arc(pos.x, pos.y, pointRadius, 0, Math.PI * 2);
                 ctx.fill();
-                if (state.neonGlowPointsLabels) {
-                    ctx.shadowBlur = 0;
-                }
                 ctx.stroke();
                 ctx.restore();
                 
@@ -1107,6 +1036,9 @@
             });
         }
         
+        // Debounced redraw for resize events
+        const debouncedRedraw = debounce(redraw, 50);
+        
         function redraw() {
             const rect = canvas.parentElement.getBoundingClientRect();
             const size = Math.min(rect.width - 40, rect.height - 40);
@@ -1126,13 +1058,17 @@
             drawCircle(exportCtx, size, true);
             
             exportCanvas.toBlob(blob => {
+                if (!blob) {
+                    alert('Failed to generate image.');
+                    return;
+                }
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
                 a.download = `level-up-circle-${size}x${size}.png`;
                 a.click();
                 URL.revokeObjectURL(url);
-            });
+            }, 'image/png');
         }
         
         // Event listeners with validation
@@ -1258,9 +1194,9 @@
             redraw();
         });
         
-        // ResizeObserver for responsive canvas
+        // ResizeObserver for responsive canvas - use debounced version
         const resizeObserver = new ResizeObserver(() => {
-            requestAnimationFrame(redraw);
+            requestAnimationFrame(debouncedRedraw);
         });
         resizeObserver.observe(canvas.parentElement);
         
