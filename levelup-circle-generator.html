@@ -437,12 +437,12 @@
         
         /* Floating Share Bar */
         .floating-share-bar {
-            position: absolute;
-            top: 12px;
-            right: 12px;
+            position: fixed;
+            top: 20px;
+            right: 20px;
             display: flex;
             gap: 8px;
-            z-index: 50;
+            z-index: 1000;
         }
         
         .share-btn {
@@ -520,13 +520,6 @@
         body.fullscreen-mode .controls,
         body.fullscreen-mode .mobile-toggle {
             display: none !important;
-        }
-        
-        body.fullscreen-mode .floating-share-bar {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
         }
         
         body.fullscreen-mode .preview {
@@ -1275,9 +1268,16 @@
                 const item = document.createElement('div');
                 item.className = 'point-item';
                 const isOnlyPoint = state.numPoints <= 1;
+                // Escape HTML entities to prevent XSS
+                const escapedLabel = point.label
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
                 item.innerHTML = `
                     <div class="point-index">${String(index + 1).padStart(2, '0')}</div>
-                    <input type="text" class="point-label-input" value="${point.label}" 
+                    <input type="text" class="point-label-input" value="${escapedLabel}" 
                            data-index="${index}" onchange="updatePointLabel(${index}, this.value)">
                     <input type="color" value="${point.color}" 
                            data-index="${index}" onchange="updatePointColor(${index}, this.value)">
@@ -1560,10 +1560,12 @@
                 
                 // Decode points from array format
                 if (obj.p && Array.isArray(obj.p)) {
-                    newState.points = obj.p.map((pt, index) => ({
-                        label: pt[0] || `Point ${index + 1}`,
-                        color: `#${pt[1] || '39FF14'}`
-                    }));
+                    newState.points = obj.p.map((pt, index) => {
+                        const label = pt[0] || `Point ${index + 1}`;
+                        // Validate hex color (6 hex chars)
+                        const colorHex = pt[1] && /^[0-9A-Fa-f]{6}$/.test(pt[1]) ? pt[1] : '39FF14';
+                        return { label, color: `#${colorHex}` };
+                    });
                     newState.numPoints = newState.points.length;
                 }
                 
@@ -1657,7 +1659,10 @@
         
         function getShareURL() {
             const encoded = encodeStateToURL();
-            const baseURL = window.location.origin + window.location.pathname;
+            // Handle file:// protocol where origin is "null"
+            const baseURL = window.location.origin === 'null' 
+                ? window.location.href.split('?')[0] 
+                : window.location.origin + window.location.pathname;
             const isFullscreen = document.body.classList.contains('fullscreen-mode');
             return isFullscreen ? `${baseURL}?${encoded}&fs=1` : `${baseURL}?${encoded}`;
         }
@@ -1707,11 +1712,11 @@
                 document.body.classList.add('fullscreen-mode');
                 
                 // Update URL to include state and fullscreen parameter
-                const url = new URL(window.location.href);
-                const compressed = LZString.compressToEncodedURIComponent(JSON.stringify(state));
-                url.searchParams.set('s', compressed);
-                url.searchParams.set('fs', '1');
-                window.history.replaceState({}, '', url.toString());
+                const encoded = encodeStateToURL();
+                const baseURL = window.location.origin === 'null' 
+                    ? window.location.href.split('?')[0] 
+                    : window.location.origin + window.location.pathname;
+                window.history.replaceState({}, '', `${baseURL}?${encoded}&fs=1`);
             }
             
             // Trigger a redraw to ensure canvas is properly sized
@@ -1882,11 +1887,16 @@
             const pointRadius = state.pointSize * scaleFactor;
             const labelOffsetScaled = state.labelOffset * scaleFactor;
             
-            // Font settings - scale with canvas size but with min/max limits
+            // Font settings - scale with canvas size
+            // For exports, scale freely; for display, apply min/max limits
             const baseFontSize = state.labelFontSize || 16;
             const baseTitleSize = state.titleFontSize || 28;
-            const fontSize = Math.max(8, Math.min(32, baseFontSize * scaleFactor));
-            const titleFontSize = Math.max(16, Math.min(48, baseTitleSize * scaleFactor));
+            const fontSize = isExport 
+                ? baseFontSize * scaleFactor 
+                : Math.max(8, Math.min(32, baseFontSize * scaleFactor));
+            const titleFontSize = isExport 
+                ? baseTitleSize * scaleFactor 
+                : Math.max(16, Math.min(48, baseTitleSize * scaleFactor));
             const lineHeight = fontSize * 1.2; // Proportional line height
             const labelPadding = Math.max(4, 6 * scaleFactor); // Padding for bounding box
             const maxLabelWidth = Math.min(180 * scaleFactor, size * 0.22); // Slightly reduced for mobile

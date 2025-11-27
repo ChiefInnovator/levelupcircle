@@ -2,6 +2,8 @@
 
 Interactive single-page tool for designing and exporting a "Level-Up Circle" — a visual map of interconnected goals or initiatives. Built as a self‑contained HTML Canvas app (`levelup-circle-generator.html`) with minimal external dependencies.
 
+**🚀 Try it now:** [https://chiefinnovator.github.io/levelupcircle/levelup-circle-generator.html](https://chiefinnovator.github.io/levelupcircle/levelup-circle-generator.html)
+
 ## Features
 - Up to 36 labeled points arranged radially
 - Smart color generation (equal or golden-angle spacing) for vivid, distinct colors
