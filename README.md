@@ -16,6 +16,7 @@ Interactive single-page tool for designing and exporting a "Level-Up Circle" —
 - **Deep linking** with compressed URL state sharing (lz-string)
 - **Fullscreen mode** for presentations and embedding
 - **Social sharing** buttons (Copy Link, Twitter/X, Facebook)
+- **Ask ChatGPT** for strategic advice on your focus areas
 - Auto-save to `localStorage` on every change
 - Responsive resizing with `ResizeObserver`
 - Mobile-friendly with collapsible controls panel
@@ -63,6 +64,7 @@ URLs use lz-string compression for compact sharing. Legacy URL format is still s
 | 🔗 Copy Link | Copy shareable URL to clipboard (includes fullscreen state) |
 | 𝕏 Twitter | Share to Twitter/X with pre-filled text |
 | f Facebook | Share to Facebook |
+| 🤖 ChatGPT | Ask ChatGPT for strategic advice on your focus areas |
 | ⛶ Fullscreen | Toggle fullscreen presentation mode |
 
 ## Color Algorithm
