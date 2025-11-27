@@ -150,8 +150,8 @@
         
         .point-item {
             display: grid;
-            grid-template-columns: 30px 1fr 70px;
-            gap: 10px;
+            grid-template-columns: 30px 1fr 50px 32px;
+            gap: 8px;
             align-items: center;
             margin-bottom: 12px;
             padding: 8px;
@@ -173,6 +173,75 @@
             border-radius: 4px;
             color: #fff;
             font-size: 13px;
+        }
+        
+        .point-delete {
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            margin: 0;
+            background: transparent;
+            border: 1px solid #555;
+            border-radius: 4px;
+            color: #888;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .point-delete:hover {
+            background: #f5576c;
+            border-color: #f5576c;
+            color: #fff;
+            transform: none;
+            box-shadow: 0 0 8px rgba(245, 87, 108, 0.4);
+        }
+        
+        .point-delete:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .point-delete:disabled:hover {
+            background: transparent;
+            border-color: #555;
+            color: #888;
+            box-shadow: none;
+        }
+        
+        .add-point-btn {
+            width: 100%;
+            margin-top: 12px;
+            padding: 10px;
+            background: transparent;
+            border: 2px dashed #444;
+            border-radius: 6px;
+            color: #888;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .add-point-btn:hover {
+            border-color: #39FF14;
+            color: #39FF14;
+            background: rgba(57, 255, 20, 0.1);
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .add-point-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .add-point-btn:disabled:hover {
+            border-color: #444;
+            color: #888;
+            background: transparent;
         }
         
         input[type="color"] {
@@ -202,12 +271,220 @@
             background: #333;
             margin: 20px 0;
         }
+        
+        /* Mobile Toggle Button */
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5);
+            transition: all 0.3s ease;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .mobile-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        /* Scroll indicator for controls */
+        .controls {
+            position: relative;
+        }
+        
+        .scroll-indicator {
+            display: none;
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(to top, #1a1a1a 0%, transparent 100%);
+            pointer-events: none;
+            margin-top: -40px;
+        }
+        
+        .scroll-indicator::after {
+            content: '↓ Scroll for more';
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .scroll-indicator.hidden {
+            opacity: 0;
+        }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 900px) {
+            body {
+                height: auto;
+                overflow: auto;
+            }
+            
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+                height: auto;
+                min-height: 100vh;
+            }
+            
+            .controls {
+                max-height: 40vh;
+                border-right: none;
+                border-bottom: 1px solid #333;
+                transition: max-height 0.3s ease;
+            }
+            
+            .controls.collapsed {
+                max-height: 60px;
+                overflow: hidden;
+            }
+            
+            .controls.collapsed > *:not(h1):not(.mobile-collapse-hint) {
+                opacity: 0;
+                pointer-events: none;
+            }
+            
+            .controls.expanded {
+                max-height: 70vh;
+            }
+            
+            .mobile-collapse-hint {
+                display: none;
+                text-align: center;
+                font-size: 12px;
+                color: #666;
+                padding: 4px;
+            }
+            
+            .controls.collapsed .mobile-collapse-hint {
+                display: block;
+            }
+            
+            .preview {
+                min-height: 55vh;
+                padding: 10px;
+            }
+            
+            .mobile-toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .scroll-indicator {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .controls {
+                padding: 12px;
+                max-height: 35vh;
+            }
+            
+            .controls.expanded {
+                max-height: 65vh;
+            }
+            
+            .preview {
+                min-height: 60vh;
+            }
+            
+            .button-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            
+            h1 {
+                font-size: 18px;
+                margin-bottom: 12px;
+            }
+            
+            h2 {
+                font-size: 14px;
+            }
+            
+            .control-group {
+                margin-bottom: 10px;
+            }
+            
+            label {
+                font-size: 12px;
+                margin-bottom: 4px;
+            }
+            
+            input[type="text"],
+            input[type="number"],
+            select {
+                padding: 6px 10px;
+                font-size: 13px;
+            }
+            
+            button {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+            
+            button.export {
+                padding: 10px;
+                font-size: 13px;
+            }
+            
+            .point-item {
+                grid-template-columns: 22px 1fr 40px 26px;
+                gap: 4px;
+                padding: 5px;
+                margin-bottom: 6px;
+            }
+            
+            .point-label-input {
+                padding: 4px 6px;
+                font-size: 11px;
+            }
+            
+            .point-delete {
+                width: 24px;
+                height: 24px;
+                font-size: 12px;
+            }
+            
+            input[type="color"] {
+                height: 26px;
+            }
+            
+            .mobile-toggle {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="controls">
-            <h1>🎯 Level-Up Circle</h1>
+        <div class="controls" id="controls">
+            <h1 onclick="toggleMobileControls()">🎯 Level-Up Circle</h1>
+            <div class="mobile-collapse-hint">Tap title to expand settings</div>
             
             <div class="control-group">
                 <label for="title">Title</label>
@@ -230,7 +507,7 @@
             
             <div class="control-group">
                 <label for="pointSize">Point Size</label>
-                <input type="number" id="pointSize" min="2" max="60" value="14">
+                <input type="number" id="pointSize" min="1" max="60" value="14">
             </div>
             
             <div class="control-group">
@@ -276,8 +553,14 @@
             <div class="point-list">
                 <h2>Point Configuration</h2>
                 <div id="pointList"></div>
+                <button class="add-point-btn" id="addPointBtn" onclick="addPoint()" title="Add a new point (max 36)">
+                    ➕ Add Point
+                </button>
             </div>
+            <div class="scroll-indicator" id="scrollIndicator"></div>
         </div>
+        
+        <button class="mobile-toggle" id="mobileToggle" onclick="toggleMobileControls()" title="Toggle Settings">⚙️</button>
         
         <div class="preview">
             <canvas id="canvas" role="img" aria-label="Level-Up Circle visualization"></canvas>
@@ -660,15 +943,21 @@
             state.points.forEach((point, index) => {
                 const item = document.createElement('div');
                 item.className = 'point-item';
+                const isOnlyPoint = state.numPoints <= 1;
                 item.innerHTML = `
                     <div class="point-index">${String(index + 1).padStart(2, '0')}</div>
                     <input type="text" class="point-label-input" value="${point.label}" 
                            data-index="${index}" onchange="updatePointLabel(${index}, this.value)">
                     <input type="color" value="${point.color}" 
                            data-index="${index}" onchange="updatePointColor(${index}, this.value)">
+                    <button class="point-delete" onclick="deletePoint(${index})" 
+                            title="Delete point" ${isOnlyPoint ? 'disabled' : ''}>✕</button>
                 `;
                 container.appendChild(item);
             });
+            
+            // Update add button state
+            updateAddButtonState();
             
             redraw();
         }
@@ -694,6 +983,59 @@
                     state.points[index].color = '#39FF14';
                 }
                 redraw();
+            }
+        }
+        
+        function deletePoint(index) {
+            // Don't allow deleting if only 1 point remains
+            if (state.numPoints <= 1) return;
+            
+            // Validate index
+            if (index >= 0 && index < state.points.length) {
+                // Remove the point
+                state.points.splice(index, 1);
+                state.numPoints = state.points.length;
+                
+                // Update the points input field
+                document.getElementById('points').value = state.numPoints;
+                
+                // Refresh the UI
+                updatePointList();
+            }
+        }
+        
+        function addPoint() {
+            // Don't allow adding if already at max (36)
+            if (state.numPoints >= 36) return;
+            
+            // Generate a color for the new point
+            const newColor = generateBrightColors(1, {
+                spacing: 'golden',
+                saturation: 0.85,
+                lightness: 0.50
+            });
+            
+            // Add the new point
+            state.points.push({
+                label: `Point ${state.numPoints + 1}`,
+                color: newColor.colors[0]
+            });
+            state.numPoints = state.points.length;
+            
+            // Update the points input field
+            document.getElementById('points').value = state.numPoints;
+            
+            // Update the add button state
+            updateAddButtonState();
+            
+            // Refresh the UI
+            updatePointList();
+        }
+        
+        function updateAddButtonState() {
+            const addBtn = document.getElementById('addPointBtn');
+            if (addBtn) {
+                addBtn.disabled = state.numPoints >= 36;
             }
         }
         
@@ -787,7 +1129,7 @@
                     
                     // Validate loaded state
                     state.numPoints = Math.max(1, Math.min(36, state.numPoints || 8));
-                    state.pointSize = Math.max(2, Math.min(60, state.pointSize || 14));
+                    state.pointSize = Math.max(1, Math.min(60, state.pointSize || 14));
                     state.labelOffset = Math.max(0, Math.min(100, state.labelOffset || 35));
                     state.exportSize = [1080, 2048, 3840].includes(state.exportSize) ? state.exportSize : 3840;
                     state.title = state.title || 'Level-Up Circle';
@@ -818,22 +1160,34 @@
             ctx.fillStyle = '#000';
             ctx.fillRect(0, 0, size, size);
             
-            // Calculate dimensions - sufficient padding for labels
-            const padding = size * 0.26; // 26% padding to accommodate wrapped labels
+            // Calculate dimensions - adaptive padding for different screen sizes
+            // Use more padding on smaller screens to prevent label clipping
+            const basePadding = size * 0.26; // 26% padding to accommodate wrapped labels
+            const minPadding = 60; // Minimum padding in pixels for very small screens
+            const padding = Math.max(basePadding, minPadding);
+            
             const centerX = size / 2;
             const centerY = size / 2;
             const circleRadius = (size - padding * 2) / 2;
             
-            const scaleFactor = isExport ? size / canvas.width : 1;
+            // Adaptive scale factor based on canvas size
+            // Reference size is 800px - scale proportionally for other sizes
+            const referenceSize = 800;
+            const displayScaleFactor = size / referenceSize;
+            const exportScaleFactor = isExport ? size / canvas.width : 1;
+            const scaleFactor = isExport ? exportScaleFactor : Math.max(0.5, Math.min(1.5, displayScaleFactor));
+            
             const pointRadius = state.pointSize * scaleFactor;
             const labelOffsetScaled = state.labelOffset * scaleFactor;
             
-            // Font settings - matching specification
-            const fontSize = 16 * scaleFactor;
-            const titleFontSize = 28 * scaleFactor;
-            const lineHeight = 18 * scaleFactor; // Explicit line height as per spec
-            const labelPadding = 6 * scaleFactor; // Padding for bounding box
-            const maxLabelWidth = Math.min(180 * scaleFactor, size * 0.25); // Reduced to encourage wrapping
+            // Font settings - scale with canvas size but with min/max limits
+            const baseFontSize = 16;
+            const baseTitleSize = 28;
+            const fontSize = Math.max(10, Math.min(24, baseFontSize * scaleFactor));
+            const titleFontSize = Math.max(16, Math.min(36, baseTitleSize * scaleFactor));
+            const lineHeight = fontSize * 1.2; // Proportional line height
+            const labelPadding = Math.max(4, 6 * scaleFactor); // Padding for bounding box
+            const maxLabelWidth = Math.min(180 * scaleFactor, size * 0.22); // Slightly reduced for mobile
             
             // Draw title with proper spacing
             ctx.save();
@@ -904,17 +1258,20 @@
             positions.forEach((pos, index) => {
                 const point = state.points[index];
                 
+                // Adaptive point size for small screens
+                const adaptivePointRadius = Math.max(6, pointRadius);
+                
                 // Draw the point
                 ctx.save();
                 ctx.fillStyle = point.color;
                 ctx.strokeStyle = '#000';
-                ctx.lineWidth = 2 * scaleFactor;
+                ctx.lineWidth = Math.max(1, 2 * scaleFactor);
                 if (state.neonGlowPointsLabels) {
                     ctx.shadowColor = point.color;
-                    ctx.shadowBlur = 15 * scaleFactor;
+                    ctx.shadowBlur = Math.max(8, 15 * scaleFactor);
                 }
                 ctx.beginPath();
-                ctx.arc(pos.x, pos.y, pointRadius, 0, Math.PI * 2);
+                ctx.arc(pos.x, pos.y, adaptivePointRadius, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.stroke();
                 ctx.restore();
@@ -934,10 +1291,11 @@
                 
                 // Step 4: Box placement along the radial
                 // The inner edge of the box should be exactly LABEL_OFFSET from the OUTER edge of points
-                // Effective outer circle radius = circleRadius + pointRadius
-                // So box center is at: (R + pointRadius) + LABEL_OFFSET + boxH/2
-                const effectiveOuterRadius = circleRadius + pointRadius;
-                const boxCenterDistance = effectiveOuterRadius + labelOffsetScaled + bbox.height / 2;
+                // Effective outer circle radius = circleRadius + adaptivePointRadius
+                // So box center is at: (R + adaptivePointRadius) + LABEL_OFFSET + boxH/2
+                const adaptiveLabelOffset = Math.max(15, labelOffsetScaled); // Minimum offset for readability
+                const effectiveOuterRadius = circleRadius + adaptivePointRadius;
+                const boxCenterDistance = effectiveOuterRadius + adaptiveLabelOffset + bbox.height / 2;
                 const boxCenterX = centerX + Math.cos(pos.angle) * boxCenterDistance;
                 const boxCenterY = centerY + Math.sin(pos.angle) * boxCenterDistance;
                 
@@ -965,17 +1323,17 @@
                 // Step 5: Draw leader line from point edge to box edge
                 ctx.save();
                 ctx.strokeStyle = point.color;
-                ctx.lineWidth = 0.5 * scaleFactor;
+                ctx.lineWidth = Math.max(0.5, 0.5 * scaleFactor);
                 ctx.globalAlpha = 0.4;
                 
                 // Apply glow to leader lines if lines glow is enabled
                 if (state.neonGlowLines) {
                     ctx.shadowColor = point.color;
-                    ctx.shadowBlur = 2 * scaleFactor;
+                    ctx.shadowBlur = Math.max(1, 2 * scaleFactor);
                 }
                 
-                // Line starts just outside the point edge
-                const lineStartRadius = circleRadius + pointRadius + 1 * scaleFactor;
+                // Line starts just outside the point edge (using adaptivePointRadius)
+                const lineStartRadius = circleRadius + adaptivePointRadius + 1 * scaleFactor;
                 // Line ends just before the label box edge
                 const lineEndRadius = boxCenterDistance - bbox.height / 2 - 1 * scaleFactor;
                 
@@ -1124,12 +1482,12 @@
         document.getElementById('pointSize').addEventListener('input', (e) => {
             let value = parseInt(e.target.value);
             
-            // Validate range 2-60
+            // Validate range 1-60
             if (isNaN(value)) {
                 value = 14; // Default
-            } else if (value < 2) {
-                value = 2;
-                e.target.value = 2;
+            } else if (value < 1) {
+                value = 1;
+                e.target.value = 1;
             } else if (value > 60) {
                 value = 60;
                 e.target.value = 60;
@@ -1172,9 +1530,9 @@
         
         document.getElementById('pointSize').addEventListener('blur', (e) => {
             let value = parseInt(e.target.value);
-            if (isNaN(value) || value < 2) {
-                e.target.value = 2;
-                state.pointSize = 2;
+            if (isNaN(value) || value < 1) {
+                e.target.value = 1;
+                state.pointSize = 1;
             } else if (value > 60) {
                 e.target.value = 60;
                 state.pointSize = 60;
@@ -1200,8 +1558,74 @@
         });
         resizeObserver.observe(canvas.parentElement);
         
+        // Mobile toggle functionality
+        function toggleMobileControls() {
+            const controls = document.getElementById('controls');
+            const toggle = document.getElementById('mobileToggle');
+            
+            // Only toggle on mobile
+            if (window.innerWidth > 900) return;
+            
+            if (controls.classList.contains('collapsed')) {
+                controls.classList.remove('collapsed');
+                controls.classList.add('expanded');
+                toggle.textContent = '✕';
+                toggle.title = 'Collapse Settings';
+            } else if (controls.classList.contains('expanded')) {
+                controls.classList.remove('expanded');
+                controls.classList.add('collapsed');
+                toggle.textContent = '⚙️';
+                toggle.title = 'Expand Settings';
+            } else {
+                // Default state - collapse it
+                controls.classList.add('collapsed');
+                toggle.textContent = '⚙️';
+                toggle.title = 'Expand Settings';
+            }
+        }
+        
+        // Scroll indicator visibility
+        function updateScrollIndicator() {
+            const controls = document.getElementById('controls');
+            const indicator = document.getElementById('scrollIndicator');
+            
+            if (!indicator || window.innerWidth > 900) return;
+            
+            const isScrollable = controls.scrollHeight > controls.clientHeight;
+            const isAtBottom = controls.scrollTop + controls.clientHeight >= controls.scrollHeight - 10;
+            
+            if (isScrollable && !isAtBottom) {
+                indicator.classList.remove('hidden');
+            } else {
+                indicator.classList.add('hidden');
+            }
+        }
+        
+        // Initialize mobile features
+        function initMobileFeatures() {
+            const controls = document.getElementById('controls');
+            
+            // Update scroll indicator on scroll
+            controls.addEventListener('scroll', updateScrollIndicator);
+            
+            // Check on resize
+            window.addEventListener('resize', () => {
+                updateScrollIndicator();
+                
+                // Reset mobile state on desktop
+                if (window.innerWidth > 900) {
+                    controls.classList.remove('collapsed', 'expanded');
+                    document.getElementById('mobileToggle').textContent = '⚙️';
+                }
+            });
+            
+            // Initial check
+            setTimeout(updateScrollIndicator, 100);
+        }
+        
         // Initialize
         loadState();
+        initMobileFeatures();
     </script>
 </body>
 </html>
