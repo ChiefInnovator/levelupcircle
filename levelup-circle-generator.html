@@ -1224,17 +1224,6 @@
             };
         }
         
-        // Legacy wrapper function - now just calls smartWrapLabel
-        function wrapLabel(text) {
-            // This function is kept for backward compatibility
-            // but now uses the smart wrapping algorithm
-            const canvas = document.getElementById('canvas');
-            const ctx = canvas.getContext('2d');
-            ctx.font = `700 16px Arial, sans-serif`;
-            const lines = smartWrapLabel(text, ctx, 220);
-            return lines.join('\\n');
-        }
-        
         function initializePoints(count) {
             // Generate bright colors for initial points
             const colorResult = generateBrightColors(count, {
