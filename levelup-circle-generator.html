@@ -4,6 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Level-Up Circle Generator</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Level-Up Circle Generator">
+    <meta property="og:description" content="Create beautiful circular diagrams to visualize your goals, projects, or focus areas. Customize colors, labels, and glow effects.">
+    <meta property="og:image" content="https://chiefinnovator.github.io/levelupcircle/preview.png">
+    <meta property="og:url" content="https://chiefinnovator.github.io/levelupcircle/levelup-circle-generator.html">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Level-Up Circle Generator">
+    <meta name="twitter:description" content="Create beautiful circular diagrams to visualize your goals, projects, or focus areas.">
+    <meta name="twitter:image" content="https://chiefinnovator.github.io/levelupcircle/preview.png">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.5.0/lz-string.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -34,6 +49,7 @@
         }
         
         .preview {
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -419,6 +435,68 @@
             }
         }
         
+        /* Floating Share Bar */
+        .floating-share-bar {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            gap: 8px;
+            z-index: 50;
+        }
+        
+        .share-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .share-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+        
+        .share-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+        
+        .share-btn.facebook {
+            background: #1877F2;
+            color: white;
+        }
+        
+        .share-btn.twitter {
+            background: #000;
+            color: white;
+            border: 1px solid #555;
+        }
+        
+        .share-btn.twitter:hover {
+            border-color: #888;
+        }
+        
+        .share-btn.copy-link {
+            background: #2a2a2a;
+            color: #39FF14;
+            border: 1px solid #444;
+        }
+        
+        .share-btn.copy-link:hover {
+            background: #3a3a3a;
+            border-color: #39FF14;
+        }
+        
         /* Mobile Toggle Button */
         .mobile-toggle {
             display: none;
@@ -737,6 +815,17 @@
         <button class="mobile-toggle" id="mobileToggle" onclick="toggleMobileControls()" title="Toggle Settings">⚙️</button>
         
         <div class="preview">
+            <div class="floating-share-bar">
+                <button class="share-btn copy-link" onclick="shareLink()" title="Copy Share Link">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+                </button>
+                <button class="share-btn facebook" onclick="shareToFacebook()" title="Share to Facebook">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                </button>
+                <button class="share-btn twitter" onclick="shareToTwitter()" title="Share to X/Twitter">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </button>
+            </div>
             <canvas id="canvas" role="img" aria-label="Level-Up Circle visualization"></canvas>
         </div>
     </div>
@@ -1312,6 +1401,18 @@
             }, 3000);
         }
         
+        // Auto-save function (silent, no toast)
+        function autoSave() {
+            try {
+                localStorage.setItem('levelUpCircleState', JSON.stringify(state));
+            } catch (e) {
+                console.error('Auto-save failed:', e);
+            }
+        }
+        
+        // Debounced auto-save to avoid too frequent writes
+        const debouncedAutoSave = debounce(autoSave, 500);
+        
         function saveState() {
             try {
                 localStorage.setItem('levelUpCircleState', JSON.stringify(state));
@@ -1329,12 +1430,254 @@
                 console.error('Failed to clear state:', e);
             }
             // Reset to default state with all glow settings enabled
+            state.neonGlowTitle = true;
             state.neonGlowPoints = true;
             state.neonGlowLabels = true;
             state.neonGlowCircle = true;
             state.neonGlowConnections = true;
             loadExample();
             showToast('State cleared and example loaded!', 'success');
+        }
+        
+        // Deep link functions - New compressed format using lz-string
+        function encodeStateToURL() {
+            // Build state object with all settings
+            const stateObj = {
+                t: state.title,
+                n: state.numPoints,
+                es: state.exportSize,
+                th: state.theme,
+                ps: state.pointSize,
+                lo: state.labelOffset,
+                fs: state.labelFontSize,
+                gt: state.neonGlowTitle ? 1 : 0,
+                gp: state.neonGlowPoints ? 1 : 0,
+                gl: state.neonGlowLabels ? 1 : 0,
+                gc: state.neonGlowCircle ? 1 : 0,
+                gn: state.neonGlowConnections ? 1 : 0,
+                sc: state.showConnections ? 1 : 0,
+                // Points as array of [label, color] pairs (color without #)
+                p: state.points.map(pt => [pt.label, pt.color.replace('#', '')])
+            };
+            
+            // Stringify, compress, and encode for URL
+            const json = JSON.stringify(stateObj);
+            const compressed = LZString.compressToEncodedURIComponent(json);
+            return `s=${compressed}`;
+        }
+        
+        // Decode from new compressed format
+        function decodeStateFromCompressed(compressedString) {
+            try {
+                const json = LZString.decompressFromEncodedURIComponent(compressedString);
+                if (!json) return null;
+                
+                const obj = JSON.parse(json);
+                
+                const newState = {
+                    title: obj.t || 'Level-Up Circle',
+                    numPoints: parseInt(obj.n) || 8,
+                    exportSize: parseInt(obj.es) || 3840,
+                    theme: obj.th || 'dark',
+                    pointSize: parseInt(obj.ps) || 14,
+                    labelOffset: parseInt(obj.lo) || 35,
+                    labelFontSize: parseInt(obj.fs) || 16,
+                    neonGlowTitle: obj.gt !== 0,
+                    neonGlowPoints: obj.gp !== 0,
+                    neonGlowLabels: obj.gl !== 0,
+                    neonGlowCircle: obj.gc !== 0,
+                    neonGlowConnections: obj.gn !== 0,
+                    showConnections: obj.sc !== 0,
+                    points: []
+                };
+                
+                // Decode points from array format
+                if (obj.p && Array.isArray(obj.p)) {
+                    newState.points = obj.p.map((pt, index) => ({
+                        label: pt[0] || `Point ${index + 1}`,
+                        color: `#${pt[1] || '39FF14'}`
+                    }));
+                    newState.numPoints = newState.points.length;
+                }
+                
+                // Validate
+                return validateState(newState);
+            } catch (e) {
+                console.error('Failed to decode compressed state:', e);
+                return null;
+            }
+        }
+        
+        // Legacy decoder for backwards compatibility with old URL format
+        function decodeStateFromLegacyURL(searchParams) {
+            try {
+                const newState = {
+                    title: searchParams.get('t') || 'Level-Up Circle',
+                    numPoints: parseInt(searchParams.get('n')) || 8,
+                    exportSize: parseInt(searchParams.get('es')) || 3840,
+                    theme: searchParams.get('th') || 'dark',
+                    pointSize: parseInt(searchParams.get('ps')) || 14,
+                    labelOffset: parseInt(searchParams.get('lo')) || 35,
+                    labelFontSize: parseInt(searchParams.get('fs')) || 16,
+                    neonGlowTitle: searchParams.get('gt') !== '0',
+                    neonGlowPoints: searchParams.get('gp') !== '0',
+                    neonGlowLabels: searchParams.get('gl') !== '0',
+                    neonGlowCircle: searchParams.get('gc') !== '0',
+                    neonGlowConnections: searchParams.get('gn') !== '0',
+                    showConnections: searchParams.get('sc') !== '0',
+                    points: []
+                };
+                
+                // Decode points from legacy format: label|color,label|color,...
+                const pointsData = searchParams.get('p');
+                if (pointsData) {
+                    const pointStrings = pointsData.split(',');
+                    newState.points = pointStrings.map((ps, index) => {
+                        const [label, color] = ps.split('|');
+                        return {
+                            label: decodeURIComponent(label) || `Point ${index + 1}`,
+                            color: `#${color || '39FF14'}`
+                        };
+                    });
+                    newState.numPoints = newState.points.length;
+                }
+                
+                // Validate
+                return validateState(newState);
+            } catch (e) {
+                console.error('Failed to decode legacy URL state:', e);
+                return null;
+            }
+        }
+        
+        // Common validation for decoded state
+        function validateState(newState) {
+            newState.numPoints = Math.max(1, Math.min(36, newState.numPoints));
+            newState.pointSize = Math.max(1, Math.min(60, newState.pointSize));
+            newState.labelOffset = Math.max(0, Math.min(100, newState.labelOffset));
+            newState.labelFontSize = Math.max(8, Math.min(32, newState.labelFontSize));
+            newState.exportSize = [1080, 2048, 3840].includes(newState.exportSize) ? newState.exportSize : 3840;
+            newState.theme = ['dark', 'light'].includes(newState.theme) ? newState.theme : 'dark';
+            
+            // If no points decoded, initialize them
+            if (newState.points.length === 0) {
+                newState.points = initializePoints(newState.numPoints);
+            }
+            
+            return newState;
+        }
+        
+        function shareLink() {
+            const encoded = encodeStateToURL();
+            const baseURL = window.location.origin + window.location.pathname;
+            const shareURL = `${baseURL}?${encoded}`;
+            
+            // Try to copy to clipboard
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(shareURL)
+                    .then(() => {
+                        showToast('Share link copied to clipboard!', 'success');
+                    })
+                    .catch(() => {
+                        // Fallback: show URL in prompt
+                        prompt('Copy this share link:', shareURL);
+                    });
+            } else {
+                // Fallback for older browsers
+                prompt('Copy this share link:', shareURL);
+            }
+        }
+        
+        function getShareURL() {
+            const encoded = encodeStateToURL();
+            const baseURL = window.location.origin + window.location.pathname;
+            return `${baseURL}?${encoded}`;
+        }
+        
+        function isLocalEnvironment() {
+            const hostname = window.location.hostname;
+            return hostname === 'localhost' || 
+                   hostname === '127.0.0.1' || 
+                   hostname === '' || 
+                   window.location.protocol === 'file:';
+        }
+        
+        function shareToFacebook() {
+            if (isLocalEnvironment()) {
+                showToast('Facebook sharing requires a public URL. Deploy to GitHub Pages first, or use "Copy Share Link" instead.', 'error');
+                return;
+            }
+            const shareURL = getShareURL();
+            const facebookURL = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareURL)}`;
+            window.open(facebookURL, '_blank', 'width=600,height=400');
+            showToast('Opening Facebook share dialog...', 'info');
+        }
+        
+        function shareToTwitter() {
+            if (isLocalEnvironment()) {
+                showToast('Twitter sharing requires a public URL. Deploy to GitHub Pages first, or use "Copy Share Link" instead.', 'error');
+                return;
+            }
+            const shareURL = getShareURL();
+            const text = `Check out my Level-Up Circle: ${state.title}`;
+            const twitterURL = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(shareURL)}`;
+            window.open(twitterURL, '_blank', 'width=600,height=400');
+            showToast('Opening X/Twitter share dialog...', 'info');
+        }
+        
+        function loadFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // First, check for new compressed format (s parameter)
+            if (urlParams.has('s')) {
+                const compressed = urlParams.get('s');
+                const urlState = decodeStateFromCompressed(compressed);
+                if (urlState) {
+                    state = urlState;
+                    applyStateToUI();
+                    
+                    // Clear URL params after loading (cleaner URL)
+                    window.history.replaceState({}, '', window.location.pathname);
+                    
+                    showToast('Loaded shared configuration!', 'success');
+                    return true;
+                }
+            }
+            
+            // Fall back to legacy format for backwards compatibility
+            if (urlParams.has('t') || urlParams.has('p')) {
+                const urlState = decodeStateFromLegacyURL(urlParams);
+                if (urlState) {
+                    state = urlState;
+                    applyStateToUI();
+                    
+                    // Clear URL params after loading (cleaner URL)
+                    window.history.replaceState({}, '', window.location.pathname);
+                    
+                    showToast('Loaded shared configuration!', 'success');
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        // Helper function to apply state to UI elements
+        function applyStateToUI() {
+            document.getElementById('title').value = state.title;
+            document.getElementById('theme').value = state.theme;
+            document.getElementById('points').value = state.numPoints;
+            document.getElementById('exportSize').value = state.exportSize;
+            document.getElementById('neonGlowTitle').checked = state.neonGlowTitle;
+            document.getElementById('neonGlowPoints').checked = state.neonGlowPoints;
+            document.getElementById('neonGlowLabels').checked = state.neonGlowLabels;
+            document.getElementById('neonGlowCircle').checked = state.neonGlowCircle;
+            document.getElementById('neonGlowConnections').checked = state.neonGlowConnections;
+            document.getElementById('showConnections').checked = state.showConnections;
+            document.getElementById('pointSize').value = state.pointSize;
+            document.getElementById('labelOffset').value = state.labelOffset;
+            document.getElementById('labelFontSize').value = state.labelFontSize;
+            
+            updatePointList();
         }
         
         function loadState() {
@@ -1666,6 +2009,17 @@
             canvas.width = size;
             canvas.height = size;
             drawCircle(ctx, size);
+            
+            // Update preview area background to match theme
+            const preview = document.querySelector('.preview');
+            if (state.theme === 'light') {
+                preview.style.background = '#fff';
+            } else {
+                preview.style.background = '#000';
+            }
+            
+            // Auto-save state on every redraw (debounced)
+            debouncedAutoSave();
         }
         
         function exportPNG() {
@@ -1938,7 +2292,10 @@
         }
         
         // Initialize
-        loadState();
+        // Check for shared URL first, then fall back to localStorage
+        if (!loadFromURL()) {
+            loadState();
+        }
         initMobileFeatures();
     </script>
 </body>
