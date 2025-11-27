@@ -497,6 +497,71 @@
             border-color: #39FF14;
         }
         
+        .share-btn.fullscreen {
+            background: #2a2a2a;
+            color: #fff;
+            border: 1px solid #444;
+        }
+        
+        .share-btn.fullscreen:hover {
+            background: #3a3a3a;
+            border-color: #888;
+        }
+        
+        /* Fullscreen Mode */
+        body.fullscreen-mode {
+            overflow: hidden;
+        }
+        
+        body.fullscreen-mode .container {
+            display: block;
+        }
+        
+        body.fullscreen-mode .controls,
+        body.fullscreen-mode .mobile-toggle {
+            display: none !important;
+        }
+        
+        body.fullscreen-mode .floating-share-bar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        body.fullscreen-mode .preview {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        body.fullscreen-mode canvas {
+            max-width: 100vw;
+            max-height: 100vh;
+            width: auto;
+            height: auto;
+        }
+        
+        /* Fullscreen button active state */
+        body.fullscreen-mode .share-btn.fullscreen {
+            background: #39FF14;
+            color: #000;
+            border-color: #39FF14;
+        }
+        
+        body.fullscreen-mode .share-btn.fullscreen:hover {
+            background: #32d912;
+            border-color: #32d912;
+        }
+        
         /* Mobile Toggle Button */
         .mobile-toggle {
             display: none;
@@ -743,6 +808,11 @@
                         <label for="labelFontSize">Label Font Size (8-32px)</label>
                         <input type="number" id="labelFontSize" min="8" max="32" value="16">
                     </div>
+                    
+                    <div class="control-group">
+                        <label for="titleFontSize">Title Font Size (16-48px)</label>
+                        <input type="number" id="titleFontSize" min="16" max="48" value="28">
+                    </div>
                 </div>
             </details>
             
@@ -819,11 +889,14 @@
                 <button class="share-btn copy-link" onclick="shareLink()" title="Copy Share Link">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
                 </button>
+                <button class="share-btn twitter" onclick="shareToTwitter()" title="Share to X/Twitter">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </button>
                 <button class="share-btn facebook" onclick="shareToFacebook()" title="Share to Facebook">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                 </button>
-                <button class="share-btn twitter" onclick="shareToTwitter()" title="Share to X/Twitter">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                <button class="share-btn fullscreen" onclick="toggleFullscreen()" title="Toggle Fullscreen">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
                 </button>
             </div>
             <canvas id="canvas" role="img" aria-label="Level-Up Circle visualization"></canvas>
@@ -959,6 +1032,7 @@
             pointSize: 14,
             labelOffset: 35,
             labelFontSize: 16,
+            titleFontSize: 28,
             points: []
         };
         
@@ -1349,6 +1423,7 @@
                 pointSize: 14,
                 labelOffset: 35,
                 labelFontSize: 16,
+                titleFontSize: 28,
                 points: initializePoints(8)
             };
             
@@ -1365,6 +1440,7 @@
             document.getElementById('pointSize').value = state.pointSize;
             document.getElementById('labelOffset').value = state.labelOffset;
             document.getElementById('labelFontSize').value = state.labelFontSize;
+            document.getElementById('titleFontSize').value = state.titleFontSize;
             
             updatePointList();
         }
@@ -1450,6 +1526,7 @@
                 ps: state.pointSize,
                 lo: state.labelOffset,
                 fs: state.labelFontSize,
+                tfs: state.titleFontSize,
                 gt: state.neonGlowTitle ? 1 : 0,
                 gp: state.neonGlowPoints ? 1 : 0,
                 gl: state.neonGlowLabels ? 1 : 0,
@@ -1482,6 +1559,7 @@
                     pointSize: parseInt(obj.ps) || 14,
                     labelOffset: parseInt(obj.lo) || 35,
                     labelFontSize: parseInt(obj.fs) || 16,
+                    titleFontSize: parseInt(obj.tfs) || 28,
                     neonGlowTitle: obj.gt !== 0,
                     neonGlowPoints: obj.gp !== 0,
                     neonGlowLabels: obj.gl !== 0,
@@ -1519,6 +1597,7 @@
                     pointSize: parseInt(searchParams.get('ps')) || 14,
                     labelOffset: parseInt(searchParams.get('lo')) || 35,
                     labelFontSize: parseInt(searchParams.get('fs')) || 16,
+                    titleFontSize: parseInt(searchParams.get('tfs')) || 28,
                     neonGlowTitle: searchParams.get('gt') !== '0',
                     neonGlowPoints: searchParams.get('gp') !== '0',
                     neonGlowLabels: searchParams.get('gl') !== '0',
@@ -1556,6 +1635,7 @@
             newState.pointSize = Math.max(1, Math.min(60, newState.pointSize));
             newState.labelOffset = Math.max(0, Math.min(100, newState.labelOffset));
             newState.labelFontSize = Math.max(8, Math.min(32, newState.labelFontSize));
+            newState.titleFontSize = Math.max(16, Math.min(48, newState.titleFontSize || 28));
             newState.exportSize = [1080, 2048, 3840].includes(newState.exportSize) ? newState.exportSize : 3840;
             newState.theme = ['dark', 'light'].includes(newState.theme) ? newState.theme : 'dark';
             
@@ -1568,9 +1648,7 @@
         }
         
         function shareLink() {
-            const encoded = encodeStateToURL();
-            const baseURL = window.location.origin + window.location.pathname;
-            const shareURL = `${baseURL}?${encoded}`;
+            const shareURL = getShareURL();
             
             // Try to copy to clipboard
             if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -1591,7 +1669,8 @@
         function getShareURL() {
             const encoded = encodeStateToURL();
             const baseURL = window.location.origin + window.location.pathname;
-            return `${baseURL}?${encoded}`;
+            const isFullscreen = document.body.classList.contains('fullscreen-mode');
+            return isFullscreen ? `${baseURL}?${encoded}&fs=1` : `${baseURL}?${encoded}`;
         }
         
         function isLocalEnvironment() {
@@ -1625,8 +1704,34 @@
             showToast('Opening X/Twitter share dialog...', 'info');
         }
         
+        function toggleFullscreen() {
+            const isFullscreen = document.body.classList.contains('fullscreen-mode');
+            
+            if (isFullscreen) {
+                // Exit fullscreen
+                document.body.classList.remove('fullscreen-mode');
+                
+                // Clear URL params
+                window.history.replaceState({}, '', window.location.pathname);
+            } else {
+                // Enter fullscreen
+                document.body.classList.add('fullscreen-mode');
+                
+                // Update URL to include state and fullscreen parameter
+                const url = new URL(window.location.href);
+                const compressed = LZString.compressToEncodedURIComponent(JSON.stringify(state));
+                url.searchParams.set('s', compressed);
+                url.searchParams.set('fs', '1');
+                window.history.replaceState({}, '', url.toString());
+            }
+            
+            // Trigger a redraw to ensure canvas is properly sized
+            setTimeout(() => redraw(), 100);
+        }
+        
         function loadFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
+            const isFullscreen = urlParams.get('fs') === '1';
             
             // First, check for new compressed format (s parameter)
             if (urlParams.has('s')) {
@@ -1636,10 +1741,16 @@
                     state = urlState;
                     applyStateToUI();
                     
-                    // Clear URL params after loading (cleaner URL)
-                    window.history.replaceState({}, '', window.location.pathname);
-                    
-                    showToast('Loaded shared configuration!', 'success');
+                    // If fullscreen mode, enter it and keep URL as-is
+                    if (isFullscreen) {
+                        document.body.classList.add('fullscreen-mode');
+                        // Trigger redraw after fullscreen mode is applied
+                        setTimeout(() => redraw(), 100);
+                    } else {
+                        // Clear URL params after loading (cleaner URL)
+                        window.history.replaceState({}, '', window.location.pathname);
+                        showToast('Loaded shared configuration!', 'success');
+                    }
                     return true;
                 }
             }
@@ -1676,6 +1787,7 @@
             document.getElementById('pointSize').value = state.pointSize;
             document.getElementById('labelOffset').value = state.labelOffset;
             document.getElementById('labelFontSize').value = state.labelFontSize;
+            document.getElementById('titleFontSize').value = state.titleFontSize;
             
             updatePointList();
         }
@@ -1712,6 +1824,7 @@
                     state.pointSize = Math.max(1, Math.min(60, state.pointSize || 14));
                     state.labelOffset = Math.max(0, Math.min(100, state.labelOffset || 35));
                     state.labelFontSize = Math.max(8, Math.min(32, state.labelFontSize || 16));
+                    state.titleFontSize = Math.max(16, Math.min(48, state.titleFontSize || 28));
                     state.exportSize = [1080, 2048, 3840].includes(state.exportSize) ? state.exportSize : 3840;
                     state.title = state.title || 'Level-Up Circle';
                     state.theme = ['dark', 'light'].includes(state.theme) ? state.theme : 'dark';
@@ -1735,6 +1848,7 @@
                     document.getElementById('pointSize').value = state.pointSize;
                     document.getElementById('labelOffset').value = state.labelOffset;
                     document.getElementById('labelFontSize').value = state.labelFontSize;
+                    document.getElementById('titleFontSize').value = state.titleFontSize;
                     updatePointList();
                 } else {
                     loadExample();
@@ -1781,9 +1895,9 @@
             
             // Font settings - scale with canvas size but with min/max limits
             const baseFontSize = state.labelFontSize || 16;
-            const baseTitleSize = 28;
+            const baseTitleSize = state.titleFontSize || 28;
             const fontSize = Math.max(8, Math.min(32, baseFontSize * scaleFactor));
-            const titleFontSize = Math.max(16, Math.min(36, baseTitleSize * scaleFactor));
+            const titleFontSize = Math.max(16, Math.min(48, baseTitleSize * scaleFactor));
             const lineHeight = fontSize * 1.2; // Proportional line height
             const labelPadding = Math.max(4, 6 * scaleFactor); // Padding for bounding box
             const maxLabelWidth = Math.min(180 * scaleFactor, size * 0.22); // Slightly reduced for mobile
@@ -2171,6 +2285,24 @@
             redraw();
         });
         
+        document.getElementById('titleFontSize').addEventListener('input', (e) => {
+            let value = parseInt(e.target.value);
+            
+            // Validate range 16-48
+            if (isNaN(value)) {
+                value = 28; // Default
+            } else if (value < 16) {
+                value = 16;
+                e.target.value = 16;
+            } else if (value > 48) {
+                value = 48;
+                e.target.value = 48;
+            }
+            
+            state.titleFontSize = value;
+            redraw();
+        });
+        
         // Add blur handlers to enforce limits when focus leaves the input
         document.getElementById('points').addEventListener('blur', (e) => {
             let value = parseInt(e.target.value);
@@ -2216,6 +2348,18 @@
             } else if (value > 32) {
                 e.target.value = 32;
                 state.labelFontSize = 32;
+            }
+            redraw();
+        });
+        
+        document.getElementById('titleFontSize').addEventListener('blur', (e) => {
+            let value = parseInt(e.target.value);
+            if (isNaN(value) || value < 16) {
+                e.target.value = 16;
+                state.titleFontSize = 16;
+            } else if (value > 48) {
+                e.target.value = 48;
+                state.titleFontSize = 48;
             }
             redraw();
         });
