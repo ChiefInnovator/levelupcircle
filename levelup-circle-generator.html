@@ -626,6 +626,14 @@
                 <input type="text" id="title" value="Level-Up Circle">
             </div>
             
+            <div class="control-group">
+                <label for="theme">Image Theme</label>
+                <select id="theme">
+                    <option value="dark">Dark (Black Background)</option>
+                    <option value="light">Light (White Background)</option>
+                </select>
+            </div>
+            
             <details class="collapsible-section">
                 <summary>Advanced Settings</summary>
                 <div class="collapsible-content">
@@ -661,6 +669,13 @@
             </details>
             
             <div class="section-label">Glow Effects</div>
+            
+            <div class="control-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="neonGlowTitle" checked>
+                    <span>Neon Glow Title</span>
+                </label>
+            </div>
             
             <div class="control-group">
                 <label class="checkbox-label">
@@ -845,6 +860,8 @@
             title: 'Level-Up Circle',
             numPoints: 8,
             exportSize: 3840,
+            theme: 'dark',                // 'dark' or 'light'
+            neonGlowTitle: true,          // Glow for title
             neonGlowPoints: true,         // Glow for points
             neonGlowLabels: true,         // Glow for labels
             neonGlowCircle: true,         // Glow for outer circle
@@ -1233,6 +1250,8 @@
                 title: 'Level-Up Circle',
                 numPoints: 8,
                 exportSize: 3840,
+                theme: 'dark',
+                neonGlowTitle: true,
                 neonGlowPoints: true,
                 neonGlowLabels: true,
                 neonGlowCircle: true,
@@ -1245,8 +1264,10 @@
             };
             
             document.getElementById('title').value = state.title;
+            document.getElementById('theme').value = state.theme;
             document.getElementById('points').value = state.numPoints;
             document.getElementById('exportSize').value = state.exportSize;
+            document.getElementById('neonGlowTitle').checked = state.neonGlowTitle;
             document.getElementById('neonGlowPoints').checked = state.neonGlowPoints;
             document.getElementById('neonGlowLabels').checked = state.neonGlowLabels;
             document.getElementById('neonGlowCircle').checked = state.neonGlowCircle;
@@ -1350,6 +1371,8 @@
                     state.labelFontSize = Math.max(8, Math.min(32, state.labelFontSize || 16));
                     state.exportSize = [1080, 2048, 3840].includes(state.exportSize) ? state.exportSize : 3840;
                     state.title = state.title || 'Level-Up Circle';
+                    state.theme = ['dark', 'light'].includes(state.theme) ? state.theme : 'dark';
+                    state.neonGlowTitle = state.neonGlowTitle !== undefined ? state.neonGlowTitle : true;
                     state.neonGlowPoints = state.neonGlowPoints !== undefined ? state.neonGlowPoints : true;
                     state.neonGlowLabels = state.neonGlowLabels !== undefined ? state.neonGlowLabels : true;
                     state.neonGlowCircle = state.neonGlowCircle !== undefined ? state.neonGlowCircle : true;
@@ -1357,8 +1380,10 @@
                     
                     // Update UI with validated values
                     document.getElementById('title').value = state.title;
+                    document.getElementById('theme').value = state.theme;
                     document.getElementById('points').value = state.numPoints;
                     document.getElementById('exportSize').value = state.exportSize;
+                    document.getElementById('neonGlowTitle').checked = state.neonGlowTitle;
                     document.getElementById('neonGlowPoints').checked = state.neonGlowPoints;
                     document.getElementById('neonGlowLabels').checked = state.neonGlowLabels;
                     document.getElementById('neonGlowCircle').checked = state.neonGlowCircle;
@@ -1378,8 +1403,17 @@
         }
         
         function drawCircle(ctx, size, isExport = false) {
-            // Clear canvas with black background
-            ctx.fillStyle = '#000';
+            // Theme colors
+            const isDark = state.theme === 'dark';
+            const bgColor = isDark ? '#000' : '#fff';
+            const titleColor = isDark ? '#fff' : '#000';
+            const circleColor = isDark ? (state.neonGlowCircle ? '#aaa' : '#888') : (state.neonGlowCircle ? '#555' : '#666');
+            const connectionColor = isDark ? (state.neonGlowConnections ? '#777' : '#666') : (state.neonGlowConnections ? '#888' : '#999');
+            const glowColor = isDark ? '#fff' : '#000';
+            const labelOutlineColor = isDark ? '#000' : '#fff';
+            
+            // Clear canvas with background
+            ctx.fillStyle = bgColor;
             ctx.fillRect(0, 0, size, size);
             
             // Calculate dimensions - adaptive padding for different screen sizes
@@ -1413,18 +1447,18 @@
             
             // Draw title with proper spacing
             ctx.save();
-            ctx.fillStyle = '#fff';
+            ctx.fillStyle = titleColor;
             ctx.font = `700 ${titleFontSize}px Arial, sans-serif`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             
             const titleY = padding * 0.45;
             
-            if (state.neonGlowLabels) {
-                ctx.strokeStyle = '#000';
+            if (state.neonGlowTitle) {
+                ctx.strokeStyle = labelOutlineColor;
                 ctx.lineWidth = 4 * scaleFactor;
                 ctx.strokeText(state.title, centerX, titleY);
-                ctx.shadowColor = '#fff';
+                ctx.shadowColor = glowColor;
                 ctx.shadowBlur = 12 * scaleFactor;
                 ctx.fillText(state.title, centerX, titleY);
             } else {
@@ -1434,10 +1468,10 @@
             
             // Draw outer ring
             ctx.save();
-            ctx.strokeStyle = state.neonGlowCircle ? '#aaa' : '#888';
+            ctx.strokeStyle = circleColor;
             ctx.lineWidth = state.neonGlowCircle ? 2 * scaleFactor : 1 * scaleFactor;
             if (state.neonGlowCircle) {
-                ctx.shadowColor = '#fff';
+                ctx.shadowColor = glowColor;
                 ctx.shadowBlur = 8 * scaleFactor;
             }
             ctx.beginPath();
@@ -1458,10 +1492,10 @@
             // Draw connection lines if enabled
             if (state.showConnections) {
                 ctx.save();
-                ctx.strokeStyle = state.neonGlowConnections ? '#777' : '#666';
+                ctx.strokeStyle = connectionColor;
                 ctx.lineWidth = 1 * scaleFactor;
                 if (state.neonGlowConnections) {
-                    ctx.shadowColor = '#fff';
+                    ctx.shadowColor = glowColor;
                     ctx.shadowBlur = 3 * scaleFactor;
                 }
                 
@@ -1486,7 +1520,7 @@
                 // Draw the point
                 ctx.save();
                 ctx.fillStyle = point.color;
-                ctx.strokeStyle = '#000';
+                ctx.strokeStyle = labelOutlineColor;
                 ctx.lineWidth = Math.max(1, 2 * scaleFactor);
                 if (state.neonGlowPoints) {
                     ctx.shadowColor = point.color;
@@ -1596,8 +1630,8 @@
                 
                 // Render each line
                 if (state.neonGlowLabels) {
-                    // Black outline for readability
-                    ctx.strokeStyle = '#000';
+                    // Outline for readability (opposite of background)
+                    ctx.strokeStyle = labelOutlineColor;
                     ctx.lineWidth = 3 * scaleFactor;
                     lines.forEach((line, lineIndex) => {
                         const textY = boxTop + labelPadding + lineIndex * lineHeight + lineHeight / 2;
@@ -1692,6 +1726,16 @@
                 state.exportSize = 3840; // Default
                 e.target.value = 3840;
             }
+        });
+        
+        document.getElementById('theme').addEventListener('change', (e) => {
+            state.theme = e.target.value;
+            redraw();
+        });
+        
+        document.getElementById('neonGlowTitle').addEventListener('change', (e) => {
+            state.neonGlowTitle = e.target.checked;
+            redraw();
         });
         
         document.getElementById('neonGlowPoints').addEventListener('change', (e) => {
