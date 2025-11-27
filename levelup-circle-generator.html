@@ -244,6 +244,75 @@
             background: transparent;
         }
         
+        /* Collapsible Sections */
+        .collapsible-section {
+            margin-bottom: 16px;
+        }
+        
+        .collapsible-section summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            list-style: none;
+            transition: all 0.2s ease;
+        }
+        
+        .collapsible-section summary::-webkit-details-marker {
+            display: none;
+        }
+        
+        .collapsible-section summary::after {
+            content: '▼';
+            font-size: 10px;
+            transition: transform 0.2s ease;
+        }
+        
+        .collapsible-section[open] summary::after {
+            transform: rotate(180deg);
+        }
+        
+        .collapsible-section summary:hover {
+            background: #333;
+            border-color: #555;
+            color: #ccc;
+        }
+        
+        .collapsible-section[open] summary {
+            border-radius: 6px 6px 0 0;
+            border-bottom: none;
+        }
+        
+        .collapsible-content {
+            padding: 12px;
+            background: #222;
+            border: 1px solid #444;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+        }
+        
+        .collapsible-content .control-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .section-label {
+            margin-top: 16px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
         input[type="color"] {
             width: 100%;
             height: 32px;
@@ -270,6 +339,84 @@
             height: 1px;
             background: #333;
             margin: 20px 0;
+        }
+        
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        
+        .toast {
+            background: #2a2a2a;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(120%);
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: auto;
+            max-width: 300px;
+            font-size: 14px;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .toast.success {
+            border-left: 4px solid #39FF14;
+        }
+        
+        .toast.success .toast-icon {
+            color: #39FF14;
+        }
+        
+        .toast.error {
+            border-left: 4px solid #f5576c;
+        }
+        
+        .toast.error .toast-icon {
+            color: #f5576c;
+        }
+        
+        .toast.info {
+            border-left: 4px solid #667eea;
+        }
+        
+        .toast.info .toast-icon {
+            color: #667eea;
+        }
+        
+        .toast-icon {
+            font-size: 16px;
+        }
+        
+        .toast-message {
+            flex: 1;
+        }
+        
+        @media (max-width: 600px) {
+            .toast-container {
+                bottom: 80px;
+                right: 10px;
+                left: 10px;
+            }
+            
+            .toast {
+                max-width: none;
+            }
         }
         
         /* Mobile Toggle Button */
@@ -357,25 +504,13 @@
                 overflow: hidden;
             }
             
-            .controls.collapsed > *:not(h1):not(.mobile-collapse-hint) {
+            .controls.collapsed > *:not(h1) {
                 opacity: 0;
                 pointer-events: none;
             }
             
             .controls.expanded {
                 max-height: 70vh;
-            }
-            
-            .mobile-collapse-hint {
-                display: none;
-                text-align: center;
-                font-size: 12px;
-                color: #666;
-                padding: 4px;
-            }
-            
-            .controls.collapsed .mobile-collapse-hint {
-                display: block;
             }
             
             .preview {
@@ -481,53 +616,77 @@
     </style>
 </head>
 <body>
+    <div class="toast-container" id="toastContainer"></div>
     <div class="container">
         <div class="controls" id="controls">
             <h1 onclick="toggleMobileControls()">🎯 Level-Up Circle</h1>
-            <div class="mobile-collapse-hint">Tap title to expand settings</div>
             
             <div class="control-group">
                 <label for="title">Title</label>
                 <input type="text" id="title" value="Level-Up Circle">
             </div>
             
-            <div class="control-group">
-                <label for="points">Number of Points (1-36)</label>
-                <input type="number" id="points" min="1" max="36" value="8">
-            </div>
+            <details class="collapsible-section">
+                <summary>Advanced Settings</summary>
+                <div class="collapsible-content">
+                    <div class="control-group">
+                        <label for="points">Number of Points (1-36)</label>
+                        <input type="number" id="points" min="1" max="36" value="8">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="exportSize">Export Size</label>
+                        <select id="exportSize">
+                            <option value="1080">1080×1080</option>
+                            <option value="2048">2048×2048</option>
+                            <option value="3840" selected>3840×3840</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="pointSize">Point Size</label>
+                        <input type="number" id="pointSize" min="1" max="60" value="14">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="labelOffset">Label Spacing (0-100px from points)</label>
+                        <input type="number" id="labelOffset" min="0" max="100" value="35">
+                    </div>
+                    
+                    <div class="control-group">
+                        <label for="labelFontSize">Label Font Size (8-32px)</label>
+                        <input type="number" id="labelFontSize" min="8" max="32" value="16">
+                    </div>
+                </div>
+            </details>
             
-            <div class="control-group">
-                <label for="exportSize">Export Size</label>
-                <select id="exportSize">
-                    <option value="1080">1080×1080</option>
-                    <option value="2048">2048×2048</option>
-                    <option value="3840" selected>3840×3840</option>
-                </select>
-            </div>
-            
-            <div class="control-group">
-                <label for="pointSize">Point Size</label>
-                <input type="number" id="pointSize" min="1" max="60" value="14">
-            </div>
-            
-            <div class="control-group">
-                <label for="labelOffset">Label Spacing (0-100px from points)</label>
-                <input type="number" id="labelOffset" min="0" max="100" value="35">
-            </div>
-            
-            <div style="margin-top: 16px; margin-bottom: 8px; font-size: 12px; color: #999; text-transform: uppercase; letter-spacing: 1px;">Glow Effects</div>
+            <div class="section-label">Glow Effects</div>
             
             <div class="control-group">
                 <label class="checkbox-label">
-                    <input type="checkbox" id="neonGlowPointsLabels" checked>
-                    <span>Neon Glow Points & Labels</span>
+                    <input type="checkbox" id="neonGlowPoints" checked>
+                    <span>Neon Glow Points</span>
                 </label>
             </div>
             
             <div class="control-group">
                 <label class="checkbox-label">
-                    <input type="checkbox" id="neonGlowLines" checked>
-                    <span>Neon Glow Circle & Lines</span>
+                    <input type="checkbox" id="neonGlowLabels" checked>
+                    <span>Neon Glow Labels</span>
+                </label>
+            </div>
+            
+            <div class="control-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="neonGlowCircle" checked>
+                    <span>Neon Glow Circle</span>
+                </label>
+            </div>
+            
+            <div class="control-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="neonGlowConnections" checked>
+                    <span>Neon Glow Connections</span>
                 </label>
             </div>
             
@@ -686,11 +845,14 @@
             title: 'Level-Up Circle',
             numPoints: 8,
             exportSize: 3840,
-            neonGlowPointsLabels: true,  // Separate glow for points and labels
-            neonGlowLines: true,          // Separate glow for circle and connections
+            neonGlowPoints: true,         // Glow for points
+            neonGlowLabels: true,         // Glow for labels
+            neonGlowCircle: true,         // Glow for outer circle
+            neonGlowConnections: true,    // Glow for connection lines
             showConnections: true,
             pointSize: 14,
             labelOffset: 35,
+            labelFontSize: 16,
             points: []
         };
         
@@ -1071,33 +1233,71 @@
                 title: 'Level-Up Circle',
                 numPoints: 8,
                 exportSize: 3840,
-                neonGlowPointsLabels: true,
-                neonGlowLines: true,
+                neonGlowPoints: true,
+                neonGlowLabels: true,
+                neonGlowCircle: true,
+                neonGlowConnections: true,
                 showConnections: true,
                 pointSize: 14,
-                labelOffset: 35, // Updated default
+                labelOffset: 35,
+                labelFontSize: 16,
                 points: initializePoints(8)
             };
             
             document.getElementById('title').value = state.title;
             document.getElementById('points').value = state.numPoints;
             document.getElementById('exportSize').value = state.exportSize;
-            document.getElementById('neonGlowPointsLabels').checked = state.neonGlowPointsLabels;
-            document.getElementById('neonGlowLines').checked = state.neonGlowLines;
+            document.getElementById('neonGlowPoints').checked = state.neonGlowPoints;
+            document.getElementById('neonGlowLabels').checked = state.neonGlowLabels;
+            document.getElementById('neonGlowCircle').checked = state.neonGlowCircle;
+            document.getElementById('neonGlowConnections').checked = state.neonGlowConnections;
             document.getElementById('showConnections').checked = state.showConnections;
             document.getElementById('pointSize').value = state.pointSize;
             document.getElementById('labelOffset').value = state.labelOffset;
+            document.getElementById('labelFontSize').value = state.labelFontSize;
             
             updatePointList();
+        }
+        
+        // Toast notification system
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                success: '✓',
+                error: '✕',
+                info: 'ℹ'
+            };
+            
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type] || icons.info}</span>
+                <span class="toast-message">${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Trigger animation
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
+            
+            // Auto-remove after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
         }
         
         function saveState() {
             try {
                 localStorage.setItem('levelUpCircleState', JSON.stringify(state));
-                alert('State saved successfully!');
+                showToast('State saved successfully!', 'success');
             } catch (e) {
                 console.error('Failed to save state:', e);
-                alert('Failed to save state. Storage may be full or unavailable.');
+                showToast('Failed to save state. Storage may be full.', 'error');
             }
         }
         
@@ -1107,11 +1307,13 @@
             } catch (e) {
                 console.error('Failed to clear state:', e);
             }
-            // Reset to default state with both glow settings enabled
-            state.neonGlowPointsLabels = true;
-            state.neonGlowLines = true;
+            // Reset to default state with all glow settings enabled
+            state.neonGlowPoints = true;
+            state.neonGlowLabels = true;
+            state.neonGlowCircle = true;
+            state.neonGlowConnections = true;
             loadExample();
-            alert('State cleared and example loaded!');
+            showToast('State cleared and example loaded!', 'success');
         }
         
         function loadState() {
@@ -1120,31 +1322,51 @@
                 if (saved) {
                     state = JSON.parse(saved);
                     
-                    // Handle backward compatibility - if old neonGlow exists, use it for both
-                    if (state.neonGlow !== undefined && state.neonGlowPointsLabels === undefined) {
-                        state.neonGlowPointsLabels = state.neonGlow;
-                        state.neonGlowLines = state.neonGlow;
+                    // Handle backward compatibility - migrate old properties
+                    if (state.neonGlow !== undefined && state.neonGlowPoints === undefined) {
+                        state.neonGlowPoints = state.neonGlow;
+                        state.neonGlowLabels = state.neonGlow;
+                        state.neonGlowCircle = state.neonGlow;
+                        state.neonGlowConnections = state.neonGlow;
                         delete state.neonGlow; // Clean up old property
+                    }
+                    // Migrate from combined neonGlowPointsLabels to separate properties
+                    if (state.neonGlowPointsLabels !== undefined && state.neonGlowPoints === undefined) {
+                        state.neonGlowPoints = state.neonGlowPointsLabels;
+                        state.neonGlowLabels = state.neonGlowPointsLabels;
+                        delete state.neonGlowPointsLabels;
+                    }
+                    // Migrate from combined neonGlowLines to separate properties
+                    if (state.neonGlowLines !== undefined && state.neonGlowCircle === undefined) {
+                        state.neonGlowCircle = state.neonGlowLines;
+                        state.neonGlowConnections = state.neonGlowLines;
+                        delete state.neonGlowLines;
                     }
                     
                     // Validate loaded state
                     state.numPoints = Math.max(1, Math.min(36, state.numPoints || 8));
                     state.pointSize = Math.max(1, Math.min(60, state.pointSize || 14));
                     state.labelOffset = Math.max(0, Math.min(100, state.labelOffset || 35));
+                    state.labelFontSize = Math.max(8, Math.min(32, state.labelFontSize || 16));
                     state.exportSize = [1080, 2048, 3840].includes(state.exportSize) ? state.exportSize : 3840;
                     state.title = state.title || 'Level-Up Circle';
-                    state.neonGlowPointsLabels = state.neonGlowPointsLabels !== undefined ? state.neonGlowPointsLabels : true;
-                    state.neonGlowLines = state.neonGlowLines !== undefined ? state.neonGlowLines : true;
+                    state.neonGlowPoints = state.neonGlowPoints !== undefined ? state.neonGlowPoints : true;
+                    state.neonGlowLabels = state.neonGlowLabels !== undefined ? state.neonGlowLabels : true;
+                    state.neonGlowCircle = state.neonGlowCircle !== undefined ? state.neonGlowCircle : true;
+                    state.neonGlowConnections = state.neonGlowConnections !== undefined ? state.neonGlowConnections : true;
                     
                     // Update UI with validated values
                     document.getElementById('title').value = state.title;
                     document.getElementById('points').value = state.numPoints;
                     document.getElementById('exportSize').value = state.exportSize;
-                    document.getElementById('neonGlowPointsLabels').checked = state.neonGlowPointsLabels;
-                    document.getElementById('neonGlowLines').checked = state.neonGlowLines;
+                    document.getElementById('neonGlowPoints').checked = state.neonGlowPoints;
+                    document.getElementById('neonGlowLabels').checked = state.neonGlowLabels;
+                    document.getElementById('neonGlowCircle').checked = state.neonGlowCircle;
+                    document.getElementById('neonGlowConnections').checked = state.neonGlowConnections;
                     document.getElementById('showConnections').checked = state.showConnections;
                     document.getElementById('pointSize').value = state.pointSize;
                     document.getElementById('labelOffset').value = state.labelOffset;
+                    document.getElementById('labelFontSize').value = state.labelFontSize;
                     updatePointList();
                 } else {
                     loadExample();
@@ -1181,9 +1403,9 @@
             const labelOffsetScaled = state.labelOffset * scaleFactor;
             
             // Font settings - scale with canvas size but with min/max limits
-            const baseFontSize = 16;
+            const baseFontSize = state.labelFontSize || 16;
             const baseTitleSize = 28;
-            const fontSize = Math.max(10, Math.min(24, baseFontSize * scaleFactor));
+            const fontSize = Math.max(8, Math.min(32, baseFontSize * scaleFactor));
             const titleFontSize = Math.max(16, Math.min(36, baseTitleSize * scaleFactor));
             const lineHeight = fontSize * 1.2; // Proportional line height
             const labelPadding = Math.max(4, 6 * scaleFactor); // Padding for bounding box
@@ -1198,7 +1420,7 @@
             
             const titleY = padding * 0.45;
             
-            if (state.neonGlowPointsLabels) {
+            if (state.neonGlowLabels) {
                 ctx.strokeStyle = '#000';
                 ctx.lineWidth = 4 * scaleFactor;
                 ctx.strokeText(state.title, centerX, titleY);
@@ -1212,9 +1434,9 @@
             
             // Draw outer ring
             ctx.save();
-            ctx.strokeStyle = state.neonGlowLines ? '#aaa' : '#888';
-            ctx.lineWidth = state.neonGlowLines ? 2 * scaleFactor : 1 * scaleFactor;
-            if (state.neonGlowLines) {
+            ctx.strokeStyle = state.neonGlowCircle ? '#aaa' : '#888';
+            ctx.lineWidth = state.neonGlowCircle ? 2 * scaleFactor : 1 * scaleFactor;
+            if (state.neonGlowCircle) {
                 ctx.shadowColor = '#fff';
                 ctx.shadowBlur = 8 * scaleFactor;
             }
@@ -1236,9 +1458,9 @@
             // Draw connection lines if enabled
             if (state.showConnections) {
                 ctx.save();
-                ctx.strokeStyle = state.neonGlowLines ? '#777' : '#666';
+                ctx.strokeStyle = state.neonGlowConnections ? '#777' : '#666';
                 ctx.lineWidth = 1 * scaleFactor;
-                if (state.neonGlowLines) {
+                if (state.neonGlowConnections) {
                     ctx.shadowColor = '#fff';
                     ctx.shadowBlur = 3 * scaleFactor;
                 }
@@ -1266,7 +1488,7 @@
                 ctx.fillStyle = point.color;
                 ctx.strokeStyle = '#000';
                 ctx.lineWidth = Math.max(1, 2 * scaleFactor);
-                if (state.neonGlowPointsLabels) {
+                if (state.neonGlowPoints) {
                     ctx.shadowColor = point.color;
                     ctx.shadowBlur = Math.max(8, 15 * scaleFactor);
                 }
@@ -1293,7 +1515,14 @@
                 // The inner edge of the box should be exactly LABEL_OFFSET from the OUTER edge of points
                 // Effective outer circle radius = circleRadius + adaptivePointRadius
                 // So box center is at: (R + adaptivePointRadius) + LABEL_OFFSET + boxH/2
-                const adaptiveLabelOffset = Math.max(15, labelOffsetScaled); // Minimum offset for readability
+                // Add extra offset based on font size increase from base (16px)
+                // When font size is larger, labels need more space from the circle
+                // Also add extra offset based on point size increase from base (14px)
+                const baseFontSizeScaled = 16 * scaleFactor;
+                const basePointSizeScaled = 14 * scaleFactor;
+                const fontSizeExtra = Math.max(0, (fontSize - baseFontSizeScaled) * 0.5);
+                const pointSizeExtra = Math.max(0, (adaptivePointRadius - basePointSizeScaled) * 0.5);
+                const adaptiveLabelOffset = Math.max(15 * scaleFactor, labelOffsetScaled) + fontSizeExtra + pointSizeExtra;
                 const effectiveOuterRadius = circleRadius + adaptivePointRadius;
                 const boxCenterDistance = effectiveOuterRadius + adaptiveLabelOffset + bbox.height / 2;
                 const boxCenterX = centerX + Math.cos(pos.angle) * boxCenterDistance;
@@ -1326,8 +1555,8 @@
                 ctx.lineWidth = Math.max(0.5, 0.5 * scaleFactor);
                 ctx.globalAlpha = 0.4;
                 
-                // Apply glow to leader lines if lines glow is enabled
-                if (state.neonGlowLines) {
+                // Apply glow to leader lines if connections glow is enabled
+                if (state.neonGlowConnections) {
                     ctx.shadowColor = point.color;
                     ctx.shadowBlur = Math.max(1, 2 * scaleFactor);
                 }
@@ -1366,7 +1595,7 @@
                 }
                 
                 // Render each line
-                if (state.neonGlowPointsLabels) {
+                if (state.neonGlowLabels) {
                     // Black outline for readability
                     ctx.strokeStyle = '#000';
                     ctx.lineWidth = 3 * scaleFactor;
@@ -1417,7 +1646,7 @@
             
             exportCanvas.toBlob(blob => {
                 if (!blob) {
-                    alert('Failed to generate image.');
+                    showToast('Failed to generate image.', 'error');
                     return;
                 }
                 const url = URL.createObjectURL(blob);
@@ -1426,6 +1655,7 @@
                 a.download = `level-up-circle-${size}x${size}.png`;
                 a.click();
                 URL.revokeObjectURL(url);
+                showToast(`Exported ${size}×${size} PNG`, 'success');
             }, 'image/png');
         }
         
@@ -1464,13 +1694,23 @@
             }
         });
         
-        document.getElementById('neonGlowPointsLabels').addEventListener('change', (e) => {
-            state.neonGlowPointsLabels = e.target.checked;
+        document.getElementById('neonGlowPoints').addEventListener('change', (e) => {
+            state.neonGlowPoints = e.target.checked;
             redraw();
         });
         
-        document.getElementById('neonGlowLines').addEventListener('change', (e) => {
-            state.neonGlowLines = e.target.checked;
+        document.getElementById('neonGlowLabels').addEventListener('change', (e) => {
+            state.neonGlowLabels = e.target.checked;
+            redraw();
+        });
+        
+        document.getElementById('neonGlowCircle').addEventListener('change', (e) => {
+            state.neonGlowCircle = e.target.checked;
+            redraw();
+        });
+        
+        document.getElementById('neonGlowConnections').addEventListener('change', (e) => {
+            state.neonGlowConnections = e.target.checked;
             redraw();
         });
         
@@ -1515,6 +1755,24 @@
             redraw();
         });
         
+        document.getElementById('labelFontSize').addEventListener('input', (e) => {
+            let value = parseInt(e.target.value);
+            
+            // Validate range 8-32
+            if (isNaN(value)) {
+                value = 16; // Default
+            } else if (value < 8) {
+                value = 8;
+                e.target.value = 8;
+            } else if (value > 32) {
+                value = 32;
+                e.target.value = 32;
+            }
+            
+            state.labelFontSize = value;
+            redraw();
+        });
+        
         // Add blur handlers to enforce limits when focus leaves the input
         document.getElementById('points').addEventListener('blur', (e) => {
             let value = parseInt(e.target.value);
@@ -1548,6 +1806,18 @@
             } else if (value > 100) {
                 e.target.value = 100;
                 state.labelOffset = 100;
+            }
+            redraw();
+        });
+        
+        document.getElementById('labelFontSize').addEventListener('blur', (e) => {
+            let value = parseInt(e.target.value);
+            if (isNaN(value) || value < 8) {
+                e.target.value = 8;
+                state.labelFontSize = 8;
+            } else if (value > 32) {
+                e.target.value = 32;
+                state.labelFontSize = 32;
             }
             redraw();
         });
