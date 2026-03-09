@@ -75,7 +75,7 @@ You can run the application locally by simply opening `levelup-circle-generator.
 ## 📤 Sharing & Deep Links
 - **Copy Share Link**: Generates a URL that contains your configuration, allowing others to see your exact circle.
 - **Fullscreen Mode**: Hide controls to focus solely on the circle, with share links preserving this mode.
-- **Social Sharing**: Share your designs directly to Twitter and Facebook with pre-filled text for ease.
+- **Social Sharing**: Easily share your designs on platforms like Twitter and Facebook.
 
 ---
 
@@ -113,8 +113,9 @@ No license is granted. All rights reserved. The source code, images, and generat
 
 ### Related Links
 - [Richard Crane's Website](https://inventingfirewith.ai)
-- [Microsoft MVP Profile](https://mvp.microsoft.com/en-US/MVP/profile/10ce0bc0-7536-43f6-b28c-e9601a4a0d0d)
-- [Inventing Fire with AI Podcast](https://inventingfirewith.ai)
+- [MILL5](https://www.mill5.com) - An AI innovation company.
+- [Microsoft MVP Profile](https://mvp.microsoft.com/en-US/MVP/profile/10ce0bc0-7536-43f6-b28c-e9601a4a0d0d) - Recognized for contributions in AI and technology.
+- [Inventing Fire with AI Podcast](https://inventingfirewith.ai) - Explore the intersection of AI and creativity.
 
 ---
 
