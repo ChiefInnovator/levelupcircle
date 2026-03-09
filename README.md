@@ -8,18 +8,18 @@
 
 ## ✨ Features
 - Create a vibrant "Level-Up Circle" with **up to 36 labeled points** arranged radially.
-- Experience **smart color generation** for distinct and pleasing visuals.
-- Toggle between **dark and light themes** with a theme-aware preview background.
-- Customize **glow effects** for titles, points, labels, and connections.
-- Enjoy **multi-line smart label wrapping** for better readability.
-- Adjust settings such as **point size**, **label offsets**, and **font sizes**.
-- Export high-quality PNG images in resolutions of **1080, 2048, and 3840 square**.
-- Share your configurations easily with **deep linking** and compressed URL state sharing.
+- Experience **smart color generation** for distinct and visually appealing designs.
+- Toggle between **dark and light themes** for a personalized look.
+- Customize **glow effects** for titles, points, labels, and connections to enhance visibility.
+- Enjoy **multi-line smart label wrapping** for improved readability.
+- Adjust settings such as **point size**, **label offsets**, and **font sizes** to suit your style.
+- Export high-quality PNG images in resolutions of **1080, 2048, and 3840 square** for various uses.
+- Share your configurations effortlessly with **deep linking** and compressed URL state sharing.
 - Present your circle in **fullscreen mode** for an immersive experience.
-- Utilize **social sharing** features for easy link sharing on platforms like Twitter and Facebook.
+- Utilize **social sharing** features for easy sharing on platforms like Twitter and Facebook.
 - Get personalized advice from **ChatGPT** for strategic insights on your focus areas.
 - **Auto-save** your progress in `localStorage` with every change.
-- Responsive design with **mobile-friendly controls** for on-the-go use.
+- Enjoy a responsive design with **mobile-friendly controls** for on-the-go use.
 
 ---
 
