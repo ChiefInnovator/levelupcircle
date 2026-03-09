@@ -55,8 +55,6 @@
 | Load Example | Reset to a seeded demo state |
 | Save State | Persist current configuration to `localStorage` |
 | Clear State | Clear saved state and reload example |
-| Redraw | Force a redraw of the canvas |
-| Export PNG | Generate and download your circle as an image |
 
 ---
 
