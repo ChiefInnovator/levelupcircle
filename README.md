@@ -109,6 +109,17 @@ No license is granted. All rights reserved. The source code, images, and generat
 
 **Copyright © 2025 Richard Crane. All Rights Reserved.**
 
+---
+
+### Related Links
+- [Richard Crane's Website](https://inventingfirewith.ai)
+- [Microsoft MVP Profile](https://mvp.microsoft.com/en-US/MVP/profile/10ce0bc0-7536-43f6-b28c-e9601a4a0d0d)
+- [Inventing Fire with AI Podcast](https://inventingfirewith.ai)
+
+---
+
+<sub>Powered by [Inventing Fire with AI](https://inventingfirewith.ai)</sub>
+
 
 ---
 
