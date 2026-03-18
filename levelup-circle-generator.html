@@ -79,7 +79,16 @@
         .control-group {
             margin-bottom: 16px;
         }
-        
+
+        .hidden {
+            display: none;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: #667eea;
+        }
+
         label {
             display: block;
             margin-bottom: 6px;
@@ -792,18 +801,35 @@
                         <select id="exportSize">
                             <option value="1080">1080×1080</option>
                             <option value="2048">2048×2048</option>
-                            <option value="3840" selected>3840×3840</option>
+                            <option value="3840">3840×3840</option>
+                            <option value="5120">5120×5120 (5K)</option>
+                            <option value="7680">7680×7680 (8K)</option>
+                            <option value="8192" selected>8192×8192 (Max)</option>
                         </select>
                     </div>
-                    
+
+                    <div class="control-group">
+                        <label for="exportFormat">Export Format</label>
+                        <select id="exportFormat">
+                            <option value="png">PNG (lossless)</option>
+                            <option value="webp">WebP</option>
+                            <option value="avif" selected>AVIF (best quality/size)</option>
+                        </select>
+                    </div>
+
+                    <div class="control-group" id="qualityGroup">
+                        <label for="exportQuality">Quality: <span id="qualityValue">100</span>%</label>
+                        <input type="range" id="exportQuality" min="50" max="100" value="100" step="1">
+                    </div>
+
                     <div class="control-group">
                         <label for="pointSize">Point Size</label>
                         <input type="number" id="pointSize" min="1" max="60" value="14">
                     </div>
                     
                     <div class="control-group">
-                        <label for="labelOffset">Label Spacing (0-100px from points)</label>
-                        <input type="number" id="labelOffset" min="0" max="100" value="35">
+                        <label for="labelOffset">Label Distance: <span id="labelOffsetValue">25</span>px</label>
+                        <input type="range" id="labelOffset" min="0" max="150" value="25" step="1">
                     </div>
                     
                     <div class="control-group">
@@ -861,9 +887,40 @@
                     <span>Show Connection Lines</span>
                 </label>
             </div>
-            
+
+            <div class="control-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="showGuideLines" checked>
+                    <span>Show Guide Lines</span>
+                </label>
+            </div>
+
             <div class="divider"></div>
-            
+
+            <details class="collapsible-section">
+                <summary>Image Metadata</summary>
+                <div class="collapsible-content">
+                    <div class="control-group">
+                        <label for="metaCopyright">Copyright</label>
+                        <input type="text" id="metaCopyright" value="Copyright Richard Crane. All Rights Reserved." placeholder="e.g. Copyright 2025 Your Name">
+                    </div>
+                    <div class="control-group">
+                        <label for="metaAuthor">Author</label>
+                        <input type="text" id="metaAuthor" value="Richard Crane" placeholder="e.g. Your Name">
+                    </div>
+                    <div class="control-group">
+                        <label for="metaDescription">Description</label>
+                        <input type="text" id="metaDescription" value="" placeholder="Auto-generated if blank">
+                    </div>
+                    <div class="control-group">
+                        <label for="metaKeywords">Keywords</label>
+                        <input type="text" id="metaKeywords" value="" placeholder="Auto-generated if blank">
+                    </div>
+                </div>
+            </details>
+
+            <div class="divider"></div>
+
             <div class="button-grid">
                 <button class="secondary" onclick="randomizeColors()" title="Generate bright colors in ROYGBIV order. Alternates between golden angle and equal spacing.">🎨 Random Colors</button>
                 <button class="secondary" onclick="loadExample()">📋 Load Example</button>
@@ -872,7 +929,7 @@
             </div>
             
             <button class="secondary" onclick="redraw()" style="width: 100%; margin-top: 8px;">🔄 Redraw</button>
-            <button class="export" onclick="exportPNG()">📸 Export PNG</button>
+            <button class="export" onclick="exportImage()">📸 Export Image</button>
             
             <div class="point-list">
                 <h2>Point Configuration</h2>
@@ -925,6 +982,16 @@
         //    - Golden: 137.507764° golden angle for optimal visual separation
         // ============================================================
         
+        // Darken or lighten a hex color by a given amount (-255 to 255)
+        function shadeColor(hex, amount) {
+            hex = hex.replace('#', '');
+            const num = parseInt(hex, 16);
+            const r = Math.min(255, Math.max(0, (num >> 16) + amount));
+            const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + amount));
+            const b = Math.min(255, Math.max(0, (num & 0x0000FF) + amount));
+            return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        }
+
         function hslToHex(h, s, l) {
             // Convert HSL to RGB then to hex
             const c = (1 - Math.abs(2 * l - 1)) * s;
@@ -1026,7 +1093,7 @@
         let state = {
             title: 'Level-Up Circle',
             numPoints: 8,
-            exportSize: 3840,
+            exportSize: 8192,
             theme: 'dark',                // 'dark' or 'light'
             neonGlowTitle: true,          // Glow for title
             neonGlowPoints: true,         // Glow for points
@@ -1034,8 +1101,13 @@
             neonGlowCircle: true,         // Glow for outer circle
             neonGlowConnections: true,    // Glow for connection lines
             showConnections: true,
+            showGuideLines: true,
+            metaCopyright: 'Copyright Richard Crane. All Rights Reserved.',
+            metaAuthor: 'Richard Crane',
+            metaDescription: '',
+            metaKeywords: '',
             pointSize: 14,
-            labelOffset: 35,
+            labelOffset: 25,
             labelFontSize: 16,
             titleFontSize: 28,
             points: []
@@ -1413,7 +1485,7 @@
             state = {
                 title: 'Level-Up Circle',
                 numPoints: 8,
-                exportSize: 3840,
+                exportSize: 8192,
                 theme: 'dark',
                 neonGlowTitle: true,
                 neonGlowPoints: true,
@@ -1421,13 +1493,18 @@
                 neonGlowCircle: true,
                 neonGlowConnections: true,
                 showConnections: true,
+                showGuideLines: true,
+                metaCopyright: 'Copyright Richard Crane. All Rights Reserved.',
+                metaAuthor: 'Richard Crane',
+                metaDescription: '',
+                metaKeywords: '',
                 pointSize: 14,
-                labelOffset: 35,
+                labelOffset: 25,
                 labelFontSize: 16,
                 titleFontSize: 28,
                 points: initializePoints(8)
             };
-            
+
             document.getElementById('title').value = state.title;
             document.getElementById('theme').value = state.theme;
             document.getElementById('points').value = state.numPoints;
@@ -1438,6 +1515,11 @@
             document.getElementById('neonGlowCircle').checked = state.neonGlowCircle;
             document.getElementById('neonGlowConnections').checked = state.neonGlowConnections;
             document.getElementById('showConnections').checked = state.showConnections;
+            document.getElementById('showGuideLines').checked = state.showGuideLines;
+            document.getElementById('metaCopyright').value = state.metaCopyright;
+            document.getElementById('metaAuthor').value = state.metaAuthor;
+            document.getElementById('metaDescription').value = state.metaDescription;
+            document.getElementById('metaKeywords').value = state.metaKeywords;
             document.getElementById('pointSize').value = state.pointSize;
             document.getElementById('labelOffset').value = state.labelOffset;
             document.getElementById('labelFontSize').value = state.labelFontSize;
@@ -1534,6 +1616,7 @@
                 gc: state.neonGlowCircle ? 1 : 0,
                 gn: state.neonGlowConnections ? 1 : 0,
                 sc: state.showConnections ? 1 : 0,
+                sg: state.showGuideLines ? 1 : 0,
                 // Points as array of [label, color] pairs (color without #)
                 p: state.points.map(pt => [pt.label, pt.color.replace('#', '')])
             };
@@ -1555,7 +1638,7 @@
                 const newState = {
                     title: obj.t || 'Level-Up Circle',
                     numPoints: parseInt(obj.n) || 8,
-                    exportSize: parseInt(obj.es) || 3840,
+                    exportSize: parseInt(obj.es) || 8192,
                     theme: obj.th || 'dark',
                     pointSize: parseInt(obj.ps) || 14,
                     labelOffset: parseInt(obj.lo) || 35,
@@ -1567,6 +1650,7 @@
                     neonGlowCircle: obj.gc !== 0,
                     neonGlowConnections: obj.gn !== 0,
                     showConnections: obj.sc !== 0,
+                    showGuideLines: obj.sg !== 0,
                     points: []
                 };
                 
@@ -1595,7 +1679,7 @@
                 const newState = {
                     title: searchParams.get('t') || 'Level-Up Circle',
                     numPoints: parseInt(searchParams.get('n')) || 8,
-                    exportSize: parseInt(searchParams.get('es')) || 3840,
+                    exportSize: parseInt(searchParams.get('es')) || 8192,
                     theme: searchParams.get('th') || 'dark',
                     pointSize: parseInt(searchParams.get('ps')) || 14,
                     labelOffset: parseInt(searchParams.get('lo')) || 35,
@@ -1607,9 +1691,10 @@
                     neonGlowCircle: searchParams.get('gc') !== '0',
                     neonGlowConnections: searchParams.get('gn') !== '0',
                     showConnections: searchParams.get('sc') !== '0',
+                    showGuideLines: searchParams.get('sg') !== '0',
                     points: []
                 };
-                
+
                 // Decode points from legacy format: label|color,label|color,...
                 const pointsData = searchParams.get('p');
                 if (pointsData) {
@@ -1636,10 +1721,10 @@
         function validateState(newState) {
             newState.numPoints = Math.max(1, Math.min(36, newState.numPoints));
             newState.pointSize = Math.max(1, Math.min(60, newState.pointSize));
-            newState.labelOffset = Math.max(0, Math.min(100, newState.labelOffset));
+            newState.labelOffset = Math.max(0, Math.min(150, newState.labelOffset));
             newState.labelFontSize = Math.max(8, Math.min(32, newState.labelFontSize));
             newState.titleFontSize = Math.max(16, Math.min(48, newState.titleFontSize || 28));
-            newState.exportSize = [1080, 2048, 3840].includes(newState.exportSize) ? newState.exportSize : 3840;
+            newState.exportSize = [1080, 2048, 3840, 5120, 7680, 8192].includes(newState.exportSize) ? newState.exportSize : 8192;
             newState.theme = ['dark', 'light'].includes(newState.theme) ? newState.theme : 'dark';
             
             // If no points decoded, initialize them
@@ -1809,6 +1894,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             document.getElementById('neonGlowCircle').checked = state.neonGlowCircle;
             document.getElementById('neonGlowConnections').checked = state.neonGlowConnections;
             document.getElementById('showConnections').checked = state.showConnections;
+            document.getElementById('showGuideLines').checked = state.showGuideLines;
             document.getElementById('pointSize').value = state.pointSize;
             document.getElementById('labelOffset').value = state.labelOffset;
             document.getElementById('labelFontSize').value = state.labelFontSize;
@@ -1847,10 +1933,10 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                     // Validate loaded state
                     state.numPoints = Math.max(1, Math.min(36, state.numPoints || 8));
                     state.pointSize = Math.max(1, Math.min(60, state.pointSize || 14));
-                    state.labelOffset = Math.max(0, Math.min(100, state.labelOffset || 35));
+                    state.labelOffset = Math.max(0, Math.min(150, state.labelOffset || 25));
                     state.labelFontSize = Math.max(8, Math.min(32, state.labelFontSize || 16));
                     state.titleFontSize = Math.max(16, Math.min(48, state.titleFontSize || 28));
-                    state.exportSize = [1080, 2048, 3840].includes(state.exportSize) ? state.exportSize : 3840;
+                    state.exportSize = [1080, 2048, 3840, 5120, 7680, 8192].includes(state.exportSize) ? state.exportSize : 8192;
                     state.title = state.title || 'Level-Up Circle';
                     state.theme = ['dark', 'light'].includes(state.theme) ? state.theme : 'dark';
                     state.neonGlowTitle = state.neonGlowTitle !== undefined ? state.neonGlowTitle : true;
@@ -1858,7 +1944,12 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                     state.neonGlowLabels = state.neonGlowLabels !== undefined ? state.neonGlowLabels : true;
                     state.neonGlowCircle = state.neonGlowCircle !== undefined ? state.neonGlowCircle : true;
                     state.neonGlowConnections = state.neonGlowConnections !== undefined ? state.neonGlowConnections : true;
-                    
+                    state.showGuideLines = state.showGuideLines !== undefined ? state.showGuideLines : true;
+                    state.metaCopyright = state.metaCopyright || 'Copyright Richard Crane. All Rights Reserved.';
+                    state.metaAuthor = state.metaAuthor || 'Richard Crane';
+                    state.metaDescription = state.metaDescription || '';
+                    state.metaKeywords = state.metaKeywords || '';
+
                     // Update UI with validated values
                     document.getElementById('title').value = state.title;
                     document.getElementById('theme').value = state.theme;
@@ -1870,6 +1961,11 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                     document.getElementById('neonGlowCircle').checked = state.neonGlowCircle;
                     document.getElementById('neonGlowConnections').checked = state.neonGlowConnections;
                     document.getElementById('showConnections').checked = state.showConnections;
+                    document.getElementById('showGuideLines').checked = state.showGuideLines !== false;
+                    document.getElementById('metaCopyright').value = state.metaCopyright;
+                    document.getElementById('metaAuthor').value = state.metaAuthor;
+                    document.getElementById('metaDescription').value = state.metaDescription;
+                    document.getElementById('metaKeywords').value = state.metaKeywords;
                     document.getElementById('pointSize').value = state.pointSize;
                     document.getElementById('labelOffset').value = state.labelOffset;
                     document.getElementById('labelFontSize').value = state.labelFontSize;
@@ -1912,7 +2008,9 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             // Reference size is 800px - scale proportionally for other sizes
             const referenceSize = 800;
             const displayScaleFactor = size / referenceSize;
-            const exportScaleFactor = isExport ? size / canvas.width : 1;
+            const dpr = window.devicePixelRatio || 1;
+            const previewLogicalSize = canvas.width / dpr;
+            const exportScaleFactor = isExport ? size / previewLogicalSize : 1;
             const scaleFactor = isExport ? exportScaleFactor : Math.max(0.5, Math.min(1.5, displayScaleFactor));
             
             const pointRadius = state.pointSize * scaleFactor;
@@ -1935,7 +2033,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             // Draw title with proper spacing
             ctx.save();
             ctx.fillStyle = titleColor;
-            ctx.font = `700 ${titleFontSize}px Arial, sans-serif`;
+            ctx.font = `700 ${titleFontSize}px 'Segoe UI', Roboto, Helvetica, Arial, sans-serif`;
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             
@@ -1945,8 +2043,20 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 ctx.strokeStyle = labelOutlineColor;
                 ctx.lineWidth = 4 * scaleFactor;
                 ctx.strokeText(state.title, centerX, titleY);
-                ctx.shadowColor = glowColor;
-                ctx.shadowBlur = 12 * scaleFactor;
+                // Multi-layer glow: wide soft, medium, tight bright
+                const glowLayers = [
+                    { blur: 30 * scaleFactor, alpha: 0.3 },
+                    { blur: 15 * scaleFactor, alpha: 0.5 },
+                    { blur: 6 * scaleFactor, alpha: 1.0 },
+                ];
+                for (const layer of glowLayers) {
+                    ctx.shadowColor = glowColor;
+                    ctx.shadowBlur = layer.blur;
+                    ctx.globalAlpha = layer.alpha;
+                    ctx.fillText(state.title, centerX, titleY);
+                }
+                ctx.globalAlpha = 1;
+                ctx.shadowBlur = 0;
                 ctx.fillText(state.title, centerX, titleY);
             } else {
                 ctx.fillText(state.title, centerX, titleY);
@@ -1956,10 +2066,24 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             // Draw outer ring
             ctx.save();
             ctx.strokeStyle = circleColor;
-            ctx.lineWidth = state.neonGlowCircle ? 2 * scaleFactor : 1 * scaleFactor;
+            ctx.lineWidth = state.neonGlowCircle ? 2.5 * scaleFactor : 1.5 * scaleFactor;
             if (state.neonGlowCircle) {
-                ctx.shadowColor = glowColor;
-                ctx.shadowBlur = 8 * scaleFactor;
+                // Multi-layer ring glow
+                const ringGlowLayers = [
+                    { blur: 20 * scaleFactor, alpha: 0.25 },
+                    { blur: 10 * scaleFactor, alpha: 0.5 },
+                    { blur: 4 * scaleFactor, alpha: 1.0 },
+                ];
+                for (const layer of ringGlowLayers) {
+                    ctx.shadowColor = glowColor;
+                    ctx.shadowBlur = layer.blur;
+                    ctx.globalAlpha = layer.alpha;
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, circleRadius, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+                ctx.globalAlpha = 1;
+                ctx.shadowBlur = 0;
             }
             ctx.beginPath();
             ctx.arc(centerX, centerY, circleRadius, 0, Math.PI * 2);
@@ -1979,15 +2103,24 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             // Draw connection lines if enabled
             if (state.showConnections) {
                 ctx.save();
-                ctx.strokeStyle = connectionColor;
                 ctx.lineWidth = 1 * scaleFactor;
-                if (state.neonGlowConnections) {
-                    ctx.shadowColor = glowColor;
-                    ctx.shadowBlur = 3 * scaleFactor;
-                }
-                
+                ctx.globalAlpha = 0.35;
+
                 for (let i = 0; i < positions.length; i++) {
                     for (let j = i + 1; j < positions.length; j++) {
+                        const grad = ctx.createLinearGradient(
+                            positions[i].x, positions[i].y,
+                            positions[j].x, positions[j].y
+                        );
+                        grad.addColorStop(0, state.points[i].color);
+                        grad.addColorStop(1, state.points[j].color);
+                        ctx.strokeStyle = grad;
+
+                        if (state.neonGlowConnections) {
+                            ctx.shadowColor = state.points[i].color;
+                            ctx.shadowBlur = 4 * scaleFactor;
+                        }
+
                         ctx.beginPath();
                         ctx.moveTo(positions[i].x, positions[i].y);
                         ctx.lineTo(positions[j].x, positions[j].y);
@@ -2004,18 +2137,41 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 // Adaptive point size for small screens
                 const adaptivePointRadius = Math.max(6, pointRadius);
                 
-                // Draw the point
+                // Draw the point with radial gradient for 3D glass look
                 ctx.save();
-                ctx.fillStyle = point.color;
-                ctx.strokeStyle = labelOutlineColor;
-                ctx.lineWidth = Math.max(1, 2 * scaleFactor);
                 if (state.neonGlowPoints) {
-                    ctx.shadowColor = point.color;
-                    ctx.shadowBlur = Math.max(8, 15 * scaleFactor);
+                    // Multi-layer point glow
+                    const ptGlowLayers = [
+                        { blur: 25 * scaleFactor, alpha: 0.3 },
+                        { blur: 12 * scaleFactor, alpha: 0.6 },
+                    ];
+                    for (const layer of ptGlowLayers) {
+                        ctx.shadowColor = point.color;
+                        ctx.shadowBlur = layer.blur;
+                        ctx.globalAlpha = layer.alpha;
+                        ctx.fillStyle = point.color;
+                        ctx.beginPath();
+                        ctx.arc(pos.x, pos.y, adaptivePointRadius, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    ctx.globalAlpha = 1;
+                    ctx.shadowBlur = 0;
                 }
+                // Radial gradient: highlight at top-left, base color, darker edge
+                const grad = ctx.createRadialGradient(
+                    pos.x - adaptivePointRadius * 0.35, pos.y - adaptivePointRadius * 0.35, adaptivePointRadius * 0.1,
+                    pos.x, pos.y, adaptivePointRadius
+                );
+                grad.addColorStop(0, '#fff');
+                grad.addColorStop(0.25, point.color);
+                grad.addColorStop(1, shadeColor(point.color, -40));
+                ctx.fillStyle = grad;
                 ctx.beginPath();
                 ctx.arc(pos.x, pos.y, adaptivePointRadius, 0, Math.PI * 2);
                 ctx.fill();
+                // Subtle outline using darkened point color
+                ctx.strokeStyle = shadeColor(point.color, -60);
+                ctx.lineWidth = Math.max(1, 1.5 * scaleFactor);
                 ctx.stroke();
                 ctx.restore();
                 
@@ -2024,10 +2180,10 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 
                 // Prepare for label text measurement
                 ctx.save();
-                ctx.font = `700 ${fontSize}px Arial, sans-serif`; // 700 weight for bold
+                ctx.font = `700 ${fontSize}px 'Segoe UI', Roboto, Helvetica, Arial, sans-serif`; // 700 weight for bold
                 
                 // Wrap text to fit max width
-                const lines = wrapText(ctx, point.label, maxLabelWidth);
+                const lines = smartWrapLabel(point.label, ctx, maxLabelWidth);
                 
                 // Calculate bounding box
                 const bbox = calculateBoundingBox(ctx, lines, lineHeight, labelPadding);
@@ -2045,7 +2201,12 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 const pointSizeExtra = Math.max(0, (adaptivePointRadius - basePointSizeScaled) * 0.5);
                 const adaptiveLabelOffset = Math.max(15 * scaleFactor, labelOffsetScaled) + fontSizeExtra + pointSizeExtra;
                 const effectiveOuterRadius = circleRadius + adaptivePointRadius;
-                const boxCenterDistance = effectiveOuterRadius + adaptiveLabelOffset + bbox.height / 2;
+                // Project bounding box onto radial direction so the inner edge clears the point
+                // For left/right points the width matters; for top/bottom the height matters
+                const absCos = Math.abs(Math.cos(pos.angle));
+                const absSin = Math.abs(Math.sin(pos.angle));
+                const halfRadialSize = absCos * bbox.width / 2 + absSin * bbox.height / 2;
+                const boxCenterDistance = effectiveOuterRadius + adaptiveLabelOffset + halfRadialSize;
                 const boxCenterX = centerX + Math.cos(pos.angle) * boxCenterDistance;
                 const boxCenterY = centerY + Math.sin(pos.angle) * boxCenterDistance;
                 
@@ -2071,37 +2232,36 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 boxTop = boxCenterY - bbox.height / 2;
                 
                 // Step 5: Draw leader line from point edge to box edge
-                ctx.save();
-                ctx.strokeStyle = point.color;
-                ctx.lineWidth = Math.max(0.5, 0.5 * scaleFactor);
-                ctx.globalAlpha = 0.4;
-                
-                // Apply glow to leader lines if connections glow is enabled
-                if (state.neonGlowConnections) {
-                    ctx.shadowColor = point.color;
-                    ctx.shadowBlur = Math.max(1, 2 * scaleFactor);
+                if (state.showGuideLines) {
+                    ctx.save();
+                    ctx.strokeStyle = point.color;
+                    ctx.lineWidth = Math.max(0.5, 0.5 * scaleFactor);
+                    ctx.globalAlpha = 0.4;
+
+                    if (state.neonGlowConnections) {
+                        ctx.shadowColor = point.color;
+                        ctx.shadowBlur = Math.max(1, 2 * scaleFactor);
+                    }
+
+                    const lineStartRadius = circleRadius + adaptivePointRadius + 1 * scaleFactor;
+                    const lineEndRadius = boxCenterDistance - halfRadialSize - 1 * scaleFactor;
+
+                    ctx.beginPath();
+                    ctx.moveTo(
+                        centerX + Math.cos(pos.angle) * lineStartRadius,
+                        centerY + Math.sin(pos.angle) * lineStartRadius
+                    );
+                    ctx.lineTo(
+                        centerX + Math.cos(pos.angle) * lineEndRadius,
+                        centerY + Math.sin(pos.angle) * lineEndRadius
+                    );
+                    ctx.stroke();
+                    ctx.restore();
                 }
-                
-                // Line starts just outside the point edge (using adaptivePointRadius)
-                const lineStartRadius = circleRadius + adaptivePointRadius + 1 * scaleFactor;
-                // Line ends just before the label box edge
-                const lineEndRadius = boxCenterDistance - bbox.height / 2 - 1 * scaleFactor;
-                
-                ctx.beginPath();
-                ctx.moveTo(
-                    centerX + Math.cos(pos.angle) * lineStartRadius,
-                    centerY + Math.sin(pos.angle) * lineStartRadius
-                );
-                ctx.lineTo(
-                    centerX + Math.cos(pos.angle) * lineEndRadius,
-                    centerY + Math.sin(pos.angle) * lineEndRadius
-                );
-                ctx.stroke();
-                ctx.restore();
                 
                 // Step 6: Label rendering
                 ctx.save();
-                ctx.font = `700 ${fontSize}px Arial, sans-serif`; // 700 weight for bold
+                ctx.font = `700 ${fontSize}px 'Segoe UI', Roboto, Helvetica, Arial, sans-serif`; // 700 weight for bold
                 ctx.textAlign = textAlign;
                 ctx.textBaseline = 'middle';
                 
@@ -2124,11 +2284,26 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                         const textY = boxTop + labelPadding + lineIndex * lineHeight + lineHeight / 2;
                         ctx.strokeText(line, textX, textY);
                     });
-                    
-                    // Glowing colored text
+
+                    // Multi-layer label glow
+                    const lblGlowLayers = [
+                        { blur: 20 * scaleFactor, alpha: 0.3 },
+                        { blur: 8 * scaleFactor, alpha: 0.6 },
+                        { blur: 3 * scaleFactor, alpha: 1.0 },
+                    ];
                     ctx.fillStyle = point.color;
-                    ctx.shadowColor = point.color;
-                    ctx.shadowBlur = 10 * scaleFactor;
+                    for (const layer of lblGlowLayers) {
+                        ctx.shadowColor = point.color;
+                        ctx.shadowBlur = layer.blur;
+                        ctx.globalAlpha = layer.alpha;
+                        lines.forEach((line, lineIndex) => {
+                            const textY = boxTop + labelPadding + lineIndex * lineHeight + lineHeight / 2;
+                            ctx.fillText(line, textX, textY);
+                        });
+                    }
+                    // Final crisp pass
+                    ctx.globalAlpha = 1;
+                    ctx.shadowBlur = 0;
                     lines.forEach((line, lineIndex) => {
                         const textY = boxTop + labelPadding + lineIndex * lineHeight + lineHeight / 2;
                         ctx.fillText(line, textX, textY);
@@ -2150,8 +2325,12 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
         function redraw() {
             const rect = canvas.parentElement.getBoundingClientRect();
             const size = Math.min(rect.width - 40, rect.height - 40);
-            canvas.width = size;
-            canvas.height = size;
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = size * dpr;
+            canvas.height = size * dpr;
+            canvas.style.width = size + 'px';
+            canvas.style.height = size + 'px';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
             drawCircle(ctx, size);
             
             // Update preview area background to match theme
@@ -2166,29 +2345,357 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             debouncedAutoSave();
         }
         
-        function exportPNG() {
+        const formatMimeTypes = { png: 'image/png', webp: 'image/webp', avif: 'image/avif' };
+        const formatExtensions = { png: 'png', webp: 'webp', avif: 'avif' };
+
+        // ============================================================
+        // Image metadata helpers
+        // ============================================================
+
+        function getImageMetadata() {
+            const labels = state.points.map(p => p.label).join(', ');
+            return {
+                title: state.title || 'Level-Up Circle',
+                description: state.metaDescription || `Level-Up Circle "${state.title}" with ${state.points.length} focus areas: ${labels}. A visual map of interconnected goals designed for synergy and compounding growth.`,
+                keywords: state.metaKeywords || [state.title, 'Level-Up Circle', 'goals', 'synergy', 'flywheel', ...state.points.map(p => p.label)].join(', '),
+                author: state.metaAuthor || 'Level-Up Circle Generator',
+                software: 'Level-Up Circle Generator (https://chiefinnovator.github.io/levelupcircle/)',
+                copyright: state.metaCopyright || `Copyright ${new Date().getFullYear()} Richard Crane. All Rights Reserved.`,
+                comment: `${state.points.length} focus areas | ${state.theme} theme | ${state.exportSize}px | Generated ${new Date().toISOString()}`
+            };
+        }
+
+        // ---- CRC32 for PNG chunk checksums ----
+        const crc32Table = (() => {
+            const table = new Uint32Array(256);
+            for (let n = 0; n < 256; n++) {
+                let c = n;
+                for (let k = 0; k < 8; k++) {
+                    c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+                }
+                table[n] = c;
+            }
+            return table;
+        })();
+
+        function crc32(bytes) {
+            let crc = 0xFFFFFFFF;
+            for (let i = 0; i < bytes.length; i++) {
+                crc = crc32Table[(crc ^ bytes[i]) & 0xFF] ^ (crc >>> 8);
+            }
+            return (crc ^ 0xFFFFFFFF) >>> 0;
+        }
+
+        // ---- PNG pHYs chunk (DPI) ----
+        // 300 DPI = 11811 pixels per meter (300 / 0.0254)
+        const PIXELS_PER_METER_300DPI = 11811;
+
+        function buildPngPhysChunk() {
+            // pHYs: 4 bytes X pixels/unit + 4 bytes Y pixels/unit + 1 byte unit (1=meter)
+            const data = new Uint8Array(9);
+            const dataView = new DataView(data.buffer);
+            dataView.setUint32(0, PIXELS_PER_METER_300DPI); // X
+            dataView.setUint32(4, PIXELS_PER_METER_300DPI); // Y
+            data[8] = 1; // unit = meter
+
+            const encoder = new TextEncoder();
+            const typeBytes = encoder.encode('pHYs');
+            const crcInput = new Uint8Array(4 + data.length);
+            crcInput.set(typeBytes, 0);
+            crcInput.set(data, 4);
+            const checksum = crc32(crcInput);
+
+            const chunk = new Uint8Array(12 + data.length);
+            const view = new DataView(chunk.buffer);
+            view.setUint32(0, data.length);
+            chunk.set(typeBytes, 4);
+            chunk.set(data, 8);
+            view.setUint32(8 + data.length, checksum);
+            return chunk;
+        }
+
+        // ---- PNG tEXt chunk injection ----
+        function buildPngTextChunk(keyword, value) {
+            const encoder = new TextEncoder();
+            const keyBytes = encoder.encode(keyword);
+            const valBytes = encoder.encode(value);
+            // tEXt data = keyword + null separator + value
+            const data = new Uint8Array(keyBytes.length + 1 + valBytes.length);
+            data.set(keyBytes, 0);
+            data[keyBytes.length] = 0; // null separator
+            data.set(valBytes, keyBytes.length + 1);
+
+            const typeBytes = encoder.encode('tEXt');
+            // CRC covers type + data
+            const crcInput = new Uint8Array(4 + data.length);
+            crcInput.set(typeBytes, 0);
+            crcInput.set(data, 4);
+            const checksum = crc32(crcInput);
+
+            // Full chunk: 4-byte length + 4-byte type + data + 4-byte CRC
+            const chunk = new Uint8Array(12 + data.length);
+            const view = new DataView(chunk.buffer);
+            view.setUint32(0, data.length);           // length
+            chunk.set(typeBytes, 4);                   // type
+            chunk.set(data, 8);                        // data
+            view.setUint32(8 + data.length, checksum); // CRC
+            return chunk;
+        }
+
+        function injectPngMetadata(pngBuffer, meta) {
+            const bytes = new Uint8Array(pngBuffer);
+            // PNG signature is 8 bytes, followed by IHDR chunk
+            // Insert tEXt chunks right after IHDR (before any other chunks)
+            // IHDR chunk: 4 (len) + 4 (type) + 13 (data) + 4 (crc) = 25 bytes
+            const insertOffset = 8 + 25; // after signature + IHDR
+
+            const chunks = [
+                buildPngPhysChunk(), // 300 DPI resolution
+                buildPngTextChunk('Title', meta.title),
+                buildPngTextChunk('Description', meta.description),
+                buildPngTextChunk('Author', meta.author),
+                buildPngTextChunk('Keywords', meta.keywords),
+                buildPngTextChunk('Software', meta.software),
+                buildPngTextChunk('Copyright', meta.copyright),
+                buildPngTextChunk('Comment', meta.comment),
+            ];
+
+            const totalChunkSize = chunks.reduce((sum, c) => sum + c.length, 0);
+            const result = new Uint8Array(bytes.length + totalChunkSize);
+            // Copy everything before insert point
+            result.set(bytes.subarray(0, insertOffset), 0);
+            // Insert metadata chunks
+            let offset = insertOffset;
+            for (const chunk of chunks) {
+                result.set(chunk, offset);
+                offset += chunk.length;
+            }
+            // Copy the rest of the original file
+            result.set(bytes.subarray(insertOffset), offset);
+            return result.buffer;
+        }
+
+        // ---- EXIF builder for WebP / AVIF ----
+        // Supports ASCII (type=2), SHORT (type=3), and RATIONAL (type=5) fields
+        function buildExifBytes(meta) {
+            const encoder = new TextEncoder();
+
+            // IFD entries: tag, type, value
+            // type 2 = ASCII (null-terminated string)
+            // type 3 = SHORT (uint16, inline in value field)
+            // type 5 = RATIONAL (two uint32: numerator, denominator — 8 bytes, stored at offset)
+            const entries = [
+                { tag: 0x010E, type: 2, value: meta.description },       // ImageDescription
+                { tag: 0x011A, type: 5, num: 300, den: 1 },             // XResolution = 300 DPI
+                { tag: 0x011B, type: 5, num: 300, den: 1 },             // YResolution = 300 DPI
+                { tag: 0x0128, type: 3, short: 2 },                     // ResolutionUnit = inches
+                { tag: 0x0131, type: 2, value: meta.software },          // Software
+                { tag: 0x013B, type: 2, value: meta.author },            // Artist
+                { tag: 0x8298, type: 2, value: meta.copyright },         // Copyright
+            ];
+
+            const ifdEntrySize = 12;
+            const ifdStart = 8;
+            const dataStart = ifdStart + 2 + (entries.length * ifdEntrySize) + 4;
+
+            // Pre-process entries: compute byte representations and offsets
+            let currentDataOffset = dataStart;
+            const processed = entries.map(e => {
+                if (e.type === 2) {
+                    const bytes = encoder.encode(e.value + '\0');
+                    const p = { tag: e.tag, type: 2, count: bytes.length, bytes, offset: currentDataOffset };
+                    if (bytes.length > 4) currentDataOffset += bytes.length;
+                    return p;
+                } else if (e.type === 3) {
+                    return { tag: e.tag, type: 3, count: 1, short: e.short };
+                } else if (e.type === 5) {
+                    const p = { tag: e.tag, type: 5, count: 1, num: e.num, den: e.den, offset: currentDataOffset };
+                    currentDataOffset += 8; // RATIONAL = 2 × uint32
+                    return p;
+                }
+            });
+
+            const totalSize = currentDataOffset;
+            const buf = new ArrayBuffer(totalSize);
+            const view = new DataView(buf);
+            const arr = new Uint8Array(buf);
+
+            // TIFF header (little-endian)
+            arr[0] = 0x49; arr[1] = 0x49; // 'II'
+            view.setUint16(2, 42, true);
+            view.setUint32(4, ifdStart, true);
+
+            // IFD0
+            let pos = ifdStart;
+            view.setUint16(pos, entries.length, true); pos += 2;
+
+            for (const e of processed) {
+                view.setUint16(pos, e.tag, true); pos += 2;
+                view.setUint16(pos, e.type, true); pos += 2;
+                view.setUint32(pos, e.count, true); pos += 4;
+
+                if (e.type === 2) {
+                    if (e.bytes.length <= 4) {
+                        arr.set(e.bytes, pos); pos += 4;
+                    } else {
+                        view.setUint32(pos, e.offset, true); pos += 4;
+                    }
+                } else if (e.type === 3) {
+                    view.setUint16(pos, e.short, true); pos += 4; // 2 bytes used, 2 padding
+                } else if (e.type === 5) {
+                    view.setUint32(pos, e.offset, true); pos += 4;
+                }
+            }
+            view.setUint32(pos, 0, true); // next IFD = none
+
+            // Write out-of-line data
+            for (const e of processed) {
+                if (e.type === 2 && e.bytes.length > 4) {
+                    arr.set(e.bytes, e.offset);
+                } else if (e.type === 5) {
+                    view.setUint32(e.offset, e.num, true);
+                    view.setUint32(e.offset + 4, e.den, true);
+                }
+            }
+
+            return new Uint8Array(buf);
+        }
+
+        function injectWebpExif(webpBuffer, meta) {
+            const bytes = new Uint8Array(webpBuffer);
+            // WebP RIFF structure: "RIFF" + size(4) + "WEBP" + chunks...
+            // We append an EXIF chunk at the end
+            const exifPayload = buildExifBytes(meta);
+            // EXIF chunk: "EXIF" + size(4) + payload (+ padding byte if odd)
+            const padded = exifPayload.length % 2 !== 0;
+            const chunkSize = 4 + 4 + exifPayload.length + (padded ? 1 : 0);
+
+            const result = new Uint8Array(bytes.length + chunkSize);
+            result.set(bytes, 0);
+            const encoder = new TextEncoder();
+            let offset = bytes.length;
+            // Chunk FourCC
+            result.set(encoder.encode('EXIF'), offset); offset += 4;
+            // Chunk size (little-endian)
+            const sizeView = new DataView(result.buffer, offset, 4);
+            sizeView.setUint32(0, exifPayload.length, true); offset += 4;
+            // Payload
+            result.set(exifPayload, offset); offset += exifPayload.length;
+            if (padded) { result[offset] = 0; offset += 1; }
+
+            // Update RIFF file size (bytes 4-7, little-endian)
+            const riffView = new DataView(result.buffer, 4, 4);
+            riffView.setUint32(0, result.length - 8, true);
+
+            return result.buffer;
+        }
+
+        function injectAvifExif(avifBuffer, meta) {
+            // AVIF is ISOBMFF (ISO base media file format). Injecting EXIF requires
+            // adding an Exif box inside a meta box, which is complex to do safely.
+            // Use XMP instead: embed as a standalone 'uuid' box with XMP UUID.
+            const labels = state.points.map(p => p.label).join(', ');
+            const xmp = `<?xpacket begin="\uFEFF" id="W5M0MpCehiHzreSzNTczkc9d"?>
+<x:xmpmeta xmlns:x="adobe:ns:meta/">
+ <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:Description rdf:about=""
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:xmp="http://ns.adobe.com/xap/1.0/"
+    xmlns:rights="http://ns.adobe.com/xap/1.0/rights/">
+   <dc:title><rdf:Alt><rdf:li xml:lang="x-default">${escapeXml(meta.title)}</rdf:li></rdf:Alt></dc:title>
+   <dc:description><rdf:Alt><rdf:li xml:lang="x-default">${escapeXml(meta.description)}</rdf:li></rdf:Alt></dc:description>
+   <dc:subject><rdf:Seq>${meta.keywords.split(', ').map(k => `<rdf:li>${escapeXml(k)}</rdf:li>`).join('')}</rdf:Seq></dc:subject>
+   <dc:creator><rdf:Seq><rdf:li>${escapeXml(meta.author)}</rdf:li></rdf:Seq></dc:creator>
+   <dc:rights><rdf:Alt><rdf:li xml:lang="x-default">${escapeXml(meta.copyright)}</rdf:li></rdf:Alt></dc:rights>
+   <xmp:CreatorTool>${escapeXml(meta.software)}</xmp:CreatorTool>
+  </rdf:Description>
+ </rdf:RDF>
+</x:xmpmeta>
+<?xpacket end="w"?>`;
+
+            const encoder = new TextEncoder();
+            const xmpBytes = encoder.encode(xmp);
+            // XMP UUID: BE7ACFCB 97A942E8 9C719994 91E3AFAC
+            const xmpUuid = new Uint8Array([0xBE,0x7A,0xCF,0xCB,0x97,0xA9,0x42,0xE8,0x9C,0x71,0x99,0x94,0x91,0xE3,0xAF,0xAC]);
+
+            // ISOBMFF uuid box: size(4) + 'uuid'(4) + uuid(16) + data
+            const boxSize = 4 + 4 + 16 + xmpBytes.length;
+            const box = new Uint8Array(boxSize);
+            const boxView = new DataView(box.buffer);
+            boxView.setUint32(0, boxSize); // big-endian
+            box.set(encoder.encode('uuid'), 4);
+            box.set(xmpUuid, 8);
+            box.set(xmpBytes, 24);
+
+            // Append box at end of file
+            const bytes = new Uint8Array(avifBuffer);
+            const result = new Uint8Array(bytes.length + box.length);
+            result.set(bytes, 0);
+            result.set(box, bytes.length);
+            return result.buffer;
+        }
+
+        function escapeXml(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        // ============================================================
+        // Export
+        // ============================================================
+
+        function exportImage() {
+            const format = document.getElementById('exportFormat').value;
+            const mime = formatMimeTypes[format] || 'image/png';
+            const ext = formatExtensions[format] || 'png';
+            const size = parseInt(state.exportSize);
+            const quality = format === 'png' ? undefined : parseInt(document.getElementById('exportQuality').value) / 100;
+
             const exportCanvas = document.createElement('canvas');
             const exportCtx = exportCanvas.getContext('2d');
-            const size = parseInt(state.exportSize);
-            
             exportCanvas.width = size;
             exportCanvas.height = size;
-            
+
             drawCircle(exportCtx, size, true);
-            
-            exportCanvas.toBlob(blob => {
+
+            exportCanvas.toBlob(async blob => {
                 if (!blob) {
-                    showToast('Failed to generate image.', 'error');
+                    showToast(`Your browser does not support ${format.toUpperCase()} export. Please update to the latest version of Chrome, Edge, or Firefox.`, 'error');
                     return;
                 }
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `level-up-circle-${size}x${size}.png`;
-                a.click();
-                URL.revokeObjectURL(url);
-                showToast(`Exported ${size}×${size} PNG`, 'success');
-            }, 'image/png');
+
+                const meta = getImageMetadata();
+                let finalBuffer;
+
+                try {
+                    const rawBuffer = await blob.arrayBuffer();
+                    if (format === 'png') {
+                        finalBuffer = injectPngMetadata(rawBuffer, meta);
+                    } else if (format === 'webp') {
+                        finalBuffer = injectWebpExif(rawBuffer, meta);
+                    } else if (format === 'avif') {
+                        finalBuffer = injectAvifExif(rawBuffer, meta);
+                    } else {
+                        finalBuffer = rawBuffer;
+                    }
+                } catch (e) {
+                    console.error('Metadata injection failed, exporting without metadata:', e);
+                    finalBuffer = await blob.arrayBuffer();
+                }
+
+                const finalBlob = new Blob([finalBuffer], { type: mime });
+                const sizeMB = (finalBlob.size / (1024 * 1024)).toFixed(1);
+                downloadBlob(finalBlob, `level-up-circle-${size}x${size}.${ext}`);
+                showToast(`Exported ${size}×${size} ${ext.toUpperCase()} (${sizeMB} MB)`, 'success');
+            }, mime, quality);
+        }
+
+        function downloadBlob(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
         }
         
         // Event listeners with validation
@@ -2215,15 +2722,29 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             updatePointList();
         });
         
+        const validExportSizes = [1080, 2048, 3840, 5120, 7680, 8192];
+
         document.getElementById('exportSize').addEventListener('change', (e) => {
             const value = parseInt(e.target.value);
-            // Validate export size is one of the allowed values
-            if ([1080, 2048, 3840].includes(value)) {
+            if (validExportSizes.includes(value)) {
                 state.exportSize = value;
             } else {
-                state.exportSize = 3840; // Default
-                e.target.value = 3840;
+                state.exportSize = 8192;
+                e.target.value = 8192;
             }
+        });
+
+        document.getElementById('exportFormat').addEventListener('change', (e) => {
+            const qualityGroup = document.getElementById('qualityGroup');
+            if (e.target.value === 'png') {
+                qualityGroup.classList.add('hidden');
+            } else {
+                qualityGroup.classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('exportQuality').addEventListener('input', (e) => {
+            document.getElementById('qualityValue').textContent = e.target.value;
         });
         
         document.getElementById('theme').addEventListener('change', (e) => {
@@ -2260,7 +2781,29 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             state.showConnections = e.target.checked;
             redraw();
         });
-        
+
+        document.getElementById('showGuideLines').addEventListener('change', (e) => {
+            state.showGuideLines = e.target.checked;
+            redraw();
+        });
+
+        document.getElementById('metaCopyright').addEventListener('input', (e) => {
+            state.metaCopyright = e.target.value;
+            debouncedAutoSave();
+        });
+        document.getElementById('metaAuthor').addEventListener('input', (e) => {
+            state.metaAuthor = e.target.value;
+            debouncedAutoSave();
+        });
+        document.getElementById('metaDescription').addEventListener('input', (e) => {
+            state.metaDescription = e.target.value;
+            debouncedAutoSave();
+        });
+        document.getElementById('metaKeywords').addEventListener('input', (e) => {
+            state.metaKeywords = e.target.value;
+            debouncedAutoSave();
+        });
+
         document.getElementById('pointSize').addEventListener('input', (e) => {
             let value = parseInt(e.target.value);
             
@@ -2280,19 +2823,8 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
         });
         
         document.getElementById('labelOffset').addEventListener('input', (e) => {
-            let value = parseInt(e.target.value);
-            
-            // Validate range 0-100
-            if (isNaN(value)) {
-                value = 35; // Default
-            } else if (value < 0) {
-                value = 0;
-                e.target.value = 0;
-            } else if (value > 100) {
-                value = 100;
-                e.target.value = 100;
-            }
-            
+            const value = parseInt(e.target.value) || 25;
+            document.getElementById('labelOffsetValue').textContent = value;
             state.labelOffset = value;
             redraw();
         });
@@ -2354,18 +2886,6 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             } else if (value > 60) {
                 e.target.value = 60;
                 state.pointSize = 60;
-            }
-            redraw();
-        });
-        
-        document.getElementById('labelOffset').addEventListener('blur', (e) => {
-            let value = parseInt(e.target.value);
-            if (isNaN(value) || value < 0) {
-                e.target.value = 0;
-                state.labelOffset = 0;
-            } else if (value > 100) {
-                e.target.value = 100;
-                state.labelOffset = 100;
             }
             redraw();
         });
