@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About — Level-Up Circle Generator</title>
+    <meta name="description" content="The thinking behind the Level-Up Circle — a modern synthesis of flywheel thinking, synergy mapping, and systems-based goal setting.">
+    <meta name="author" content="Richard Crane">
+    <link rel="canonical" href="https://chiefinnovator.github.io/levelupcircle/about.html">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0a0a0a;
+            color: #d0d0d0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(255, 60, 120, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 30%, rgba(60, 180, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(120, 255, 80, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .site-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: rgba(17, 17, 17, 0.9);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #333;
+            padding: 12px 20px;
+            height: 56px;
+            z-index: 10;
+        }
+
+        .site-header h1 {
+            font-size: 20px;
+            margin: 0;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            white-space: nowrap;
+        }
+
+        .site-header h1 a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .site-header h1 a:hover {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 60px 24px 100px;
+            line-height: 1.75;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 72px;
+        }
+
+        .hero h2 {
+            font-size: 42px;
+            margin-bottom: 18px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ff6b6b, #ffa940, #ffd93d, #6bcb77, #4d96ff, #9b59b6);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 6s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #aaa;
+            max-width: 540px;
+            margin: 0 auto;
+        }
+
+        .section {
+            margin-bottom: 56px;
+            padding: 28px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 4px 40px rgba(255, 255, 255, 0.03);
+        }
+
+        .section:nth-child(1) { --accent: #ff6b6b; }
+        .section:nth-child(2) { --accent: #4d96ff; }
+        .section:nth-child(3) { --accent: #ffd93d; }
+        .section:nth-child(4) { --accent: #6bcb77; }
+
+        .section:nth-child(1):hover { border-color: #ff6b6b; box-shadow: 0 4px 40px rgba(255, 107, 107, 0.1); }
+        .section:nth-child(2):hover { border-color: #4d96ff; box-shadow: 0 4px 40px rgba(77, 150, 255, 0.1); }
+        .section:nth-child(3):hover { border-color: #ffd93d; box-shadow: 0 4px 40px rgba(255, 217, 61, 0.1); }
+        .section:nth-child(4):hover { border-color: #6bcb77; box-shadow: 0 4px 40px rgba(107, 203, 119, 0.1); }
+
+        .section:nth-child(1) .num { background: rgba(255, 107, 107, 0.15); border: 1px solid rgba(255, 107, 107, 0.4); }
+        .section:nth-child(2) .num { background: rgba(77, 150, 255, 0.15); border: 1px solid rgba(77, 150, 255, 0.4); }
+        .section:nth-child(3) .num { background: rgba(255, 217, 61, 0.15); border: 1px solid rgba(255, 217, 61, 0.4); }
+        .section:nth-child(4) .num { background: rgba(107, 203, 119, 0.15); border: 1px solid rgba(107, 203, 119, 0.4); }
+
+        .section h3 {
+            font-size: 22px;
+            color: #fff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section h3 .num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent, #888);
+            flex-shrink: 0;
+        }
+
+        .section p {
+            margin-bottom: 14px;
+            font-size: 16px;
+        }
+
+        .origin-label {
+            display: inline-block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent, #666);
+            margin-bottom: 12px;
+            opacity: 0.8;
+        }
+
+        .highlight {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        blockquote {
+            border-left: 3px solid var(--accent, #444);
+            padding: 14px 22px;
+            margin: 18px 0;
+            color: #bbb;
+            font-style: italic;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .hedgehog-list {
+            padding-left: 24px;
+            color: #bbb;
+            margin-bottom: 14px;
+        }
+
+        .hedgehog-list span {
+            color: var(--accent, #fff);
+            font-weight: 600;
+        }
+
+        .cta {
+            text-align: center;
+            margin-top: 72px;
+            padding-top: 48px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .cta a {
+            display: inline-block;
+            padding: 16px 44px;
+            background: linear-gradient(135deg, #ff6b6b, #ffa940, #ffd93d, #6bcb77, #4d96ff);
+            background-size: 200% 200%;
+            animation: gradientShift 4s ease infinite;
+            color: #000;
+            text-decoration: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .cta a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(255, 107, 107, 0.2), 0 4px 15px rgba(77, 150, 255, 0.15);
+        }
+
+        .cta p {
+            margin-top: 14px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .author {
+            text-align: center;
+            margin-top: 48px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .author a {
+            color: #888;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .author a:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <h1><a href="levelup-circle-generator.html">🎯 Level-Up Circle Generator</a></h1>
+    </header>
+
+    <main class="content">
+        <div class="hero">
+            <h2>The Thinking Behind the Circle</h2>
+            <p>A modern synthesis of classic strategic frameworks, adapted for anyone who wants their goals to reinforce each other.</p>
+        </div>
+
+        <section class="section">
+            <h3><span class="num">1</span> The Flywheel Effect</h3>
+            <span class="origin-label">Jim Collins — Good to Great</span>
+            <p>Success doesn't come from a single breakthrough. It comes from <span class="highlight">cumulative momentum</span> — small wins that compound on each other until the whole system spins under its own power.</p>
+            <blockquote>Each turn of the flywheel builds upon work done earlier, compounding your investment of effort.</blockquote>
+            <p>The Level-Up Circle converts your goals into a momentum machine. The output of one area — say, fitness — becomes fuel for another, like professional productivity. Over time, every spoke accelerates the wheel.</p>
+        </section>
+
+        <section class="section">
+            <h3><span class="num">2</span> Synergy Mapping</h3>
+            <span class="origin-label">Martin Eppler — 1998</span>
+            <p>A flat to-do list treats goals as independent items. A Synergy Map places them in a <span class="highlight">radial pattern and maps their interdependencies</span> — revealing where goals support or conflict with one another.</p>
+            <p>The Level-Up Circle borrows this visual logic. Instead of a linear checklist, you see a timing circuit of short-term and long-term objectives interacting in real-time.</p>
+        </section>
+
+        <section class="section">
+            <h3><span class="num">3</span> The Hedgehog Concept</h3>
+            <span class="origin-label">Jim Collins — Good to Great</span>
+            <p>Focus on the intersection of three things:</p>
+            <p class="hedgehog-list">
+                What you are <span>deeply passionate</span> about.<br>
+                What you can be the <span>best in the world</span> at.<br>
+                What drives your <span>economic engine</span>.
+            </p>
+            <p>When your circle's focus areas sit at that intersection, the flywheel doesn't just spin — it accelerates.</p>
+        </section>
+
+        <section class="section">
+            <h3><span class="num">4</span> Putting It Together</h3>
+            <p>The Level-Up Circle is a <span class="highlight">strategic compass</span>. It helps you identify the synergy — the grease — that lets your personal and professional life spin faster with less friction.</p>
+            <p>Add your goals. See how they connect. Find the leverage points. Build momentum.</p>
+        </section>
+
+        <div class="cta">
+            <a href="levelup-circle-generator.html">Build Your Circle</a>
+            <p>Free. No sign-up. Works in any browser.</p>
+        </div>
+
+        <div class="author">
+            <p>Created by <a href="https://github.com/chiefinnovator">Richard Crane</a> — Founder & Chief AI Officer at MILL5</p>
+        </div>
+    </main>
+</body>
+</html>

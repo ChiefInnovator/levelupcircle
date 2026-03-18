@@ -157,6 +157,24 @@
             white-space: nowrap;
         }
 
+        .site-header .about-link {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ccc;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: color 0.15s ease, text-shadow 0.15s ease;
+        }
+
+        .site-header .about-link:hover {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+        }
+
         .site-header .share-bar {
             position: absolute;
             right: 20px;
@@ -887,6 +905,7 @@
     </noscript>
     <div class="toast-container" id="toastContainer"></div>
     <header class="site-header">
+        <a href="about.html" class="about-link">About</a>
         <h1>🎯 Level-Up Circle Generator</h1>
         <div class="share-bar">
             <button class="share-btn copy-link" onclick="shareLink()" title="Copy Share Link">
@@ -1206,7 +1225,7 @@
             };
         }
         
-        const defaultLabels = ['MILL5', 'Card Game', 'Webinars', 'Casual Apps', 'Inventing Fire with AI', 'Rich Crane', 'Xmas Store', 'Purdue Course'];
+        const defaultLabels = ['Health & Fitness', 'Career Growth', 'Financial Freedom', 'Relationships', 'Learning & Skills', 'Mindfulness', 'Side Projects', 'Community'];
         
         let state = {
             title: 'Level-Up Circle',
@@ -1419,7 +1438,7 @@
             };
         }
         
-        function initializePoints(count) {
+        function initializePoints(count, useDefaults = true) {
             // Generate bright colors for initial points
             const colorResult = generateBrightColors(count, {
                 spacing: 'equal',
@@ -1427,11 +1446,11 @@
                 lightness: 0.50,
                 seed: 42  // Fixed seed for consistent initial colors
             });
-            
+
             const points = [];
             for (let i = 0; i < count; i++) {
                 points.push({
-                    label: defaultLabels[i] || `Point ${i + 1}`,
+                    label: useDefaults ? (defaultLabels[i] || `Point ${i + 1}`) : `Point ${i + 1}`,
                     color: colorResult.colors[i]
                 });
             }
@@ -1601,17 +1620,17 @@
         
         function loadExample() {
             state = {
-                title: 'Level-Up Circle',
+                title: 'My Level-Up Circle',
                 numPoints: 8,
                 exportSize: 8192,
                 theme: 'dark',
-                neonGlowTitle: true,
-                neonGlowPoints: true,
-                neonGlowLabels: true,
+                neonGlowTitle: false,
+                neonGlowPoints: false,
+                neonGlowLabels: false,
                 neonGlowCircle: true,
                 neonGlowConnections: true,
                 showConnections: true,
-                showGuideLines: true,
+                showGuideLines: false,
                 metaCopyright: 'Copyright Richard Crane. All Rights Reserved.',
                 metaAuthor: 'Richard Crane',
                 metaDescription: '',
@@ -1706,14 +1725,52 @@
             } catch (e) {
                 console.error('Failed to clear state:', e);
             }
-            // Reset to default state with all glow settings enabled
-            state.neonGlowTitle = true;
-            state.neonGlowPoints = true;
-            state.neonGlowLabels = true;
-            state.neonGlowCircle = true;
-            state.neonGlowConnections = true;
-            loadExample();
-            showToast('State cleared and example loaded!', 'success');
+            // Reset to empty state
+            state = {
+                title: 'Level-Up Circle',
+                numPoints: 8,
+                exportSize: 8192,
+                theme: 'dark',
+                neonGlowTitle: false,
+                neonGlowPoints: false,
+                neonGlowLabels: false,
+                neonGlowCircle: true,
+                neonGlowConnections: true,
+                showConnections: true,
+                showGuideLines: false,
+                metaCopyright: '',
+                metaAuthor: '',
+                metaDescription: '',
+                metaKeywords: '',
+                pointSize: 14,
+                labelOffset: 25,
+                labelFontSize: 16,
+                titleFontSize: 28,
+                points: initializePoints(8, false)
+            };
+
+            document.getElementById('title').value = state.title;
+            document.getElementById('theme').value = state.theme;
+            document.getElementById('points').value = state.numPoints;
+            document.getElementById('exportSize').value = state.exportSize;
+            document.getElementById('neonGlowTitle').checked = state.neonGlowTitle;
+            document.getElementById('neonGlowPoints').checked = state.neonGlowPoints;
+            document.getElementById('neonGlowLabels').checked = state.neonGlowLabels;
+            document.getElementById('neonGlowCircle').checked = state.neonGlowCircle;
+            document.getElementById('neonGlowConnections').checked = state.neonGlowConnections;
+            document.getElementById('showConnections').checked = state.showConnections;
+            document.getElementById('showGuideLines').checked = state.showGuideLines;
+            document.getElementById('metaCopyright').value = state.metaCopyright;
+            document.getElementById('metaAuthor').value = state.metaAuthor;
+            document.getElementById('metaDescription').value = state.metaDescription;
+            document.getElementById('metaKeywords').value = state.metaKeywords;
+            document.getElementById('pointSize').value = state.pointSize;
+            document.getElementById('labelOffset').value = state.labelOffset;
+            document.getElementById('labelFontSize').value = state.labelFontSize;
+            document.getElementById('titleFontSize').value = state.titleFontSize;
+
+            updatePointList();
+            showToast('State cleared!', 'success');
         }
         
         // Deep link functions - New compressed format using lz-string
@@ -1945,7 +2002,6 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             const idx = panelModes.indexOf(panelMode);
             panelMode = panelModes[(idx + 1) % panelModes.length];
             applyPanelMode();
-            showToast(panelModeLabels[panelMode], 'info');
         }
 
         function applyPanelMode() {
