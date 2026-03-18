@@ -1,127 +1,156 @@
-# **Level-Up Circle Generator**
+# Level-Up Circle Generator
 
-*Interactive tool for visualizing your interconnected goals!* 🎯
+Interactive single-page tool for designing and exporting a "Level-Up Circle" — a visual map of interconnected goals, projects, or focus areas that reinforce each other through synergy and compounding growth. Built as a self-contained HTML Canvas app with minimal external dependencies.
 
-**🚀 Try it now:** [Live Demo](https://chiefinnovator.github.io/levelupcircle/levelup-circle-generator.html)
+**Try it now:** [https://chiefinnovator.github.io/levelupcircle/levelup-circle-generator.html](https://chiefinnovator.github.io/levelupcircle/levelup-circle-generator.html)
 
----
+## Features
 
-## ✨ Features
-- Create a vibrant "Level-Up Circle" with **up to 36 labeled points** arranged radially.
-- Experience **smart color generation** for distinct and visually appealing designs.
-- Toggle between **dark and light themes** for a personalized look.
-- Customize **glow effects** for titles, points, labels, and connections to enhance visibility.
-- Enjoy **multi-line smart label wrapping** for improved readability.
-- Adjust settings such as **point size**, **label offsets**, and **font sizes** to suit your style.
-- Export high-quality PNG images in resolutions of **1080, 2048, and 3840 square** for various uses.
-- Share your configurations effortlessly with **deep linking** and compressed URL state sharing.
-- Present your circle in **fullscreen mode** for an immersive experience.
-- Utilize **social sharing** features for easy sharing on platforms like Twitter and Facebook.
-- Get personalized advice from **ChatGPT** for strategic insights on your focus areas.
-- **Auto-save** your progress in `localStorage` with every change.
-- Enjoy a responsive design with **mobile-friendly controls** for on-the-go use.
+- Up to 36 labeled points arranged radially around a central circle
+- Smart color generation (equal or golden-angle spacing) for vivid, distinct colors
+- Dark and light theme support with theme-aware preview background
+- Independent neon glow effects for title, points, labels, circle, and connections
+- Automatic multi-line smart label wrapping with semantic split points
+- Adjustable point size, label offset spacing, label font size, and title font size
+- Complete connection mesh toggle (show/hide lines between all points)
+- High-resolution PNG export (1080, 2048, 3840 square)
+- Deep linking with compressed URL state sharing (lz-string)
+- Fullscreen mode for presentations and embedding
+- Social sharing buttons (Copy Link, Twitter/X, Facebook)
+- Ask ChatGPT for personalized strategic advice on your focus areas
+- Auto-save to `localStorage` on every change
+- Responsive resizing with `ResizeObserver`
+- Mobile-friendly with collapsible controls panel and scroll indicator
+- Toast notification system for user feedback
+- XSS-safe label rendering with HTML entity escaping
 
----
+## Quick Start
 
-## 🚀 Getting Started
+1. Open `levelup-circle-generator.html` in any modern browser (Chrome, Edge, Safari, Firefox). No build step required.
+2. Adjust the controls in the left panel — title, theme, number of points, glow effects, etc.
+3. Edit point labels and colors directly in the point list.
+4. Click **Export PNG** to download a high-resolution image.
+5. Use the share buttons to copy a link or share to social media.
 
-### Prerequisites
-- A modern web browser (Chrome, Edge, Safari, Firefox).
+## Controls Reference
 
-### Installation
-No installation is required. Simply download or clone the repository.
+### Basic Settings
 
-### Setup Steps
-1. Open `levelup-circle-generator.html` in your browser.
-2. Adjust the controls in the left panel to customize your circle.
-3. Click **Export PNG** to download a high-resolution image of your design.
-4. Use the share buttons to copy a link or share your circle on social media.
+| Control | Description |
+|---------|-------------|
+| Title | Text displayed at top of the circle (glow optional) |
+| Theme | Dark (black) or Light (white) background |
 
----
+### Advanced Settings (collapsible)
 
-## 🏗️ Architecture
+| Control | Range | Description |
+|---------|-------|-------------|
+| Number of Points | 1–36 | Nodes arranged around the circle |
+| Export Size | 1080 / 2048 / 3840 | Output canvas dimension (square, in pixels) |
+| Point Size | 1–60 | Radius of each goal node |
+| Label Spacing | 0–100 | Distance of labels from point edge |
+| Label Font Size | 8–32 | Size of point label text |
+| Title Font Size | 16–48 | Size of title text |
 
-### Project Structure
+### Glow Effects
+
+| Control | Description |
+|---------|-------------|
+| Neon Glow Title | Toggle glow for title text |
+| Neon Glow Points | Toggle glow for point dots |
+| Neon Glow Labels | Toggle glow for label text |
+| Neon Glow Circle | Toggle glow for the outer ring |
+| Neon Glow Connections | Toggle glow for connection lines |
+| Show Connection Lines | Toggle full interconnection mesh |
+
+### Action Buttons
+
+| Button | Description |
+|--------|-------------|
+| Random Colors | Re-generate colors (alternates spacing mode) |
+| Load Example | Reset to seeded demo state |
+| Save State | Persist configuration to `localStorage` with confirmation |
+| Clear State | Clear saved state and reload example |
+| Redraw | Force redraw the canvas |
+| Export PNG | Generate and download image |
+
+### Share Bar (floating, top-right)
+
+| Button | Description |
+|--------|-------------|
+| Copy Link | Copy shareable URL to clipboard (includes fullscreen state) |
+| Twitter/X | Share to Twitter/X with pre-filled text |
+| Facebook | Share to Facebook |
+| ChatGPT | Ask ChatGPT for strategic advice on your focus areas |
+| Fullscreen | Toggle fullscreen presentation mode (hides controls) |
+
+## Sharing & Deep Links
+
+- **Copy Share Link**: Copies a URL containing your entire circle configuration. Recipients see your exact circle.
+- **Fullscreen Mode**: Toggle fullscreen to hide controls and show only the circle. Share links preserve this mode with `&fs=1`.
+- **Twitter/X & Facebook**: Share directly to social platforms (requires deployed URL, not localhost).
+- **Ask ChatGPT**: Opens a new browser tab with a personalized strategy prompt based on your circle's title and focus areas.
+
+URLs use lz-string compression for compact sharing. Legacy URL format is supported for backwards compatibility.
+
+## Project Structure
+
 ```
-.
-├── PLAN.md
-├── README.md
-├── docs
-│   └── ask-chatgpt-feature.md
-├── Rich
+levelupcircle/
+├── levelup-circle-generator.html   # Main application (single-file app)
+├── index.html                      # Redirect page to main app
+├── README.md                       # This file
+├── level_up_circle_blog.md         # Philosophy article on synergy mapping
+├── preview.png                     # Open Graph / social media preview image
+├── docs/
+│   ├── architecture.md             # Technical architecture & rendering pipeline
+│   ├── features.md                 # Complete feature specifications
+│   ├── url-sharing-spec.md         # URL sharing & deep linking specification
+│   ├── state-management.md         # State schema & persistence details
+│   ├── ask-chatgpt-feature.md      # ChatGPT integration documentation
+│   └── roadmap.md                  # UI enhancement plan & roadmap
+├── Rich/                           # Reference example images
 │   ├── level-up-circle-3840x3840 no lines.jpg
 │   ├── level-up-circle-3840x3840 no lines.png
 │   ├── level-up-circle-3840x3840 w lines.jpg
 │   └── level-up-circle-3840x3840 w lines.png
-├── index.html
-├── level_up_circle_blog.md
-└── levelup-circle-generator.html
+└── .gitignore
 ```
 
-### Tech Stack
-- HTML5
-- CSS3
-- JavaScript
+## Dependencies
 
-### Key Design Decisions
-- The application is designed to work entirely client-side with no server interaction, allowing for fast loading times and offline capabilities.
-- Utilizes `localStorage` for saving user configurations, ensuring a seamless user experience across sessions.
+| Dependency | Version | Purpose |
+|------------|---------|---------|
+| [lz-string](https://github.com/pieroxy/lz-string) | 1.5.0 (CDN) | URL compression for deep linking |
 
-### Local Development
-You can run the application locally by simply opening `levelup-circle-generator.html` in a web browser. No server setup is necessary.
+No build tools, package managers, or frameworks required. Works standalone in any modern browser.
 
----
+## Documentation
 
-## 📤 Sharing & Deep Links
-- **Copy Share Link**: Generates a URL that contains your configuration, allowing others to see your exact circle.
-- **Fullscreen Mode**: Hide controls to focus solely on the circle, with share links preserving this mode.
-- **Social Sharing**: Easily share your designs on platforms like Twitter and Facebook.
+Detailed specifications are in the [docs/](docs/) folder:
 
----
+- **[Architecture](docs/architecture.md)** — Technical overview, rendering pipeline, and code organization
+- **[Features](docs/features.md)** — Complete feature specifications and behavior details
+- **[URL Sharing](docs/url-sharing-spec.md)** — Deep linking format, compression, and legacy support
+- **[State Management](docs/state-management.md)** — State schema, localStorage persistence, auto-save
+- **[Ask ChatGPT](docs/ask-chatgpt-feature.md)** — ChatGPT integration and prompt template
+- **[Roadmap](docs/roadmap.md)** — Planned enhancements and completion status
 
-## 🎨 Core Controls
-| Control                | Description                                          |
-|-----------------------|------------------------------------------------------|
-| Title                 | Text at the top (glow optional)                      |
-| Theme                 | Choose between Dark or Light background               |
-| Number of Points      | Set 1–36 nodes around the circle                      |
-| Export Size           | Select output canvas dimension (square)              |
-| Point Size            | Adjust the radius of each goal node                   |
-| Label Spacing         | Control the distance of label boxes from point edges  |
-| Label Font Size       | Modify size of point label text                       |
-| Title Font Size       | Adjust size of the title text                         |
-| Neon Glow Effects     | Toggle glow for title, points, labels, and connections|
-| Show Connection Lines  | Toggle full interconnection mesh on/off              |
-| Random Colors         | Regenerate colors with different spacing modes        |
-| Load Example          | Reset to a seeded demo state                          |
-| Save State            | Persist current configuration to `localStorage`       |
-| Clear State           | Clear saved state and reload example                  |
+## Concept & Philosophy
 
----
+See [level_up_circle_blog.md](level_up_circle_blog.md) for the philosophy behind interconnected goal design. The Level-Up Circle represents a shift from isolated goal-setting to synergistic systems thinking, inspired by flywheel diagrams (Disney, Amazon) and goal compounding principles.
 
-## ✍️ Contributing
-We welcome contributions! Open an issue or submit a pull request with focused changes (feature, refactor, or documentation updates).
+## Browser Support
 
----
+Modern browsers supporting HTML5 Canvas, localStorage, and ResizeObserver:
+- Chrome / Edge (Chromium)
+- Safari
+- Firefox
 
-## 📜 License
-No license is granted. All rights reserved. The source code, images, and generated outputs may not be copied, modified, redistributed, published, or used without prior written permission.
+## License
 
-**Copyright © 2025 Richard Crane. All Rights Reserved.**
+No license is granted. All rights reserved. The source code, images, article content, and generated outputs may not be copied, modified, redistributed, published, or used (commercially or non-commercially) without the explicit prior written permission of the author.
 
----
+Permitted use: You may view and run the HTML locally for personal evaluation only. Any other usage requires written authorization.
 
-### Related Links
-- [Richard Crane's Website](https://inventingfirewith.ai)
-- [MILL5](https://www.mill5.com) - An AI innovation company.
-- [Microsoft MVP Profile](https://mvp.microsoft.com/en-US/MVP/profile/10ce0bc0-7536-43f6-b28c-e9601a4a0d0d) - Recognized for contributions in AI and technology.
-- [Inventing Fire with AI Podcast](https://inventingfirewith.ai) - Explore the intersection of AI and creativity.
-
----
-
-<sub>Powered by [Inventing Fire with AI](https://inventingfirewith.ai)</sub>
-
-
----
-
-<sub>Powered by [RepoBeacon](https://repobeacon.com)</sub>
+**Copyright &copy; 2025 Richard Crane. All Rights Reserved.**
