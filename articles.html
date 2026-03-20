@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Articles — Level-Up Circle Generator</title>
+    <meta name="description" content="Articles about goal visualization, flywheel thinking, synergy mapping, and the Level-Up Circle methodology. Learn how interconnected goals create compounding growth.">
+    <meta name="keywords" content="Level-Up Circle articles, goal setting, flywheel effect, synergy mapping, personal development, strategic planning, Jim Collins, Richard Crane">
+    <meta name="author" content="Richard Crane">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <link rel="canonical" href="https://chiefinnovator.github.io/levelupcircle/articles.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Level-Up Circle Generator">
+    <meta property="og:title" content="Articles — Level-Up Circle Generator">
+    <meta property="og:description" content="Articles about goal visualization, flywheel thinking, and the Level-Up Circle methodology.">
+    <meta property="og:image" content="https://chiefinnovator.github.io/levelupcircle/preview.png">
+    <meta property="og:url" content="https://chiefinnovator.github.io/levelupcircle/articles.html">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Articles — Level-Up Circle Generator">
+    <meta name="twitter:description" content="Articles about goal visualization, flywheel thinking, and the Level-Up Circle methodology.">
+    <meta name="twitter:image" content="https://chiefinnovator.github.io/levelupcircle/preview.png">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0a0a0a;
+            color: #d0d0d0;
+            min-height: 100vh;
+        }
+
+        .site-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: #111;
+            border-bottom: 1px solid #333;
+            padding: 12px 20px;
+            height: 56px;
+        }
+
+        .site-header h1 {
+            font-size: 20px;
+            margin: 0;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            white-space: nowrap;
+        }
+
+        .site-header h1 a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .site-header h1 a:hover {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+        }
+
+        .site-header .site-nav {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 16px;
+        }
+
+        .site-header .site-nav a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: color 0.15s ease, text-shadow 0.15s ease;
+        }
+
+        .site-header .site-nav a:hover,
+        .site-header .site-nav a.active {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+        }
+
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 24px 100px;
+        }
+
+        .page-title {
+            font-size: 36px;
+            color: #fff;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 48px;
+        }
+
+        .article-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .article-card {
+            display: block;
+            padding: 28px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            text-decoration: none;
+            color: inherit;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+        }
+
+        .article-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 30px rgba(255, 255, 255, 0.04);
+            transform: translateY(-2px);
+        }
+
+        .article-card .tag {
+            display: inline-block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 3px 10px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+        }
+
+        .tag-new {
+            background: rgba(107, 203, 119, 0.15);
+            color: #6bcb77;
+            border: 1px solid rgba(107, 203, 119, 0.3);
+        }
+
+        .tag-original {
+            background: rgba(77, 150, 255, 0.15);
+            color: #4d96ff;
+            border: 1px solid rgba(77, 150, 255, 0.3);
+        }
+
+        .article-card h2 {
+            font-size: 22px;
+            color: #fff;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .article-card p {
+            font-size: 15px;
+            color: #999;
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+
+        .article-card .read-more {
+            font-size: 14px;
+            color: #6bcb77;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .article-card:hover .read-more {
+            color: #8fe09a;
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <nav class="site-nav">
+            <a href="articles.html" class="active">Articles</a>
+            <a href="about.html">About</a>
+        </nav>
+        <h1><a href="levelup-circle-generator.html">🎯 Level-Up Circle Generator</a></h1>
+    </header>
+
+    <main class="content">
+        <h1 class="page-title">Articles</h1>
+        <p class="page-subtitle">Thinking, strategy, and updates on the Level-Up Circle.</p>
+
+        <div class="article-list">
+            <a href="article.html?post=level_up_circle_blog_v2" class="article-card">
+                <span class="tag tag-new">New</span>
+                <h2>I Built a Free Tool That Turns Your Goals Into a Flywheel — Here's What Changed Everything</h2>
+                <p>The Level-Up Circle Generator got a complete rebuild — 3-panel workspace, AI-powered strategic advice, auto-save persistence, and a cleaner default experience. Here's what changed and why it matters.</p>
+                <span class="read-more">Read article &rarr;</span>
+            </a>
+
+            <a href="article.html?post=level_up_circle_blog" class="article-card">
+                <span class="tag tag-original">Original</span>
+                <h2>The Level-Up Circle: How Interconnected Goals Unlock Extraordinary Success</h2>
+                <p>Why most goals fail, the power of synergy, and how to design goals that reinforce each other — inspired by Disney's synergy map, Amazon's flywheel, and the world's top entrepreneurs.</p>
+                <span class="read-more">Read article &rarr;</span>
+            </a>
+        </div>
+    </main>
+</body>
+</html>
