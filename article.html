@@ -4,19 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Article — Level-Up Circle Generator</title>
-    <meta name="description" content="Read articles about goal visualization, flywheel thinking, synergy mapping, and the Level-Up Circle methodology.">
+    <meta name="description" content="Long-form articles on goal visualization, flywheel thinking, synergy mapping, and the Level-Up Circle methodology by Richard Crane.">
+    <meta name="keywords" content="Level-Up Circle, flywheel effect, synergy mapping, goal visualization, Jim Collins, Martin Eppler, personal development, Richard Crane, MILL5">
     <meta name="author" content="Richard Crane">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">
+    <link rel="canonical" href="https://chiefinnovator.github.io/levelupcircle/articles.html">
+    <link rel="alternate" type="text/plain" title="llms.txt" href="https://chiefinnovator.github.io/levelupcircle/llms.txt">
 
     <!-- Open Graph -->
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Level-Up Circle Generator">
+    <meta property="og:title" content="Level-Up Circle — Articles on Flywheel Thinking & Synergy Mapping">
+    <meta property="og:description" content="Long-form essays on goal visualization, the Flywheel Effect, Synergy Mapping, and the Level-Up Circle methodology by Richard Crane, Founder & Chief AI Officer at MILL5.">
     <meta property="og:image" content="https://chiefinnovator.github.io/levelupcircle/preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="1200">
+    <meta property="og:image:alt" content="A Level-Up Circle diagram showing interconnected goals arranged in a radial pattern with colorful neon glow effects">
+    <meta property="og:url" content="https://chiefinnovator.github.io/levelupcircle/article.html">
     <meta property="og:locale" content="en_US">
+    <meta property="article:author" content="Richard Crane">
+    <meta property="article:publisher" content="https://chiefinnovator.github.io/levelupcircle/">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Level-Up Circle — Articles on Flywheel Thinking & Synergy Mapping">
+    <meta name="twitter:description" content="Long-form essays on goal visualization, flywheel thinking, and synergy mapping by Richard Crane.">
     <meta name="twitter:image" content="https://chiefinnovator.github.io/levelupcircle/preview.png">
+    <meta name="twitter:image:alt" content="A Level-Up Circle diagram with interconnected goals and neon glow effects">
+
+    <!-- Structured Data: default Article (updated at load time from markdown source) -->
+    <script type="application/ld+json" id="article-jsonld">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Level-Up Circle — Articles on Flywheel Thinking & Synergy Mapping",
+        "description": "Long-form essays on goal visualization, the Flywheel Effect, and the Level-Up Circle methodology.",
+        "author": {
+            "@type": "Person",
+            "name": "Richard Crane",
+            "jobTitle": "Founder & Chief AI Officer",
+            "worksFor": { "@type": "Organization", "name": "MILL5" }
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Level-Up Circle Generator",
+            "url": "https://chiefinnovator.github.io/levelupcircle/"
+        },
+        "image": "https://chiefinnovator.github.io/levelupcircle/preview.png",
+        "mainEntityOfPage": "https://chiefinnovator.github.io/levelupcircle/articles.html",
+        "inLanguage": "en"
+    }
+    </script>
+
+    <!-- Breadcrumb -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Level-Up Circle Generator", "item": "https://chiefinnovator.github.io/levelupcircle/" },
+            { "@type": "ListItem", "position": 2, "name": "Articles", "item": "https://chiefinnovator.github.io/levelupcircle/articles.html" },
+            { "@type": "ListItem", "position": 3, "name": "Article" }
+        ]
+    }
+    </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.1/marked.min.js"></script>
 
@@ -286,11 +337,70 @@
     </main>
 
     <script>
-        // Allowed articles (whitelist to prevent arbitrary file loading)
+        // Allowed articles (whitelist to prevent arbitrary file loading).
+        // Per-post metadata drives link previews, canonical URLs, and Article JSON-LD so
+        // each article has a distinct share card and a search-indexable schema payload.
         const allowedPosts = {
-            'level_up_circle_blog': 'level_up_circle_blog.md',
-            'level_up_circle_blog_v2': 'level_up_circle_blog_v2.md'
+            'level_up_circle_blog': {
+                file: 'level_up_circle_blog.md',
+                title: "The Level-Up Circle: How Interconnected Goals Unlock Extraordinary Success",
+                description: "Why most goals fail, the power of synergy, and how to design goals that reinforce each other — inspired by Disney's synergy map, Amazon's flywheel, and the world's top entrepreneurs.",
+                datePublished: "2025-01-01",
+                dateModified: "2026-03-18"
+            },
+            'level_up_circle_blog_v2': {
+                file: 'level_up_circle_blog_v2.md',
+                title: "I Built a Free Tool That Turns Your Goals Into a Flywheel — Here's What Changed Everything",
+                description: "The Level-Up Circle Generator got a complete rebuild — 3-panel workspace, AI-powered strategic advice, auto-save persistence, and a cleaner default experience. Here's what changed and why it matters.",
+                datePublished: "2026-03-18",
+                dateModified: "2026-04-15"
+            }
         };
+
+        function setMeta(selector, attr, value) {
+            const el = document.querySelector(selector);
+            if (el) el.setAttribute(attr, value);
+        }
+
+        function updateLinkPreview(postId, meta) {
+            const canonicalUrl = `https://chiefinnovator.github.io/levelupcircle/article.html?post=${postId}`;
+            const fullTitle = meta.title + ' — Level-Up Circle Generator';
+
+            document.title = fullTitle;
+            setMeta('link[rel="canonical"]', 'href', canonicalUrl);
+            setMeta('meta[name="description"]', 'content', meta.description);
+            setMeta('meta[property="og:title"]', 'content', fullTitle);
+            setMeta('meta[property="og:description"]', 'content', meta.description);
+            setMeta('meta[property="og:url"]', 'content', canonicalUrl);
+            setMeta('meta[name="twitter:title"]', 'content', fullTitle);
+            setMeta('meta[name="twitter:description"]', 'content', meta.description);
+
+            const jsonld = document.getElementById('article-jsonld');
+            if (jsonld) {
+                jsonld.textContent = JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "Article",
+                    "headline": meta.title,
+                    "description": meta.description,
+                    "datePublished": meta.datePublished,
+                    "dateModified": meta.dateModified,
+                    "author": {
+                        "@type": "Person",
+                        "name": "Richard Crane",
+                        "jobTitle": "Founder & Chief AI Officer",
+                        "worksFor": { "@type": "Organization", "name": "MILL5" }
+                    },
+                    "publisher": {
+                        "@type": "Organization",
+                        "name": "Level-Up Circle Generator",
+                        "url": "https://chiefinnovator.github.io/levelupcircle/"
+                    },
+                    "image": "https://chiefinnovator.github.io/levelupcircle/preview.png",
+                    "mainEntityOfPage": canonicalUrl,
+                    "inLanguage": "en"
+                }, null, 2);
+            }
+        }
 
         async function loadArticle() {
             const params = new URLSearchParams(window.location.search);
@@ -299,12 +409,23 @@
             const footerEl = document.getElementById('articleFooter');
 
             if (!postId || !allowedPosts[postId]) {
-                articleEl.innerHTML = '<div class="error">Article not found. <a href="articles.html">Back to articles</a></div>';
+                articleEl.textContent = '';
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error';
+                errorDiv.textContent = 'Article not found. ';
+                const link = document.createElement('a');
+                link.href = 'articles.html';
+                link.textContent = 'Back to articles';
+                errorDiv.appendChild(link);
+                articleEl.appendChild(errorDiv);
                 return;
             }
 
+            const meta = allowedPosts[postId];
+            updateLinkPreview(postId, meta);
+
             try {
-                const response = await fetch(allowedPosts[postId]);
+                const response = await fetch(meta.file);
                 if (!response.ok) throw new Error('Failed to load');
 
                 const markdown = await response.text();
@@ -317,12 +438,6 @@
 
                 articleEl.innerHTML = marked.parse(markdown);
                 footerEl.style.display = '';
-
-                // Update page title from first h1
-                const firstH1 = articleEl.querySelector('h1');
-                if (firstH1) {
-                    document.title = firstH1.textContent + ' — Level-Up Circle Generator';
-                }
             } catch (e) {
                 articleEl.innerHTML = '<div class="error">Failed to load article. <a href="articles.html">Back to articles</a></div>';
             }

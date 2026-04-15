@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/0.9">
+  <url>
+    <loc>https://chiefinnovator.github.io/levelupcircle/</loc>
+    <lastmod>2026-04-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://chiefinnovator.github.io/levelupcircle/preview.png</image:loc>
+      <image:title>Level-Up Circle Generator preview</image:title>
+      <image:caption>A Level-Up Circle diagram showing interconnected goals arranged in a radial pattern with neon glow effects.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://chiefinnovator.github.io/levelupcircle/levelup-circle-generator.html</loc>
+    <lastmod>2026-04-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://chiefinnovator.github.io/levelupcircle/preview.png</image:loc>
+      <image:title>Level-Up Circle Generator preview</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://chiefinnovator.github.io/levelupcircle/about.html</loc>
+    <lastmod>2026-04-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://chiefinnovator.github.io/levelupcircle/articles.html</loc>
+    <lastmod>2026-04-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://chiefinnovator.github.io/levelupcircle/article.html?post=level_up_circle_blog_v2</loc>
+    <lastmod>2026-04-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://chiefinnovator.github.io/levelupcircle/article.html?post=level_up_circle_blog</loc>
+    <lastmod>2026-04-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>
