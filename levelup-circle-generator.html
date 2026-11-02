@@ -2210,7 +2210,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             }
         }
         
-        function drawCircle(ctx, size, isExport = false) {
+        function drawCircle(ctx, size) {
             // Theme colors
             const isDark = state.theme === 'dark';
             const bgColor = isDark ? '#000' : '#fff';
@@ -2221,44 +2221,30 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             const labelOutlineColor = isDark ? '#000' : '#fff';
             
             // Clear canvas with background
+            ctx.save();
             ctx.fillStyle = bgColor;
             ctx.fillRect(0, 0, size, size);
             
-            // Calculate dimensions - adaptive padding for different screen sizes
-            // Use more padding on smaller screens to prevent label clipping
-            const basePadding = size * 0.26; // 26% padding to accommodate wrapped labels
-            const minPadding = 60; // Minimum padding in pixels for very small screens
-            const padding = Math.max(basePadding, minPadding);
+            // Draw in an 800×800 logical space so preview and export are uniform scalings of each other.
+            // measureText ignores the transform, so labels wrap identically at every output size.
+            ctx.scale(size / 800, size / 800);
+            size = 800;
+            // shadowBlur is measured in device pixels and ignores the transform; scale it by pixels per unit
+            const blurScale = ctx.getTransform().a;
+            
+            const padding = size * 0.26; // 26% padding to accommodate wrapped labels
             
             const centerX = size / 2;
             const centerY = size / 2;
             const circleRadius = (size - padding * 2) / 2;
             
-            // Adaptive scale factor based on canvas size
-            // Reference size is 800px - scale proportionally for other sizes
-            const referenceSize = 800;
-            const displayScaleFactor = size / referenceSize;
-            const dpr = window.devicePixelRatio || 1;
-            const previewLogicalSize = canvas.width / dpr;
-            const exportScaleFactor = isExport ? size / previewLogicalSize : 1;
-            const scaleFactor = isExport ? exportScaleFactor : Math.max(0.5, Math.min(1.5, displayScaleFactor));
-            
-            const pointRadius = state.pointSize * scaleFactor;
-            const labelOffsetScaled = state.labelOffset * scaleFactor;
-            
-            // Font settings - scale with canvas size
-            // For exports, scale freely; for display, apply min/max limits
-            const baseFontSize = state.labelFontSize || 16;
-            const baseTitleSize = state.titleFontSize || 28;
-            const fontSize = isExport 
-                ? baseFontSize * scaleFactor 
-                : Math.max(8, Math.min(32, baseFontSize * scaleFactor));
-            const titleFontSize = isExport 
-                ? baseTitleSize * scaleFactor 
-                : Math.max(16, Math.min(48, baseTitleSize * scaleFactor));
+            const pointRadius = state.pointSize;
+            const labelOffsetScaled = state.labelOffset;
+            const fontSize = state.labelFontSize;
+            const titleFontSize = state.titleFontSize;
             const lineHeight = fontSize * 1.2; // Proportional line height
-            const labelPadding = Math.max(4, 6 * scaleFactor); // Padding for bounding box
-            const maxLabelWidth = Math.min(180 * scaleFactor, size * 0.22); // Slightly reduced for mobile
+            const labelPadding = 6; // Padding for bounding box
+            const maxLabelWidth = Math.min(180, size * 0.22);
             
             // Draw title with proper spacing
             ctx.save();
@@ -2271,13 +2257,13 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             
             if (state.neonGlowTitle) {
                 ctx.strokeStyle = labelOutlineColor;
-                ctx.lineWidth = 4 * scaleFactor;
+                ctx.lineWidth = 4;
                 ctx.strokeText(state.title, centerX, titleY);
                 // Multi-layer glow: wide soft, medium, tight bright
                 const glowLayers = [
-                    { blur: 30 * scaleFactor, alpha: 0.3 },
-                    { blur: 15 * scaleFactor, alpha: 0.5 },
-                    { blur: 6 * scaleFactor, alpha: 1.0 },
+                    { blur: 30 * blurScale, alpha: 0.3 },
+                    { blur: 15 * blurScale, alpha: 0.5 },
+                    { blur: 6 * blurScale, alpha: 1.0 },
                 ];
                 for (const layer of glowLayers) {
                     ctx.shadowColor = glowColor;
@@ -2296,13 +2282,13 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             // Draw outer ring
             ctx.save();
             ctx.strokeStyle = circleColor;
-            ctx.lineWidth = state.neonGlowCircle ? 2.5 * scaleFactor : 1.5 * scaleFactor;
+            ctx.lineWidth = state.neonGlowCircle ? 2.5 : 1.5;
             if (state.neonGlowCircle) {
                 // Multi-layer ring glow
                 const ringGlowLayers = [
-                    { blur: 20 * scaleFactor, alpha: 0.25 },
-                    { blur: 10 * scaleFactor, alpha: 0.5 },
-                    { blur: 4 * scaleFactor, alpha: 1.0 },
+                    { blur: 20 * blurScale, alpha: 0.25 },
+                    { blur: 10 * blurScale, alpha: 0.5 },
+                    { blur: 4 * blurScale, alpha: 1.0 },
                 ];
                 for (const layer of ringGlowLayers) {
                     ctx.shadowColor = glowColor;
@@ -2333,7 +2319,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             // Draw connection lines if enabled
             if (state.showConnections) {
                 ctx.save();
-                ctx.lineWidth = 1 * scaleFactor;
+                ctx.lineWidth = 1;
                 ctx.globalAlpha = 0.35;
 
                 for (let i = 0; i < positions.length; i++) {
@@ -2348,7 +2334,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
 
                         if (state.neonGlowConnections) {
                             ctx.shadowColor = state.points[i].color;
-                            ctx.shadowBlur = 4 * scaleFactor;
+                            ctx.shadowBlur = 4 * blurScale;
                         }
 
                         ctx.beginPath();
@@ -2364,16 +2350,15 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             positions.forEach((pos, index) => {
                 const point = state.points[index];
                 
-                // Adaptive point size for small screens
-                const adaptivePointRadius = Math.max(6, pointRadius);
+                                const adaptivePointRadius = pointRadius;
                 
                 // Draw the point with radial gradient for 3D glass look
                 ctx.save();
                 if (state.neonGlowPoints) {
                     // Multi-layer point glow
                     const ptGlowLayers = [
-                        { blur: 25 * scaleFactor, alpha: 0.3 },
-                        { blur: 12 * scaleFactor, alpha: 0.6 },
+                        { blur: 25 * blurScale, alpha: 0.3 },
+                        { blur: 12 * blurScale, alpha: 0.6 },
                     ];
                     for (const layer of ptGlowLayers) {
                         ctx.shadowColor = point.color;
@@ -2401,7 +2386,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 ctx.fill();
                 // Subtle outline using darkened point color
                 ctx.strokeStyle = shadeColor(point.color, -60);
-                ctx.lineWidth = Math.max(1, 1.5 * scaleFactor);
+                ctx.lineWidth = 1.5;
                 ctx.stroke();
                 ctx.restore();
                 
@@ -2425,11 +2410,11 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 // Add extra offset based on font size increase from base (16px)
                 // When font size is larger, labels need more space from the circle
                 // Also add extra offset based on point size increase from base (14px)
-                const baseFontSizeScaled = 16 * scaleFactor;
-                const basePointSizeScaled = 14 * scaleFactor;
+                const baseFontSizeScaled = 16;
+                const basePointSizeScaled = 14;
                 const fontSizeExtra = Math.max(0, (fontSize - baseFontSizeScaled) * 0.5);
                 const pointSizeExtra = Math.max(0, (adaptivePointRadius - basePointSizeScaled) * 0.5);
-                const adaptiveLabelOffset = Math.max(15 * scaleFactor, labelOffsetScaled) + fontSizeExtra + pointSizeExtra;
+                const adaptiveLabelOffset = Math.max(15, labelOffsetScaled) + fontSizeExtra + pointSizeExtra;
                 const effectiveOuterRadius = circleRadius + adaptivePointRadius;
                 // Project bounding box onto radial direction so the inner edge clears the point
                 // For left/right points the width matters; for top/bottom the height matters
@@ -2465,15 +2450,15 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 if (state.showGuideLines) {
                     ctx.save();
                     ctx.strokeStyle = point.color;
-                    ctx.lineWidth = Math.max(0.5, 0.5 * scaleFactor);
+                    ctx.lineWidth = 0.5;
                     ctx.globalAlpha = 0.4;
 
                     if (state.neonGlowConnections) {
                         ctx.shadowColor = point.color;
-                        ctx.shadowBlur = Math.max(1, 2 * scaleFactor);
+                        ctx.shadowBlur = 2 * blurScale;
                     }
 
-                    const lineStartRadius = circleRadius + adaptivePointRadius + 1 * scaleFactor;
+                    const lineStartRadius = circleRadius + adaptivePointRadius + 1;
                     const lineEndRadius = boxCenterDistance + halfRadialSize;
 
                     ctx.beginPath();
@@ -2509,7 +2494,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 if (state.neonGlowLabels) {
                     // Outline for readability (opposite of background)
                     ctx.strokeStyle = labelOutlineColor;
-                    ctx.lineWidth = 3 * scaleFactor;
+                    ctx.lineWidth = 3;
                     lines.forEach((line, lineIndex) => {
                         const textY = boxTop + labelPadding + lineIndex * lineHeight + lineHeight / 2;
                         ctx.strokeText(line, textX, textY);
@@ -2517,9 +2502,9 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
 
                     // Multi-layer label glow
                     const lblGlowLayers = [
-                        { blur: 20 * scaleFactor, alpha: 0.3 },
-                        { blur: 8 * scaleFactor, alpha: 0.6 },
-                        { blur: 3 * scaleFactor, alpha: 1.0 },
+                        { blur: 20 * blurScale, alpha: 0.3 },
+                        { blur: 8 * blurScale, alpha: 0.6 },
+                        { blur: 3 * blurScale, alpha: 1.0 },
                     ];
                     ctx.fillStyle = point.color;
                     for (const layer of lblGlowLayers) {
@@ -2547,6 +2532,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 }
                 ctx.restore();
             });
+            ctx.restore();
         }
         
         // Debounced redraw for resize events
@@ -2720,7 +2706,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 exportCanvas.height = size;
                 const exportCtx = exportCanvas.getContext('2d');
                 if (!exportCtx) { release(); return null; }
-                drawCircle(exportCtx, size, true);
+                drawCircle(exportCtx, size);
                 // The background is opaque, so a transparent pixel means the canvas is unusable
                 if (exportCtx.getImageData(0, 0, 1, 1).data[3] === 0) { release(); return null; }
                 const blob = await new Promise(resolve => exportCanvas.toBlob(resolve, mime, quality));
