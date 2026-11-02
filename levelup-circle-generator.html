@@ -1959,7 +1959,9 @@
                 if (pointsData) {
                     raw.points = pointsData.split(',').map(ps => {
                         const [label, color] = ps.split('|');
-                        return { label: decodeURIComponent(label), color: `#${color}` };
+                        // Validate hex color (6 hex chars); the value is later written into HTML
+                        const colorHex = color && /^[0-9A-Fa-f]{6}$/.test(color) ? color : '39FF14';
+                        return { label: decodeURIComponent(label), color: `#${colorHex}` };
                     });
                 }
                 return raw;
