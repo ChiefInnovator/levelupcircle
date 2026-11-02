@@ -1998,9 +1998,11 @@
                     const pointStrings = pointsData.split(',');
                     newState.points = pointStrings.map((ps, index) => {
                         const [label, color] = ps.split('|');
+                        // Validate hex color (6 hex chars); the value is later written into HTML
+                        const colorHex = color && /^[0-9A-Fa-f]{6}$/.test(color) ? color : '39FF14';
                         return {
                             label: decodeURIComponent(label) || `Point ${index + 1}`,
-                            color: `#${color || '39FF14'}`
+                            color: `#${colorHex}`
                         };
                     });
                     newState.numPoints = newState.points.length;
