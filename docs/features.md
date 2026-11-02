@@ -185,17 +185,17 @@ Export generates a high-resolution PNG or WebP image using an off-screen canvas.
 
 ### Tablet (600–900px)
 
-- Stacked layout: controls above, preview below
-- Controls panel has a max-height of 40vh and scrolls
-- Mobile toggle button appears to show/hide controls
-- Scroll indicator shown when controls are visible
+- Stacked layout: preview first (min 50vh), then settings, then points
+- Panels grow to their content; the page scrolls as one
+- Text inputs and selects are 16px so iOS does not zoom on focus
+- The panel toggle hides either panel
 
 ### Mobile (< 600px)
 
 - Compact padding and spacing throughout
 - Button grid becomes 2-column
-- Font sizes reduced
-- Toast notifications span full width
+- Header wraps onto two rows so the title, links, and share buttons do not overlap
+- Toast notifications span full width at the top of the screen
 - Point items use a more compact layout
 
 ## Toast Notifications

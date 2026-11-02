@@ -124,10 +124,10 @@ The layout uses CSS Grid with two responsive breakpoints:
 | Breakpoint | Layout |
 |------------|--------|
 | > 900px (desktop) | `320px \| 1fr \| 320px` three-panel grid |
-| 600–900px (tablet) | Stacked, controls collapse to 40vh max-height |
-| < 600px (mobile) | Compact padding, 2-column button grid, full-width toasts |
+| 600–900px (tablet) | Stacked with the preview first (min 50vh), then settings, then points; panels grow to their content and the page scrolls as one; inputs are 16px |
+| < 600px (mobile) | Header wraps onto two rows, compact padding, 2-column button grid, full-width toasts at the top |
 
-A `ResizeObserver` on the preview container triggers `redraw()` when the viewport changes. On mobile, a toggle button and scroll indicator help manage the controls panel.
+A `ResizeObserver` on the preview container triggers `redraw()` when the viewport changes. The panel toggle still hides either panel at every width.
 
 ## External Dependencies
 
