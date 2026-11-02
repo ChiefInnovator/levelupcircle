@@ -11,13 +11,10 @@ colors:
   control-graphite: "#2a2a2a"
   control-hover: "#3a3a3a"
   hairline: "#333333"
-  control-edge: "#444444"
+  control-edge: "#6e6e6e"
   text-primary: "#e0e0e0"
   text-label: "#b0b0b0"
   text-muted: "#888888"
-  legacy-violet-start: "#667eea"
-  legacy-violet-end: "#764ba2"
-  legacy-export-start: "#f093fb"
 typography:
   title:
     fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
@@ -113,11 +110,11 @@ One loud accent on a graphite stage; the diagram supplies all other color.
 - **Control Graphite** (#2a2a2a): Inputs, point rows, secondary buttons.
 - **Control Hover** (#3a3a3a): Hovered secondary buttons.
 - **Hairline** (#333333): Panel borders and dividers.
-- **Control Edge** (#444444): Input and button borders.
+- **Control Edge** (#6e6e6e): Input and button borders (≥3:1 against panels, WCAG 1.4.11).
 - **Text Primary** (#e0e0e0), **Text Label** (#b0b0b0), **Text Muted** (#888888): Body text, form labels, point indices.
 
-### Legacy (retire)
-- **Legacy Violet gradient** (#667eea → #764ba2) on default buttons, range accent, and info toasts, and **Legacy Export gradient** (#f093fb → #f5576c) on Export. Both predate this system and compete with the neon. Replace with Neon Green treatments.
+### Retired
+- The violet (#667eea → #764ba2) and pink (#f093fb → #f5576c) gradients were removed on 2026-11-02. Export is now a graphite button with a Neon Green border that fills Neon Green on hover and focus.
 
 ### Named Rules
 **The One Voice Rule.** Neon Green is the only interface accent. No second accent hue in the chrome.
@@ -194,6 +191,6 @@ Gently rounded rectangles (6px) for every control, 4px for small chips and icons
 - **Do** keep chrome in graphite steps (#111 / #1a1a1a / #2a2a2a) so the circle stays the brightest object.
 
 ### Don't:
-- **Don't** add new gradients to chrome; retire the violet and pink gradients.
+- **Don't** add gradients to chrome.
 - **Don't** introduce a second accent hue in the interface.
 - **Don't** use text inputs under 16px on phones.

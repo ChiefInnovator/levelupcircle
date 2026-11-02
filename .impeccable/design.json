@@ -4,29 +4,112 @@
   "title": "Design System: Level-Up Circle Generator",
   "extensions": {
     "colorMeta": {
-      "neon-green": { "role": "primary", "displayName": "Neon Green", "canonical": "#39FF14", "tonalRamp": ["#0b3d05", "#11610a", "#18860e", "#1fab12", "#39FF14", "#6bff52", "#a2ff94", "#d6ffd0"] },
-      "signal-pink": { "role": "secondary", "displayName": "Signal Pink", "canonical": "#f5576c", "tonalRamp": ["#3d0a12", "#66111e", "#99192d", "#cc223c", "#f5576c", "#f7808f", "#faaab4", "#fdd5da"] },
-      "panel-graphite": { "role": "neutral", "displayName": "Panel Graphite", "canonical": "#1a1a1a", "tonalRamp": ["#000000", "#0a0a0a", "#111111", "#1a1a1a", "#2a2a2a", "#3a3a3a", "#444444", "#888888"] }
+      "neon-green": {
+        "role": "primary",
+        "displayName": "Neon Green",
+        "canonical": "#39FF14",
+        "tonalRamp": [
+          "#0b3d05",
+          "#11610a",
+          "#18860e",
+          "#1fab12",
+          "#39FF14",
+          "#6bff52",
+          "#a2ff94",
+          "#d6ffd0"
+        ]
+      },
+      "signal-pink": {
+        "role": "secondary",
+        "displayName": "Signal Pink",
+        "canonical": "#f5576c",
+        "tonalRamp": [
+          "#3d0a12",
+          "#66111e",
+          "#99192d",
+          "#cc223c",
+          "#f5576c",
+          "#f7808f",
+          "#faaab4",
+          "#fdd5da"
+        ]
+      },
+      "panel-graphite": {
+        "role": "neutral",
+        "displayName": "Panel Graphite",
+        "canonical": "#1a1a1a",
+        "tonalRamp": [
+          "#000000",
+          "#0a0a0a",
+          "#111111",
+          "#1a1a1a",
+          "#2a2a2a",
+          "#3a3a3a",
+          "#444444",
+          "#888888"
+        ]
+      }
     },
     "typographyMeta": {
-      "title": { "displayName": "Title", "purpose": "App name in the header." },
-      "section": { "displayName": "Section", "purpose": "Uppercase panel headings." },
-      "body": { "displayName": "Body", "purpose": "Inputs and buttons." },
-      "label": { "displayName": "Label", "purpose": "Form labels." },
-      "diagram-label": { "displayName": "Diagram label", "purpose": "Point labels drawn on the canvas." }
+      "title": {
+        "displayName": "Title",
+        "purpose": "App name in the header."
+      },
+      "section": {
+        "displayName": "Section",
+        "purpose": "Uppercase panel headings."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Inputs and buttons."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Form labels."
+      },
+      "diagram-label": {
+        "displayName": "Diagram label",
+        "purpose": "Point labels drawn on the canvas."
+      }
     },
     "shadows": [
-      { "name": "hover-lift", "value": "0 3px 10px rgba(255, 255, 255, 0.1)", "purpose": "Secondary button hover." },
-      { "name": "toast", "value": "0 4px 12px rgba(0, 0, 0, 0.4)", "purpose": "Floating toasts." },
-      { "name": "neon-glow", "value": "0 0 5px rgba(57, 255, 20, 0.3)", "purpose": "Neon-accented focus and hover." }
+      {
+        "name": "hover-lift",
+        "value": "0 3px 10px rgba(255, 255, 255, 0.1)",
+        "purpose": "Secondary button hover."
+      },
+      {
+        "name": "toast",
+        "value": "0 4px 12px rgba(0, 0, 0, 0.4)",
+        "purpose": "Floating toasts."
+      },
+      {
+        "name": "neon-glow",
+        "value": "0 0 5px rgba(57, 255, 20, 0.3)",
+        "purpose": "Neon-accented focus and hover."
+      }
     ],
     "motion": [
-      { "name": "state", "value": "0.2s ease", "purpose": "Hover and focus transitions." },
-      { "name": "toast", "value": "0.3s ease", "purpose": "Toast slide-in." }
+      {
+        "name": "state",
+        "value": "0.2s ease",
+        "purpose": "Hover and focus transitions."
+      },
+      {
+        "name": "toast",
+        "value": "0.3s ease",
+        "purpose": "Toast slide-in."
+      }
     ],
     "breakpoints": [
-      { "name": "stack", "value": "900px" },
-      { "name": "compact", "value": "600px" }
+      {
+        "name": "stack",
+        "value": "900px"
+      },
+      {
+        "name": "compact",
+        "value": "600px"
+      }
     ]
   },
   "components": [
@@ -65,14 +148,43 @@
   "narrative": {
     "northStar": "The Neon Orbit",
     "overview": "The glowing circle is the only star in the room. The interface is a dark control deck around it: graphite panels on near-black, quiet labels, and controls that feel physical. Light belongs to the diagram; the chrome borrows it only to answer the user, always in the same neon green. Controls are tactile and playful: playfulness lives in response and motion, never in extra ornament or extra hues.",
-    "keyCharacteristics": ["Near-black stage, graphite panels, one neon accent.", "The diagram's per-point colors are the only rainbow on screen.", "Tactile feedback: hover lift, press, glow on focus.", "Three-column deck: settings left, circle center, points right; panels can be hidden."],
-    "rules": [
-      { "name": "The One Voice Rule", "body": "Neon Green is the only interface accent. No second accent hue in the chrome.", "section": "colors" },
-      { "name": "The Diagram Owns the Rainbow Rule", "body": "Multi-hue color appears only in the circle and in point swatches, never in chrome.", "section": "colors" },
-      { "name": "The 16px Input Rule", "body": "Text inputs on phones must be at least 16px, or iOS zooms on focus.", "section": "typography" },
-      { "name": "The Flat-at-Rest Rule", "body": "Surfaces are flat until touched; elevation is a response, not a state.", "section": "elevation" }
+    "keyCharacteristics": [
+      "Near-black stage, graphite panels, one neon accent.",
+      "The diagram's per-point colors are the only rainbow on screen.",
+      "Tactile feedback: hover lift, press, glow on focus.",
+      "Three-column deck: settings left, circle center, points right; panels can be hidden."
     ],
-    "dos": ["Do use Neon Green (#39FF14) for every interface highlight: focus, success, primary hover.", "Do give every interactive element a hover response and a visible 2px focus outline.", "Do keep chrome in graphite steps (#111 / #1a1a1a / #2a2a2a) so the circle stays the brightest object."],
-    "donts": ["Don't add new gradients to chrome; retire the violet and pink gradients.", "Don't introduce a second accent hue in the interface.", "Don't use text inputs under 16px on phones."]
+    "rules": [
+      {
+        "name": "The One Voice Rule",
+        "body": "Neon Green is the only interface accent. No second accent hue in the chrome.",
+        "section": "colors"
+      },
+      {
+        "name": "The Diagram Owns the Rainbow Rule",
+        "body": "Multi-hue color appears only in the circle and in point swatches, never in chrome.",
+        "section": "colors"
+      },
+      {
+        "name": "The 16px Input Rule",
+        "body": "Text inputs on phones must be at least 16px, or iOS zooms on focus.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-at-Rest Rule",
+        "body": "Surfaces are flat until touched; elevation is a response, not a state.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use Neon Green (#39FF14) for every interface highlight: focus, success, primary hover.",
+      "Do give every interactive element a hover response and a visible 2px focus outline.",
+      "Do keep chrome in graphite steps (#111 / #1a1a1a / #2a2a2a) so the circle stays the brightest object."
+    ],
+    "donts": [
+      "Don't add gradients to chrome.",
+      "Don't introduce a second accent hue in the interface.",
+      "Don't use text inputs under 16px on phones."
+    ]
   }
 }

@@ -393,7 +393,7 @@
 
         input[type="range"] {
             width: 100%;
-            accent-color: #667eea;
+            accent-color: #39FF14;
         }
 
         label {
@@ -410,7 +410,7 @@
             width: 100%;
             padding: 8px 12px;
             background: #2a2a2a;
-            border: 1px solid #444;
+            border: 1px solid #6e6e6e;
             border-radius: 6px;
             color: #fff;
             font-size: 14px;
@@ -423,6 +423,31 @@
             box-shadow: 0 0 5px rgba(57, 255, 20, 0.3);
         }
 
+        ::placeholder {
+            color: #999;
+        }
+
+        ::selection {
+            background: rgba(57, 255, 20, 0.35);
+            color: #fff;
+        }
+
+        input {
+            caret-color: #39FF14;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+            }
+            button:hover,
+            button:active,
+            .share-btn:hover {
+                transform: none;
+            }
+        }
+
         button:focus-visible,
         a:focus-visible,
         input:focus-visible,
@@ -433,6 +458,7 @@
         }
         
         input[type="checkbox"] {
+            accent-color: #39FF14;
             width: 18px;
             height: 18px;
             margin-right: 8px;
@@ -440,6 +466,13 @@
             cursor: pointer;
         }
         
+        .control-fieldset {
+            border: 0;
+            padding: 0;
+            margin: 0;
+            min-width: 0;
+        }
+
         .checkbox-label {
             display: flex;
             align-items: center;
@@ -447,27 +480,37 @@
         }
         
         button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
+            background: #2a2a2a;
+            color: #e0e0e0;
+            border: 1px solid #6e6e6e;
             padding: 10px 16px;
             border-radius: 6px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
             width: 100%;
             margin-bottom: 8px;
         }
         
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 3px 10px rgba(255, 255, 255, 0.1);
+        }
+
+        button:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+            transform: none;
         }
         
         button.secondary {
             background: #2a2a2a;
-            border: 1px solid #444;
+            border: 1px solid #6e6e6e;
         }
         
         button.secondary:hover {
@@ -476,12 +519,21 @@
         }
         
         button.export {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: #2a2a2a;
+            border: 1px solid #39FF14;
+            color: #39FF14;
             font-size: 16px;
             padding: 12px;
             margin-top: 12px;
         }
         
+        button.export:hover:not(:disabled),
+        button.export:focus-visible {
+            background: #39FF14;
+            color: #000;
+            box-shadow: 0 0 5px rgba(57, 255, 20, 0.3);
+        }
+
         .point-list {
             margin-top: 20px;
             padding-top: 20px;
@@ -500,7 +552,7 @@
         }
         
         .point-index {
-            color: #888;
+            color: #b0b0b0;
             font-size: 12px;
             font-weight: 600;
             text-align: center;
@@ -509,7 +561,7 @@
         .point-label-input {
             padding: 6px 10px;
             background: #1a1a1a;
-            border: 1px solid #444;
+            border: 1px solid #6e6e6e;
             border-radius: 4px;
             color: #fff;
             font-size: 13px;
@@ -537,7 +589,6 @@
             border-color: #f5576c;
             color: #fff;
             transform: none;
-            box-shadow: 0 0 8px rgba(245, 87, 108, 0.4);
         }
         
         .point-delete:disabled {
@@ -557,12 +608,12 @@
             margin-top: 12px;
             padding: 10px;
             background: transparent;
-            border: 2px dashed #444;
+            border: 2px dashed #6e6e6e;
             border-radius: 6px;
-            color: #888;
+            color: #b0b0b0;
             font-size: 14px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: border-color 0.18s ease, color 0.18s ease, background-color 0.18s ease;
         }
         
         .add-point-btn:hover {
@@ -732,11 +783,27 @@
         }
         
         .toast.info {
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #888;
         }
         
         .toast.info .toast-icon {
-            color: #667eea;
+            color: #b0b0b0;
+        }
+
+        .toast-action,
+        .toast-close {
+            width: auto;
+            margin: 0;
+            padding: 4px 10px;
+            font-size: 13px;
+            background: transparent;
+            color: #39FF14;
+            border: 1px solid #39FF14;
+        }
+
+        .toast-close {
+            color: #e0e0e0;
+            border-color: #6e6e6e;
         }
         
         .toast-icon {
@@ -749,7 +816,8 @@
         
         @media (max-width: 600px) {
             .toast-container {
-                bottom: 80px;
+                top: 12px;
+                bottom: auto;
                 right: 10px;
                 left: 10px;
             }
@@ -770,7 +838,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
             margin: 0;
             padding: 0;
@@ -873,36 +941,39 @@
                 gap: 4px;
             }
 
-            .site-header .share-btn {
-                width: 30px;
-                height: 30px;
-            }
-
-            .site-header .share-btn svg {
-                width: 16px;
-                height: 16px;
-            }
-
             .container,
             .container.hide-left,
             .container.hide-right,
             .container.hide-both {
                 grid-template-columns: 1fr;
-                grid-template-rows: auto minmax(50vh, 1fr) auto;
+                grid-template-rows: minmax(50vh, 1fr) auto auto;
                 height: auto;
                 min-height: calc(100vh - 56px);
             }
 
+            /* Circle first, then settings and points in one page scroll */
+            .preview {
+                order: -1;
+            }
+
             .panel-left {
                 border-right: none;
-                border-bottom: 1px solid #333;
-                max-height: 40vh;
+                border-top: 1px solid #333;
+                overflow-y: visible;
             }
 
             .panel-right {
                 border-left: none;
                 border-top: 1px solid #333;
-                max-height: 40vh;
+                overflow-y: visible;
+            }
+
+            /* 16px or larger, or iOS zooms on focus */
+            input[type="text"],
+            input[type="number"],
+            select,
+            .point-label-input {
+                font-size: 16px;
             }
 
             .container.hide-left .panel-left,
@@ -924,6 +995,30 @@
         }
 
         @media (max-width: 600px) {
+            .site-header {
+                height: auto;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                row-gap: 8px;
+                padding: 10px 12px;
+            }
+
+            .site-header .site-nav,
+            .site-header .share-bar {
+                position: static;
+                transform: none;
+            }
+
+            .site-header h1 {
+                order: -1;
+                flex-basis: 100%;
+                text-align: center;
+            }
+
+            .preview {
+                padding: 4px;
+            }
+
             .panel-left,
             .panel-right {
                 padding: 12px;
@@ -947,7 +1042,6 @@
             input[type="number"],
             select {
                 padding: 6px 10px;
-                font-size: 13px;
             }
 
             button {
@@ -969,7 +1063,6 @@
 
             .point-label-input {
                 padding: 4px 6px;
-                font-size: 11px;
             }
 
             .point-delete {
@@ -1037,7 +1130,7 @@
             <a href="articles.html">Articles</a>
             <a href="about.html">About</a>
         </nav>
-        <h1>🎯 Level-Up Circle Generator</h1>
+        <h1><span aria-hidden="true">🎯</span> Level-Up Circle Generator</h1>
         <div class="share-bar">
             <button class="share-btn copy-link" onclick="shareLink()" title="Copy Share Link" aria-label="Copy share link">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
@@ -1061,7 +1154,7 @@
         </div>
     </header>
     <main class="container" id="container">
-        <nav class="panel-left" id="panelLeft" aria-label="Circle settings">
+        <section class="panel-left" id="panelLeft" aria-label="Circle settings">
             <h2 class="panel-heading">Settings</h2>
 
             <div class="control-group">
@@ -1132,7 +1225,8 @@
                 </div>
             </details>
             
-            <div class="section-label">Glow Effects</div>
+            <fieldset class="control-fieldset">
+            <legend class="section-label">Glow Effects</legend>
             
             <div class="control-group">
                 <label class="checkbox-label">
@@ -1183,6 +1277,8 @@
                 </label>
             </div>
 
+            </fieldset>
+
             <div class="divider"></div>
 
             <details class="collapsible-section">
@@ -1210,13 +1306,13 @@
             <div class="divider"></div>
 
             <div class="button-grid">
-                <button class="secondary" onclick="randomizeColors()" title="Generate bright colors in ROYGBIV order. Alternates between golden angle and equal spacing.">🎨 Random Colors</button>
-                <button class="secondary" onclick="confirmLoadExample()">📋 Load Example</button>
-                <button class="secondary" onclick="saveState()">💾 Save State</button>
-                <button class="secondary" onclick="confirmClearState()">🗑️ Clear State</button>
+                <button class="secondary" onclick="randomizeColors()" title="Generate bright colors in ROYGBIV order. Alternates between golden angle and equal spacing."><span aria-hidden="true">🎨</span> Random Colors</button>
+                <button class="secondary" onclick="confirmLoadExample()"><span aria-hidden="true">📋</span> Load Example</button>
+                <button class="secondary" onclick="saveState()"><span aria-hidden="true">💾</span> Save State</button>
+                <button class="secondary" onclick="confirmClearState()"><span aria-hidden="true">🗑️</span> Clear State</button>
             </div>
             
-        </nav>
+        </section>
 
         <section class="preview" aria-label="Circle preview">
             <canvas id="canvas" role="img" aria-label="Level-Up Circle visualization — a radial diagram showing interconnected goals with customizable colors and neon glow effects"></canvas>
@@ -1226,9 +1322,9 @@
             <h2 class="panel-heading">Points</h2>
             <div id="pointList"></div>
             <button class="add-point-btn" id="addPointBtn" onclick="addPoint()" title="Add a new point (max 36)">
-                ➕ Add Point
+                <span aria-hidden="true">➕</span> Add Point
             </button>
-            <button class="export" id="exportBtn" onclick="exportImage()">📸 Export Image</button>
+            <button class="export" id="exportBtn" onclick="exportImage()"><span aria-hidden="true">📸</span> Export Image</button>
         </aside>
     </main>
     
@@ -1676,7 +1772,7 @@
             // Validate index
             if (index >= 0 && index < state.points.length) {
                 // Remove the point
-                state.points.splice(index, 1);
+                const [removed] = state.points.splice(index, 1);
                 state.numPoints = state.points.length;
                 
                 // Update the points input field
@@ -1686,8 +1782,19 @@
                 updatePointList();
 
                 // Keep keyboard focus in the list after the row disappears
-                const next = document.querySelector(`#pointList .point-delete[data-index="${Math.min(index, state.points.length - 1)}"]`);
-                (next && !next.disabled ? next : document.getElementById('addPointBtn')).focus();
+                const next = document.querySelector(`#pointList .point-label-input[data-index="${Math.min(index, state.points.length - 1)}"]`);
+                (next || document.getElementById('addPointBtn')).focus();
+
+                showToast(`Deleted "${removed.label}".`, 'info', {
+                    label: 'Undo',
+                    onClick: () => {
+                        if (state.points.length >= 36) return;
+                        state.points.splice(Math.min(index, state.points.length), 0, removed);
+                        state.numPoints = state.points.length;
+                        document.getElementById('points').value = state.numPoints;
+                        updatePointList();
+                    }
+                });
             }
         }
         
@@ -1786,7 +1893,7 @@
         }
         
         // Toast notification system
-        function showToast(message, type = 'info') {
+        function showToast(message, type = 'info', action = null) {
             const container = document.getElementById('toastContainer');
             
             const toast = document.createElement('div');
@@ -1806,6 +1913,34 @@
             text.className = 'toast-message';
             text.textContent = message;
             toast.append(icon, text);
+
+            const dismiss = () => {
+                clearTimeout(timer);
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            };
+
+            // Optional action button, e.g. { label: 'Undo', onClick }
+            if (action) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'toast-action';
+                btn.textContent = action.label;
+                btn.addEventListener('click', () => { dismiss(); action.onClick(); });
+                toast.append(btn);
+            }
+
+            // Errors and actionable toasts stay until closed; others time out by length
+            const sticky = type === 'error' || Boolean(action);
+            if (sticky) {
+                const close = document.createElement('button');
+                close.type = 'button';
+                close.className = 'toast-close';
+                close.setAttribute('aria-label', 'Dismiss');
+                close.textContent = '×';
+                close.addEventListener('click', dismiss);
+                toast.append(close);
+            }
             
             container.appendChild(toast);
             
@@ -1814,11 +1949,14 @@
                 toast.classList.add('show');
             });
             
-            // Auto-remove after 3 seconds
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            const duration = Math.max(4000, message.length * 60);
+            let timer = sticky ? null : setTimeout(dismiss, duration);
+            if (!sticky) {
+                // Pause while the user is reading or focused on the toast
+                toast.addEventListener('mouseenter', () => clearTimeout(timer));
+                toast.addEventListener('focusin', () => clearTimeout(timer));
+                toast.addEventListener('mouseleave', () => { timer = setTimeout(dismiss, duration); });
+            }
         }
         
         // Auto-save function (silent, no toast)
@@ -2165,17 +2303,32 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             }
             if (!raw) return false;
 
+            // Auto-save will overwrite the recipient's own circle, so keep a copy they can restore
+            let previous = null;
+            try { previous = localStorage.getItem('levelUpCircleState'); } catch (e) { /* storage unavailable */ }
+
             state = normalizeState({ ...getSavedPreferences(), ...raw });
             syncUIFromState();
+
+            const replacedOwnCircle = previous && previous !== JSON.stringify(state);
+            const restoreAction = replacedOwnCircle ? {
+                label: 'Restore mine',
+                onClick: () => {
+                    try { localStorage.setItem('levelUpCircleState', previous); } catch (e) { /* storage unavailable */ }
+                    loadState();
+                    showToast('Restored your circle.', 'success');
+                }
+            } : null;
 
             // If fullscreen mode (legacy fs=1), hide both panels
             if (urlParams.has('s') && isFullscreen) {
                 panelMode = 'none';
                 applyPanelMode();
+                if (restoreAction) showToast('Opened a shared circle.', 'info', restoreAction);
             } else {
                 // Clear URL params after loading (cleaner URL)
                 window.history.replaceState({}, '', window.location.pathname);
-                showToast('Loaded shared configuration!', 'success');
+                showToast('Opened a shared circle.', 'success', restoreAction);
             }
             return true;
         }
@@ -2723,7 +2876,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
 
         async function exportImage() {
             const exportBtn = document.getElementById('exportBtn');
-            const btnLabel = exportBtn.textContent;
+            const btnLabel = exportBtn.innerHTML;
             exportBtn.disabled = true;
             exportBtn.textContent = 'Exporting…';
             try {
@@ -2781,7 +2934,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 showToast(`Exported ${size}×${size} ${actualExt.toUpperCase()} (${sizeMB} MB).${capped}`, 'success');
             } finally {
                 exportBtn.disabled = false;
-                exportBtn.textContent = btnLabel;
+                exportBtn.innerHTML = btnLabel;
             }
         }
 
@@ -2806,6 +2959,12 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
         // Commit on change (Enter, blur, spinner), never per keystroke: typing "12" must not pass through 1
         document.getElementById('points').addEventListener('change', (e) => {
             const value = clampInt(e.target.value, 1, 36, state.numPoints);
+            // Ask before dropping points the user has renamed
+            const named = state.points.slice(value).filter((p, i) => p.label !== `Point ${value + i + 1}`);
+            if (named.length && !confirm(`Remove ${named.length} named point${named.length > 1 ? 's' : ''} (${named.map(p => p.label).join(', ')})?`)) {
+                e.target.value = state.numPoints;
+                return;
+            }
             e.target.value = value;
             state.numPoints = value;
             updatePointList();
