@@ -1855,9 +1855,6 @@
             });
             
             updatePointList();
-            
-            // Log for debugging (optional)
-            console.log(`Generated ${state.numPoints} colors using ${colorSpacingMode} spacing`);
         }
         
         function loadExample() {
@@ -2980,6 +2977,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 state.exportSize = 8192;
                 e.target.value = 8192;
             }
+            debouncedAutoSave();
         });
 
         document.getElementById('exportFormat').addEventListener('change', (e) => {

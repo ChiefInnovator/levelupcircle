@@ -142,7 +142,7 @@ One loud accent on a graphite stage; the diagram supplies all other color.
 
 - Fixed 56px header; below it a CSS grid of 320px | 1fr | 320px filling the viewport.
 - The panel toggle cycles both / left only / right only / none by collapsing columns to 0.
-- At 900px and below, columns stack: settings, preview (min 50vh), points; each panel caps at 40vh and scrolls.
+- At 900px and below, columns stack with the circle first: preview (min 50vh), then settings, then points; panels grow to their content and the page scrolls as one.
 - At 600px and below, padding drops to 12px and the action buttons form a 2-column grid.
 - Spacing steps: 4, 8, 12, 16, 20px.
 
