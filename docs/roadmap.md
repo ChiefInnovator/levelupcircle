@@ -42,11 +42,11 @@ UI/UX improvement plan for the Level-Up Circle Generator. Items marked with [x] 
 - [x] Generate personalized strategy prompt from circle configuration
 - [x] Open ChatGPT in new browser tab
 
-### 6. Fullscreen Mode
+### 6. Fullscreen Mode (replaced by the panel toggle)
 
-- [x] Toggle fullscreen to hide controls
-- [x] Preserve fullscreen state in shared URLs (`&fs=1`)
-- [x] Fullscreen button in share bar
+- [x] Toggle fullscreen to hide controls — now a panel toggle that cycles both/left/right/none
+- [x] Preserve fullscreen state in shared URLs (`&fs=1`) — `fs=1` still hides both panels
+- [x] Fullscreen button in share bar — replaced by the panel toggle button
 
 ### 7. Auto-Save
 
@@ -73,15 +73,15 @@ UI/UX improvement plan for the Level-Up Circle Generator. Items marked with [x] 
 - [ ] Create history array and `pushHistory()` function
 - [ ] Implement `undo()` and `redo()` functions
 - [ ] Add `Cmd/Ctrl+Z` and `Cmd/Ctrl+Shift+Z` handlers
-- [ ] Create `syncUIFromState()` helper
+- [x] Create `syncUIFromState()` helper
 
 ### 10. Accessibility Improvements
 
 - [ ] Add `role="form"` to `.controls` container
 - [ ] Add `aria-labelledby` attributes to inputs
 - [ ] Add skip link to canvas at top of controls
-- [ ] Add `:focus-visible` CSS styles
-- [ ] Add `aria-label` to point configuration inputs
+- [x] Add `:focus-visible` CSS styles
+- [x] Add `aria-label` to point configuration inputs
 
 ### 11. Future Ideas
 

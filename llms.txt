@@ -16,7 +16,7 @@ The framework answers three questions:
 
 ## Primary pages
 
-- [Generator](https://chiefinnovator.github.io/levelupcircle/levelup-circle-generator.html): The interactive tool. Build, customize, export, and share a Level-Up Circle. Core features: 1–36 points, neon glow toggles, dark/light themes, 8K PNG/WebP/AVIF export with embedded metadata, compressed URL sharing via lz-string, localStorage auto-save, "Ask ChatGPT" integration for strategic advice.
+- [Generator](https://chiefinnovator.github.io/levelupcircle/levelup-circle-generator.html): The interactive tool. Build, customize, export, and share a Level-Up Circle. Core features: 1–36 points, neon glow toggles, dark/light themes, 8K PNG/WebP export with embedded metadata (PNG), compressed URL sharing via lz-string, localStorage auto-save, "Ask ChatGPT" integration for strategic advice.
 - [About](https://chiefinnovator.github.io/levelupcircle/about.html): Explains the strategic frameworks (Flywheel, Synergy Mapping, Hedgehog Concept) and how the Level-Up Circle synthesizes them.
 - [Articles](https://chiefinnovator.github.io/levelupcircle/articles.html): Index of long-form articles about the methodology.
 

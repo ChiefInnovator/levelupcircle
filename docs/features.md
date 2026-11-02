@@ -87,9 +87,9 @@ The "Random Colors" button alternates between these two modes on each click.
 - Start hue: random (or seeded for reproducibility)
 - Adjacent duplicate prevention via hue nudging
 
-## PNG Export
+## Image Export
 
-Export generates a high-resolution PNG image using an off-screen canvas.
+Export generates a high-resolution PNG or WebP image using an off-screen canvas. PNG exports include embedded metadata (title, description, author, keywords, copyright); WebP exports do not.
 
 ### Resolution Options
 
@@ -98,13 +98,23 @@ Export generates a high-resolution PNG image using an off-screen canvas.
 | 1080 | 1080 x 1080 px | Social media posts |
 | 2048 | 2048 x 2048 px | Presentations, web |
 | 3840 | 3840 x 3840 px | Print, high-DPI displays |
+| 5120 | 5120 x 5120 px | Large-format print |
+| 7680 | 7680 x 7680 px | Large-format print |
+| 8192 | 8192 x 8192 px | Maximum resolution (default) |
+
+### Formats
+
+| Format | Notes |
+|--------|-------|
+| PNG | Lossless, with embedded metadata |
+| WebP | Smaller files, adjustable quality (50–100), no metadata (default) |
 
 ### Export Behavior
 
 - Creates an off-screen `<canvas>` at the target resolution
-- Renders the circle using the same `drawCircle()` function with `isExport = true`
-- All sizes, fonts, and glow effects scale proportionally
-- Downloads automatically as `level-up-circle-{size}x{size}.png`
+- Renders the circle with the same `drawCircle(ctx, size)` function as the preview: it draws in an 800×800 logical space under one `ctx.scale(size / 800)`, with glow `shadowBlur` multiplied by `ctx.getTransform().a`
+- The export is a uniform scaling of the preview, so sizes, fonts, line breaks, and glow match exactly
+- Downloads automatically as `level-up-circle-{size}x{size}.{png|webp}`
 - Shows a success/failure toast notification
 
 ## Point Management
@@ -140,7 +150,7 @@ Export generates a high-resolution PNG image using an off-screen canvas.
 - Compresses the current state into a URL parameter using lz-string
 - Copies the full URL to the clipboard
 - Shows a success toast notification
-- Fullscreen state is included as `&fs=1` if active
+- Adds `&fs=1` when both panels are hidden; the link then opens with both panels hidden
 
 ### Twitter/X
 
@@ -158,34 +168,34 @@ Export generates a high-resolution PNG image using an off-screen canvas.
 - Prompt includes the circle title, number of focus areas, and all labels
 - See [ask-chatgpt-feature.md](ask-chatgpt-feature.md) for full details
 
-## Fullscreen Mode
+## Panel Toggle
 
-- Hides the controls panel and shows only the circle canvas
-- Toggle via the fullscreen button in the share bar
-- Preserved in shared URLs with `&fs=1`
-- On mobile, also hides the mobile toggle button and scroll indicator
+- The panel toggle button in the share bar cycles panel visibility: both → left only → right only → none
+- "None" hides both side panels and shows only the circle canvas
+- Replaces the former fullscreen button
+- A shared URL with `&fs=1` opens with both panels hidden
 
 ## Responsive Design
 
 ### Desktop (> 900px)
 
-- Two-column grid: 400px controls sidebar | flexible preview area
+- Three-panel grid: 320px settings | flexible preview area | 320px point config
 - All sections expanded by default
 - Full share bar visible
 
 ### Tablet (600–900px)
 
-- Stacked layout: controls above, preview below
-- Controls panel has a max-height of 40vh and scrolls
-- Mobile toggle button appears to show/hide controls
-- Scroll indicator shown when controls are visible
+- Stacked layout: preview first (min 50vh), then settings, then points
+- Panels grow to their content; the page scrolls as one
+- Text inputs and selects are 16px so iOS does not zoom on focus
+- The panel toggle hides either panel
 
 ### Mobile (< 600px)
 
 - Compact padding and spacing throughout
 - Button grid becomes 2-column
-- Font sizes reduced
-- Toast notifications span full width
+- Header wraps onto two rows so the title, links, and share buttons do not overlap
+- Toast notifications span full width at the top of the screen
 - Point items use a more compact layout
 
 ## Toast Notifications

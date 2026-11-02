@@ -52,13 +52,13 @@
             "Up to 36 labeled focus areas arranged radially",
             "Smart color generation with golden-angle and equal spacing",
             "Dark and light themes with neon glow effects",
-            "High-resolution export up to 8192×8192 in PNG, WebP, and AVIF",
+            "High-resolution export up to 8192×8192 in PNG and WebP",
             "Deep linking with compressed URL state sharing",
             "3-panel layout with configurable panel visibility",
             "Social sharing to Twitter/X, Facebook, and ChatGPT",
             "Ask ChatGPT for personalized strategic advice on your goals",
             "Automatic smart label wrapping",
-            "300 DPI print-quality export with embedded metadata",
+            "300 DPI print-quality export with embedded metadata (PNG)",
             "Auto-save with localStorage persistence across visits",
             "No sign-up or installation required"
         ],
@@ -110,7 +110,7 @@
                 "name": "How do I create a Level-Up Circle?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Open the Level-Up Circle Generator in any modern browser. Add up to 36 focus areas, customize their labels and colors, toggle neon glow effects, and adjust the layout. Export as a high-resolution PNG, WebP, or AVIF image up to 8K resolution. Share instantly via a URL link, Twitter/X, or Facebook. No sign-up or download required."
+                    "text": "Open the Level-Up Circle Generator in any modern browser. Add up to 36 focus areas, customize their labels and colors, toggle neon glow effects, and adjust the layout. Export as a high-resolution PNG or WebP image up to 8K resolution. Share instantly via a URL link, Twitter/X, or Facebook. No sign-up or download required."
                 }
             },
             {
@@ -118,7 +118,7 @@
                 "name": "What export formats and resolutions are supported?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "The Level-Up Circle Generator exports in PNG (lossless), WebP (smaller files), and AVIF (smallest files with best quality-to-size ratio). Resolutions range from 1080×1080 up to 8192×8192 pixels at 300 DPI — suitable for social media, presentations, and print. All exports include embedded metadata (title, description, keywords, author, copyright)."
+                    "text": "The Level-Up Circle Generator exports in PNG (lossless) and WebP (smaller files). Resolutions range from 1080×1080 up to 8192×8192 pixels at 300 DPI — suitable for social media, presentations, and print. PNG exports include embedded metadata (title, description, keywords, author, copyright)."
                 }
             },
             {
@@ -158,7 +158,7 @@
                 "name": "Is the Level-Up Circle Generator free?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Yes, the Level-Up Circle Generator is completely free with no sign-up, no account, and no limitations. It runs entirely in your browser — nothing is uploaded to a server. Export images up to 8K resolution in PNG, WebP, or AVIF format."
+                    "text": "Yes, the Level-Up Circle Generator is completely free with no sign-up, no account, and no limitations. It runs entirely in your browser — nothing is uploaded to a server. Export images up to 8K resolution in PNG or WebP format."
                 }
             }
         ]
@@ -217,7 +217,7 @@
                 "@type": "HowToStep",
                 "position": 6,
                 "name": "Export and share",
-                "text": "Export as PNG, WebP, or AVIF up to 8192×8192 at 300 DPI with embedded metadata, or copy the share link — state is compressed into the URL."
+                "text": "Export as PNG or WebP up to 8192×8192 at 300 DPI with embedded metadata (PNG), or copy the share link — state is compressed into the URL."
             }
         ]
     }
@@ -393,7 +393,7 @@
 
         input[type="range"] {
             width: 100%;
-            accent-color: #667eea;
+            accent-color: #39FF14;
         }
 
         label {
@@ -410,7 +410,7 @@
             width: 100%;
             padding: 8px 12px;
             background: #2a2a2a;
-            border: 1px solid #444;
+            border: 1px solid #6e6e6e;
             border-radius: 6px;
             color: #fff;
             font-size: 14px;
@@ -419,12 +419,46 @@
         input[type="text"]:focus,
         input[type="number"]:focus,
         select:focus {
-            outline: none;
             border-color: #39FF14;
             box-shadow: 0 0 5px rgba(57, 255, 20, 0.3);
         }
+
+        ::placeholder {
+            color: #999;
+        }
+
+        ::selection {
+            background: rgba(57, 255, 20, 0.35);
+            color: #fff;
+        }
+
+        input {
+            caret-color: #39FF14;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+            }
+            button:hover,
+            button:active,
+            .share-btn:hover {
+                transform: none;
+            }
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        summary:focus-visible {
+            outline: 2px solid #39FF14;
+            outline-offset: 2px;
+        }
         
         input[type="checkbox"] {
+            accent-color: #39FF14;
             width: 18px;
             height: 18px;
             margin-right: 8px;
@@ -432,6 +466,13 @@
             cursor: pointer;
         }
         
+        .control-fieldset {
+            border: 0;
+            padding: 0;
+            margin: 0;
+            min-width: 0;
+        }
+
         .checkbox-label {
             display: flex;
             align-items: center;
@@ -439,27 +480,37 @@
         }
         
         button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
+            background: #2a2a2a;
+            color: #e0e0e0;
+            border: 1px solid #6e6e6e;
             padding: 10px 16px;
             border-radius: 6px;
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
             width: 100%;
             margin-bottom: 8px;
         }
         
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 3px 10px rgba(255, 255, 255, 0.1);
+        }
+
+        button:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+            transform: none;
         }
         
         button.secondary {
             background: #2a2a2a;
-            border: 1px solid #444;
+            border: 1px solid #6e6e6e;
         }
         
         button.secondary:hover {
@@ -468,12 +519,21 @@
         }
         
         button.export {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: #2a2a2a;
+            border: 1px solid #39FF14;
+            color: #39FF14;
             font-size: 16px;
             padding: 12px;
             margin-top: 12px;
         }
         
+        button.export:hover:not(:disabled),
+        button.export:focus-visible {
+            background: #39FF14;
+            color: #000;
+            box-shadow: 0 0 5px rgba(57, 255, 20, 0.3);
+        }
+
         .point-list {
             margin-top: 20px;
             padding-top: 20px;
@@ -492,7 +552,7 @@
         }
         
         .point-index {
-            color: #888;
+            color: #b0b0b0;
             font-size: 12px;
             font-weight: 600;
             text-align: center;
@@ -501,7 +561,7 @@
         .point-label-input {
             padding: 6px 10px;
             background: #1a1a1a;
-            border: 1px solid #444;
+            border: 1px solid #6e6e6e;
             border-radius: 4px;
             color: #fff;
             font-size: 13px;
@@ -529,7 +589,6 @@
             border-color: #f5576c;
             color: #fff;
             transform: none;
-            box-shadow: 0 0 8px rgba(245, 87, 108, 0.4);
         }
         
         .point-delete:disabled {
@@ -549,12 +608,12 @@
             margin-top: 12px;
             padding: 10px;
             background: transparent;
-            border: 2px dashed #444;
+            border: 2px dashed #6e6e6e;
             border-radius: 6px;
-            color: #888;
+            color: #b0b0b0;
             font-size: 14px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: border-color 0.18s ease, color 0.18s ease, background-color 0.18s ease;
         }
         
         .add-point-btn:hover {
@@ -724,11 +783,27 @@
         }
         
         .toast.info {
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #888;
         }
         
         .toast.info .toast-icon {
-            color: #667eea;
+            color: #b0b0b0;
+        }
+
+        .toast-action,
+        .toast-close {
+            width: auto;
+            margin: 0;
+            padding: 4px 10px;
+            font-size: 13px;
+            background: transparent;
+            color: #39FF14;
+            border: 1px solid #39FF14;
+        }
+
+        .toast-close {
+            color: #e0e0e0;
+            border-color: #6e6e6e;
         }
         
         .toast-icon {
@@ -741,7 +816,8 @@
         
         @media (max-width: 600px) {
             .toast-container {
-                bottom: 80px;
+                top: 12px;
+                bottom: auto;
                 right: 10px;
                 left: 10px;
             }
@@ -762,7 +838,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
             margin: 0;
             padding: 0;
@@ -865,36 +941,39 @@
                 gap: 4px;
             }
 
-            .site-header .share-btn {
-                width: 30px;
-                height: 30px;
-            }
-
-            .site-header .share-btn svg {
-                width: 16px;
-                height: 16px;
-            }
-
             .container,
             .container.hide-left,
             .container.hide-right,
             .container.hide-both {
                 grid-template-columns: 1fr;
-                grid-template-rows: auto minmax(50vh, 1fr) auto;
+                grid-template-rows: minmax(50vh, 1fr) auto auto;
                 height: auto;
                 min-height: calc(100vh - 56px);
             }
 
+            /* Circle first, then settings and points in one page scroll */
+            .preview {
+                order: -1;
+            }
+
             .panel-left {
                 border-right: none;
-                border-bottom: 1px solid #333;
-                max-height: 40vh;
+                border-top: 1px solid #333;
+                overflow-y: visible;
             }
 
             .panel-right {
                 border-left: none;
                 border-top: 1px solid #333;
-                max-height: 40vh;
+                overflow-y: visible;
+            }
+
+            /* 16px or larger, or iOS zooms on focus */
+            input[type="text"],
+            input[type="number"],
+            select,
+            .point-label-input {
+                font-size: 16px;
             }
 
             .container.hide-left .panel-left,
@@ -916,6 +995,30 @@
         }
 
         @media (max-width: 600px) {
+            .site-header {
+                height: auto;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                row-gap: 8px;
+                padding: 10px 12px;
+            }
+
+            .site-header .site-nav,
+            .site-header .share-bar {
+                position: static;
+                transform: none;
+            }
+
+            .site-header h1 {
+                order: -1;
+                flex-basis: 100%;
+                text-align: center;
+            }
+
+            .preview {
+                padding: 4px;
+            }
+
             .panel-left,
             .panel-right {
                 padding: 12px;
@@ -939,7 +1042,6 @@
             input[type="number"],
             select {
                 padding: 6px 10px;
-                font-size: 13px;
             }
 
             button {
@@ -961,7 +1063,6 @@
 
             .point-label-input {
                 padding: 4px 6px;
-                font-size: 11px;
             }
 
             .point-delete {
@@ -1001,10 +1102,10 @@
             <li>Smart color generation using golden-angle and equal spacing algorithms</li>
             <li>Dark and light themes with customizable neon glow effects</li>
             <li>High-resolution export up to 8192×8192 pixels (8K) at 300 DPI</li>
-            <li>Export in PNG, WebP, and AVIF formats with embedded metadata</li>
+            <li>Export in PNG and WebP formats with embedded metadata (PNG)</li>
             <li>Instant sharing via deep links, Twitter/X, and Facebook</li>
             <li>Ask ChatGPT for strategic advice based on your focus areas</li>
-            <li>Fullscreen presentation mode</li>
+            <li>Panel toggle to show only the circle</li>
             <li>Auto-save with localStorage persistence</li>
             <li>No sign-up, download, or installation required</li>
         </ul>
@@ -1023,27 +1124,27 @@
             </div>
         </div>
     </noscript>
-    <div class="toast-container" id="toastContainer"></div>
+    <div class="toast-container" id="toastContainer" role="status" aria-live="polite"></div>
     <header class="site-header">
         <nav class="site-nav">
             <a href="articles.html">Articles</a>
             <a href="about.html">About</a>
         </nav>
-        <h1>🎯 Level-Up Circle Generator</h1>
+        <h1><span aria-hidden="true">🎯</span> Level-Up Circle Generator</h1>
         <div class="share-bar">
-            <button class="share-btn copy-link" onclick="shareLink()" title="Copy Share Link">
+            <button class="share-btn copy-link" onclick="shareLink()" title="Copy Share Link" aria-label="Copy share link">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
             </button>
-            <button class="share-btn twitter" onclick="shareToTwitter()" title="Share to X/Twitter">
+            <button class="share-btn twitter" onclick="shareToTwitter()" title="Share to X/Twitter" aria-label="Share to X">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             </button>
-            <button class="share-btn facebook" onclick="shareToFacebook()" title="Share to Facebook">
+            <button class="share-btn facebook" onclick="shareToFacebook()" title="Share to Facebook" aria-label="Share to Facebook">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
             </button>
-            <button class="share-btn chatgpt" onclick="askChatGPT()" title="Ask ChatGPT for Strategy">
+            <button class="share-btn chatgpt" onclick="askChatGPT()" title="Ask ChatGPT for Strategy" aria-label="Ask ChatGPT for strategy">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg>
             </button>
-            <button class="share-btn panel-toggle" id="panelToggleBtn" onclick="cyclePanelMode()" title="Toggle panels: Both → Left → Right → None">
+            <button class="share-btn panel-toggle" id="panelToggleBtn" onclick="cyclePanelMode()" title="Toggle panels: Both → Left → Right → None" aria-label="Toggle panels (current: Both panels)">
                 <div class="panel-icon">
                     <div class="panel-bar active" id="panelBarLeft"></div>
                     <div class="panel-bar center"></div>
@@ -1053,7 +1154,7 @@
         </div>
     </header>
     <main class="container" id="container">
-        <nav class="panel-left" id="panelLeft" aria-label="Circle settings">
+        <section class="panel-left" id="panelLeft" aria-label="Circle settings">
             <h2 class="panel-heading">Settings</h2>
 
             <div class="control-group">
@@ -1124,7 +1225,8 @@
                 </div>
             </details>
             
-            <div class="section-label">Glow Effects</div>
+            <fieldset class="control-fieldset">
+            <legend class="section-label">Glow Effects</legend>
             
             <div class="control-group">
                 <label class="checkbox-label">
@@ -1175,6 +1277,8 @@
                 </label>
             </div>
 
+            </fieldset>
+
             <div class="divider"></div>
 
             <details class="collapsible-section">
@@ -1202,13 +1306,13 @@
             <div class="divider"></div>
 
             <div class="button-grid">
-                <button class="secondary" onclick="randomizeColors()" title="Generate bright colors in ROYGBIV order. Alternates between golden angle and equal spacing.">🎨 Random Colors</button>
-                <button class="secondary" onclick="loadExample()">📋 Load Example</button>
-                <button class="secondary" onclick="saveState()">💾 Save State</button>
-                <button class="secondary" onclick="clearState()">🗑️ Clear State</button>
+                <button class="secondary" onclick="randomizeColors()" title="Generate bright colors in ROYGBIV order. Alternates between golden angle and equal spacing."><span aria-hidden="true">🎨</span> Random Colors</button>
+                <button class="secondary" onclick="confirmLoadExample()"><span aria-hidden="true">📋</span> Load Example</button>
+                <button class="secondary" onclick="saveState()"><span aria-hidden="true">💾</span> Save State</button>
+                <button class="secondary" onclick="confirmClearState()"><span aria-hidden="true">🗑️</span> Clear State</button>
             </div>
             
-        </nav>
+        </section>
 
         <section class="preview" aria-label="Circle preview">
             <canvas id="canvas" role="img" aria-label="Level-Up Circle visualization — a radial diagram showing interconnected goals with customizable colors and neon glow effects"></canvas>
@@ -1218,9 +1322,9 @@
             <h2 class="panel-heading">Points</h2>
             <div id="pointList"></div>
             <button class="add-point-btn" id="addPointBtn" onclick="addPoint()" title="Add a new point (max 36)">
-                ➕ Add Point
+                <span aria-hidden="true">➕</span> Add Point
             </button>
-            <button class="export" onclick="exportImage()">📸 Export Image</button>
+            <button class="export" id="exportBtn" onclick="exportImage()"><span aria-hidden="true">📸</span> Export Image</button>
         </aside>
     </main>
     
@@ -1620,12 +1724,13 @@
                     .replace(/'/g, '&#39;');
                 item.innerHTML = `
                     <div class="point-index">${String(index + 1).padStart(2, '0')}</div>
-                    <input type="text" class="point-label-input" value="${escapedLabel}" 
-                           data-index="${index}" onchange="updatePointLabel(${index}, this.value)">
-                    <input type="color" value="${point.color}" 
+                    <input type="text" class="point-label-input" value="${escapedLabel}" aria-label="Point ${index + 1} label"
+                           data-index="${index}" oninput="updatePointLabel(${index}, this.value)"
+                           onchange="if (!this.value) this.value = 'Point ${index + 1}'">
+                    <input type="color" value="${point.color}" aria-label="Point ${index + 1} color"
                            data-index="${index}" onchange="updatePointColor(${index}, this.value)">
-                    <button class="point-delete" onclick="deletePoint(${index})" 
-                            title="Delete point" ${isOnlyPoint ? 'disabled' : ''}>✕</button>
+                    <button class="point-delete" onclick="deletePoint(${index})" data-index="${index}"
+                            title="Delete point" aria-label="Delete point ${index + 1}" ${isOnlyPoint ? 'disabled' : ''}>✕</button>
                 `;
                 container.appendChild(item);
             });
@@ -1667,7 +1772,7 @@
             // Validate index
             if (index >= 0 && index < state.points.length) {
                 // Remove the point
-                state.points.splice(index, 1);
+                const [removed] = state.points.splice(index, 1);
                 state.numPoints = state.points.length;
                 
                 // Update the points input field
@@ -1675,6 +1780,21 @@
                 
                 // Refresh the UI
                 updatePointList();
+
+                // Keep keyboard focus in the list after the row disappears
+                const next = document.querySelector(`#pointList .point-label-input[data-index="${Math.min(index, state.points.length - 1)}"]`);
+                (next || document.getElementById('addPointBtn')).focus();
+
+                showToast(`Deleted "${removed.label}".`, 'info', {
+                    label: 'Undo',
+                    onClick: () => {
+                        if (state.points.length >= 36) return;
+                        state.points.splice(Math.min(index, state.points.length), 0, removed);
+                        state.numPoints = state.points.length;
+                        document.getElementById('points').value = state.numPoints;
+                        updatePointList();
+                    }
+                });
             }
         }
         
@@ -1735,60 +1855,42 @@
             });
             
             updatePointList();
-            
-            // Log for debugging (optional)
-            console.log(`Generated ${state.numPoints} colors using ${colorSpacingMode} spacing`);
         }
         
         function loadExample() {
-            state = {
+            state = normalizeState({
                 title: 'My Level-Up Circle',
-                numPoints: 8,
-                exportSize: 8192,
-                theme: 'dark',
                 neonGlowTitle: false,
                 neonGlowPoints: false,
                 neonGlowLabels: false,
-                neonGlowCircle: true,
-                neonGlowConnections: true,
-                showConnections: true,
                 showGuideLines: false,
-                metaCopyright: 'Copyright Richard Crane. All Rights Reserved.',
-                metaAuthor: 'Richard Crane',
-                metaDescription: '',
-                metaKeywords: '',
-                pointSize: 14,
-                labelOffset: 25,
-                labelFontSize: 16,
-                titleFontSize: 28,
                 points: initializePoints(8)
-            };
+            });
+            syncUIFromState();
+        }
 
-            document.getElementById('title').value = state.title;
-            document.getElementById('theme').value = state.theme;
-            document.getElementById('points').value = state.numPoints;
-            document.getElementById('exportSize').value = state.exportSize;
-            document.getElementById('neonGlowTitle').checked = state.neonGlowTitle;
-            document.getElementById('neonGlowPoints').checked = state.neonGlowPoints;
-            document.getElementById('neonGlowLabels').checked = state.neonGlowLabels;
-            document.getElementById('neonGlowCircle').checked = state.neonGlowCircle;
-            document.getElementById('neonGlowConnections').checked = state.neonGlowConnections;
-            document.getElementById('showConnections').checked = state.showConnections;
-            document.getElementById('showGuideLines').checked = state.showGuideLines;
-            document.getElementById('metaCopyright').value = state.metaCopyright;
-            document.getElementById('metaAuthor').value = state.metaAuthor;
-            document.getElementById('metaDescription').value = state.metaDescription;
-            document.getElementById('metaKeywords').value = state.metaKeywords;
-            document.getElementById('pointSize').value = state.pointSize;
-            document.getElementById('labelOffset').value = state.labelOffset;
-            document.getElementById('labelFontSize').value = state.labelFontSize;
-            document.getElementById('titleFontSize').value = state.titleFontSize;
-            
+        function confirmLoadExample() {
+            if (confirm('Replace your current circle with the example?')) loadExample();
+        }
+
+        // Write every form control and readout from state, then rebuild the point list
+        function syncUIFromState() {
+            const setValue = (id, v) => { document.getElementById(id).value = v; };
+            const setChecked = (id, v) => { document.getElementById(id).checked = v; };
+            ['title', 'theme', 'exportSize', 'exportFormat', 'exportQuality', 'pointSize', 'labelOffset',
+             'labelFontSize', 'titleFontSize', 'metaCopyright', 'metaAuthor', 'metaDescription', 'metaKeywords']
+                .forEach(id => setValue(id, state[id]));
+            setValue('points', state.numPoints);
+            ['neonGlowTitle', 'neonGlowPoints', 'neonGlowLabels', 'neonGlowCircle', 'neonGlowConnections',
+             'showConnections', 'showGuideLines'].forEach(id => setChecked(id, state[id]));
+            document.getElementById('labelOffsetValue').textContent = state.labelOffset;
+            document.getElementById('qualityValue').textContent = state.exportQuality;
+            document.getElementById('qualityGroup').classList.toggle('hidden', state.exportFormat === 'png');
             updatePointList();
         }
         
         // Toast notification system
-        function showToast(message, type = 'info') {
+        function showToast(message, type = 'info', action = null) {
             const container = document.getElementById('toastContainer');
             
             const toast = document.createElement('div');
@@ -1800,10 +1902,42 @@
                 info: 'ℹ'
             };
             
-            toast.innerHTML = `
-                <span class="toast-icon">${icons[type] || icons.info}</span>
-                <span class="toast-message">${message}</span>
-            `;
+            const icon = document.createElement('span');
+            icon.className = 'toast-icon';
+            icon.setAttribute('aria-hidden', 'true');
+            icon.textContent = icons[type] || icons.info;
+            const text = document.createElement('span');
+            text.className = 'toast-message';
+            text.textContent = message;
+            toast.append(icon, text);
+
+            const dismiss = () => {
+                clearTimeout(timer);
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            };
+
+            // Optional action button, e.g. { label: 'Undo', onClick }
+            if (action) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'toast-action';
+                btn.textContent = action.label;
+                btn.addEventListener('click', () => { dismiss(); action.onClick(); });
+                toast.append(btn);
+            }
+
+            // Errors and actionable toasts stay until closed; others time out by length
+            const sticky = type === 'error' || Boolean(action);
+            if (sticky) {
+                const close = document.createElement('button');
+                close.type = 'button';
+                close.className = 'toast-close';
+                close.setAttribute('aria-label', 'Dismiss');
+                close.textContent = '×';
+                close.addEventListener('click', dismiss);
+                toast.append(close);
+            }
             
             container.appendChild(toast);
             
@@ -1812,11 +1946,14 @@
                 toast.classList.add('show');
             });
             
-            // Auto-remove after 3 seconds
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            const duration = Math.max(4000, message.length * 60);
+            let timer = sticky ? null : setTimeout(dismiss, duration);
+            if (!sticky) {
+                // Pause while the user is reading or focused on the toast
+                toast.addEventListener('mouseenter', () => clearTimeout(timer));
+                toast.addEventListener('focusin', () => clearTimeout(timer));
+                toast.addEventListener('mouseleave', () => { timer = setTimeout(dismiss, duration); });
+            }
         }
         
         // Auto-save function (silent, no toast)
@@ -1848,51 +1985,21 @@
                 console.error('Failed to clear state:', e);
             }
             // Reset to empty state
-            state = {
-                title: 'Level-Up Circle',
-                numPoints: 8,
-                exportSize: 8192,
-                theme: 'dark',
+            state = normalizeState({
                 neonGlowTitle: false,
                 neonGlowPoints: false,
                 neonGlowLabels: false,
-                neonGlowCircle: true,
-                neonGlowConnections: true,
-                showConnections: true,
                 showGuideLines: false,
                 metaCopyright: '',
                 metaAuthor: '',
-                metaDescription: '',
-                metaKeywords: '',
-                pointSize: 14,
-                labelOffset: 25,
-                labelFontSize: 16,
-                titleFontSize: 28,
                 points: initializePoints(8, false)
-            };
-
-            document.getElementById('title').value = state.title;
-            document.getElementById('theme').value = state.theme;
-            document.getElementById('points').value = state.numPoints;
-            document.getElementById('exportSize').value = state.exportSize;
-            document.getElementById('neonGlowTitle').checked = state.neonGlowTitle;
-            document.getElementById('neonGlowPoints').checked = state.neonGlowPoints;
-            document.getElementById('neonGlowLabels').checked = state.neonGlowLabels;
-            document.getElementById('neonGlowCircle').checked = state.neonGlowCircle;
-            document.getElementById('neonGlowConnections').checked = state.neonGlowConnections;
-            document.getElementById('showConnections').checked = state.showConnections;
-            document.getElementById('showGuideLines').checked = state.showGuideLines;
-            document.getElementById('metaCopyright').value = state.metaCopyright;
-            document.getElementById('metaAuthor').value = state.metaAuthor;
-            document.getElementById('metaDescription').value = state.metaDescription;
-            document.getElementById('metaKeywords').value = state.metaKeywords;
-            document.getElementById('pointSize').value = state.pointSize;
-            document.getElementById('labelOffset').value = state.labelOffset;
-            document.getElementById('labelFontSize').value = state.labelFontSize;
-            document.getElementById('titleFontSize').value = state.titleFontSize;
-
-            updatePointList();
+            });
+            syncUIFromState();
             showToast('State cleared!', 'success');
+        }
+
+        function confirmClearState() {
+            if (confirm('Clear your saved circle? This cannot be undone.')) clearState();
         }
         
         // Deep link functions - New compressed format using lz-string
@@ -1931,16 +2038,17 @@
                 if (!json) return null;
                 
                 const obj = JSON.parse(json);
+                if (!obj || typeof obj !== 'object') return null;
                 
-                const newState = {
-                    title: obj.t || 'Level-Up Circle',
-                    numPoints: parseInt(obj.n) || 8,
-                    exportSize: parseInt(obj.es) || 8192,
-                    theme: obj.th || 'dark',
-                    pointSize: parseInt(obj.ps) || 14,
-                    labelOffset: parseInt(obj.lo) || 35,
-                    labelFontSize: parseInt(obj.fs) || 16,
-                    titleFontSize: parseInt(obj.tfs) || 28,
+                return {
+                    title: obj.t,
+                    numPoints: obj.n,
+                    exportSize: obj.es,
+                    theme: obj.th,
+                    pointSize: obj.ps,
+                    labelOffset: obj.lo,
+                    labelFontSize: obj.fs,
+                    titleFontSize: obj.tfs,
                     neonGlowTitle: obj.gt !== 0,
                     neonGlowPoints: obj.gp !== 0,
                     neonGlowLabels: obj.gl !== 0,
@@ -1948,22 +2056,11 @@
                     neonGlowConnections: obj.gn !== 0,
                     showConnections: obj.sc !== 0,
                     showGuideLines: obj.sg !== 0,
-                    points: []
+                    // Points as array of [label, color] pairs (color without #)
+                    points: Array.isArray(obj.p)
+                        ? obj.p.map(pt => ({ label: pt && pt[0], color: pt && typeof pt[1] === 'string' ? `#${pt[1]}` : undefined }))
+                        : undefined
                 };
-                
-                // Decode points from array format
-                if (obj.p && Array.isArray(obj.p)) {
-                    newState.points = obj.p.map((pt, index) => {
-                        const label = pt[0] || `Point ${index + 1}`;
-                        // Validate hex color (6 hex chars)
-                        const colorHex = pt[1] && /^[0-9A-Fa-f]{6}$/.test(pt[1]) ? pt[1] : '39FF14';
-                        return { label, color: `#${colorHex}` };
-                    });
-                    newState.numPoints = newState.points.length;
-                }
-                
-                // Validate
-                return validateState(newState);
             } catch (e) {
                 console.error('Failed to decode compressed state:', e);
                 return null;
@@ -1973,65 +2070,94 @@
         // Legacy decoder for backwards compatibility with old URL format
         function decodeStateFromLegacyURL(searchParams) {
             try {
-                const newState = {
-                    title: searchParams.get('t') || 'Level-Up Circle',
-                    numPoints: parseInt(searchParams.get('n')) || 8,
-                    exportSize: parseInt(searchParams.get('es')) || 8192,
-                    theme: searchParams.get('th') || 'dark',
-                    pointSize: parseInt(searchParams.get('ps')) || 14,
-                    labelOffset: parseInt(searchParams.get('lo')) || 35,
-                    labelFontSize: parseInt(searchParams.get('fs')) || 16,
-                    titleFontSize: parseInt(searchParams.get('tfs')) || 28,
+                const raw = {
+                    title: searchParams.get('t'),
+                    numPoints: searchParams.get('n'),
+                    exportSize: searchParams.get('es'),
+                    theme: searchParams.get('th'),
+                    pointSize: searchParams.get('ps'),
+                    labelOffset: searchParams.get('lo') ?? 35,
+                    labelFontSize: searchParams.get('fs'),
+                    titleFontSize: searchParams.get('tfs'),
                     neonGlowTitle: searchParams.get('gt') !== '0',
                     neonGlowPoints: searchParams.get('gp') !== '0',
                     neonGlowLabels: searchParams.get('gl') !== '0',
                     neonGlowCircle: searchParams.get('gc') !== '0',
                     neonGlowConnections: searchParams.get('gn') !== '0',
                     showConnections: searchParams.get('sc') !== '0',
-                    showGuideLines: searchParams.get('sg') !== '0',
-                    points: []
+                    showGuideLines: searchParams.get('sg') !== '0'
                 };
 
                 // Decode points from legacy format: label|color,label|color,...
+                // Colors are validated as hex by normalizeState before reaching the DOM
                 const pointsData = searchParams.get('p');
                 if (pointsData) {
-                    const pointStrings = pointsData.split(',');
-                    newState.points = pointStrings.map((ps, index) => {
+                    raw.points = pointsData.split(',').map(ps => {
                         const [label, color] = ps.split('|');
                         // Validate hex color (6 hex chars); the value is later written into HTML
                         const colorHex = color && /^[0-9A-Fa-f]{6}$/.test(color) ? color : '39FF14';
-                        return {
-                            label: decodeURIComponent(label) || `Point ${index + 1}`,
-                            color: `#${colorHex}`
-                        };
+                        return { label: decodeURIComponent(label), color: `#${colorHex}` };
                     });
-                    newState.numPoints = newState.points.length;
                 }
-                
-                // Validate
-                return validateState(newState);
+                return raw;
             } catch (e) {
                 console.error('Failed to decode legacy URL state:', e);
                 return null;
             }
         }
         
-        // Common validation for decoded state
-        function validateState(newState) {
-            newState.numPoints = Math.max(1, Math.min(36, newState.numPoints));
-            newState.pointSize = Math.max(1, Math.min(60, newState.pointSize));
-            newState.labelOffset = Math.max(0, Math.min(150, newState.labelOffset));
-            newState.labelFontSize = Math.max(8, Math.min(32, newState.labelFontSize));
-            newState.titleFontSize = Math.max(16, Math.min(48, newState.titleFontSize || 28));
-            newState.exportSize = [1080, 2048, 3840, 5120, 7680, 8192].includes(newState.exportSize) ? newState.exportSize : 8192;
-            newState.theme = ['dark', 'light'].includes(newState.theme) ? newState.theme : 'dark';
-            
-            // If no points decoded, initialize them
-            if (newState.points.length === 0) {
-                newState.points = initializePoints(newState.numPoints);
+        // Parse an integer; only NaN falls back (0 is a valid value)
+        function toInt(value, fallback) {
+            const n = Number.parseInt(value, 10);
+            return Number.isNaN(n) ? fallback : n;
+        }
+
+        const clampInt = (value, min, max, fallback) => Math.max(min, Math.min(max, toInt(value, fallback)));
+        const HEX_COLOR = /^#[0-9A-Fa-f]{6}$/;
+        const DEFAULT_META_COPYRIGHT = 'Copyright Richard Crane. All Rights Reserved.';
+        const DEFAULT_META_AUTHOR = 'Richard Crane';
+
+        // Single validator for every load path (URL, legacy URL, localStorage, example, clear).
+        // Returns a complete, valid state built from fresh objects.
+        function normalizeState(raw) {
+            raw = raw && typeof raw === 'object' ? raw : {};
+            const bool = (v) => typeof v === 'boolean' ? v : true;
+            const str = (v, fallback) => typeof v === 'string' ? v : fallback;
+
+            let points;
+            if (Array.isArray(raw.points) && raw.points.length > 0) {
+                points = raw.points.slice(0, 36).map((pt, i) => ({
+                    label: pt && typeof pt.label === 'string' && pt.label ? pt.label : `Point ${i + 1}`,
+                    color: pt && typeof pt.color === 'string' && HEX_COLOR.test(pt.color) ? pt.color : '#39FF14'
+                }));
+            } else {
+                points = initializePoints(clampInt(raw.numPoints, 1, 36, 8));
             }
-            
-            return newState;
+
+            return {
+                title: typeof raw.title === 'string' && raw.title ? raw.title : 'Level-Up Circle',
+                numPoints: points.length,
+                exportSize: validExportSizes.includes(toInt(raw.exportSize, 8192)) ? toInt(raw.exportSize, 8192) : 8192,
+                exportFormat: ['png', 'webp'].includes(raw.exportFormat) ? raw.exportFormat : 'webp',
+                exportQuality: clampInt(raw.exportQuality, 50, 100, 100),
+                theme: ['dark', 'light'].includes(raw.theme) ? raw.theme : 'dark',
+                neonGlowTitle: bool(raw.neonGlowTitle),
+                neonGlowPoints: bool(raw.neonGlowPoints),
+                neonGlowLabels: bool(raw.neonGlowLabels),
+                neonGlowCircle: bool(raw.neonGlowCircle),
+                neonGlowConnections: bool(raw.neonGlowConnections),
+                showConnections: bool(raw.showConnections),
+                showGuideLines: bool(raw.showGuideLines),
+                metaCopyright: str(raw.metaCopyright, DEFAULT_META_COPYRIGHT),
+                metaAuthor: str(raw.metaAuthor, DEFAULT_META_AUTHOR),
+                metaDescription: str(raw.metaDescription, ''),
+                metaKeywords: str(raw.metaKeywords, ''),
+                pointSize: clampInt(raw.pointSize, 1, 60, 14),
+                labelOffset: clampInt(raw.labelOffset, 0, 150, 25),
+                labelFontSize: clampInt(raw.labelFontSize, 8, 32, 16),
+                titleFontSize: clampInt(raw.titleFontSize, 16, 48, 28),
+                points
+            };
         }
         
         function shareLink() {
@@ -2107,7 +2233,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
 4. Highlights potential conflicts or trade-offs to watch for
 5. Provides specific next actions for each focus area`;
 
-            const chatGptUrl = `https://chat.openai.com/?q=${encodeURIComponent(prompt)}`;
+            const chatGptUrl = `https://chatgpt.com/?q=${encodeURIComponent(prompt)}`;
             window.open(chatGptUrl, '_blank');
             showToast('Opening ChatGPT with your Level-Up Circle...', 'info');
         }
@@ -2141,151 +2267,102 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             const rightBar = document.getElementById('panelBarRight');
             leftBar.classList.toggle('active', panelMode === 'both' || panelMode === 'left');
             rightBar.classList.toggle('active', panelMode === 'both' || panelMode === 'right');
+            document.getElementById('panelToggleBtn').setAttribute('aria-label', `Toggle panels (current: ${panelModeLabels[panelMode]})`);
 
             setTimeout(() => redraw(), 50);
         }
         
+        // The recipient's own preferences survive opening a share link (they are not in the URL)
+        function getSavedPreferences() {
+            try {
+                const saved = JSON.parse(localStorage.getItem('levelUpCircleState'));
+                if (!saved || typeof saved !== 'object') return {};
+                const prefs = {};
+                ['metaCopyright', 'metaAuthor', 'metaDescription', 'metaKeywords', 'exportFormat', 'exportQuality']
+                    .forEach(key => { if (saved[key] !== undefined) prefs[key] = saved[key]; });
+                return prefs;
+            } catch (e) {
+                return {};
+            }
+        }
+
         function loadFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
             const isFullscreen = urlParams.get('fs') === '1';
             
-            // First, check for new compressed format (s parameter)
+            let raw = null;
             if (urlParams.has('s')) {
-                const compressed = urlParams.get('s');
-                const urlState = decodeStateFromCompressed(compressed);
-                if (urlState) {
-                    state = urlState;
-                    applyStateToUI();
-                    
-                    // If fullscreen mode (legacy fs=1), hide both panels
-                    if (isFullscreen) {
-                        panelMode = 'none';
-                        applyPanelMode();
-                    } else {
-                        // Clear URL params after loading (cleaner URL)
-                        window.history.replaceState({}, '', window.location.pathname);
-                        showToast('Loaded shared configuration!', 'success');
-                    }
-                    return true;
-                }
+                raw = decodeStateFromCompressed(urlParams.get('s'));
             }
-            
             // Fall back to legacy format for backwards compatibility
-            if (urlParams.has('t') || urlParams.has('p')) {
-                const urlState = decodeStateFromLegacyURL(urlParams);
-                if (urlState) {
-                    state = urlState;
-                    applyStateToUI();
-                    
-                    // Clear URL params after loading (cleaner URL)
-                    window.history.replaceState({}, '', window.location.pathname);
-                    
-                    showToast('Loaded shared configuration!', 'success');
-                    return true;
-                }
+            if (!raw && (urlParams.has('t') || urlParams.has('p'))) {
+                raw = decodeStateFromLegacyURL(urlParams);
             }
-            return false;
-        }
-        
-        // Helper function to apply state to UI elements
-        function applyStateToUI() {
-            document.getElementById('title').value = state.title;
-            document.getElementById('theme').value = state.theme;
-            document.getElementById('points').value = state.numPoints;
-            document.getElementById('exportSize').value = state.exportSize;
-            document.getElementById('neonGlowTitle').checked = state.neonGlowTitle;
-            document.getElementById('neonGlowPoints').checked = state.neonGlowPoints;
-            document.getElementById('neonGlowLabels').checked = state.neonGlowLabels;
-            document.getElementById('neonGlowCircle').checked = state.neonGlowCircle;
-            document.getElementById('neonGlowConnections').checked = state.neonGlowConnections;
-            document.getElementById('showConnections').checked = state.showConnections;
-            document.getElementById('showGuideLines').checked = state.showGuideLines;
-            document.getElementById('pointSize').value = state.pointSize;
-            document.getElementById('labelOffset').value = state.labelOffset;
-            document.getElementById('labelFontSize').value = state.labelFontSize;
-            document.getElementById('titleFontSize').value = state.titleFontSize;
-            
-            updatePointList();
+            if (!raw) return false;
+
+            // Auto-save will overwrite the recipient's own circle, so keep a copy they can restore
+            let previous = null;
+            try { previous = localStorage.getItem('levelUpCircleState'); } catch (e) { /* storage unavailable */ }
+
+            state = normalizeState({ ...getSavedPreferences(), ...raw });
+            syncUIFromState();
+
+            const replacedOwnCircle = previous && previous !== JSON.stringify(state);
+            const restoreAction = replacedOwnCircle ? {
+                label: 'Restore mine',
+                onClick: () => {
+                    try { localStorage.setItem('levelUpCircleState', previous); } catch (e) { /* storage unavailable */ }
+                    loadState();
+                    showToast('Restored your circle.', 'success');
+                }
+            } : null;
+
+            // If fullscreen mode (legacy fs=1), hide both panels
+            if (urlParams.has('s') && isFullscreen) {
+                panelMode = 'none';
+                applyPanelMode();
+                if (restoreAction) showToast('Opened a shared circle.', 'info', restoreAction);
+            } else {
+                // Clear URL params after loading (cleaner URL)
+                window.history.replaceState({}, '', window.location.pathname);
+                showToast('Opened a shared circle.', 'success', restoreAction);
+            }
+            return true;
         }
         
         function loadState() {
             try {
-                const saved = localStorage.getItem('levelUpCircleState');
-                if (saved) {
-                    state = JSON.parse(saved);
-                    
-                    // Handle backward compatibility - migrate old properties
-                    if (state.neonGlow !== undefined && state.neonGlowPoints === undefined) {
-                        state.neonGlowPoints = state.neonGlow;
-                        state.neonGlowLabels = state.neonGlow;
-                        state.neonGlowCircle = state.neonGlow;
-                        state.neonGlowConnections = state.neonGlow;
-                        delete state.neonGlow; // Clean up old property
-                    }
-                    // Migrate from combined neonGlowPointsLabels to separate properties
-                    if (state.neonGlowPointsLabels !== undefined && state.neonGlowPoints === undefined) {
-                        state.neonGlowPoints = state.neonGlowPointsLabels;
-                        state.neonGlowLabels = state.neonGlowPointsLabels;
-                        delete state.neonGlowPointsLabels;
-                    }
-                    // Migrate from combined neonGlowLines to separate properties
-                    if (state.neonGlowLines !== undefined && state.neonGlowCircle === undefined) {
-                        state.neonGlowCircle = state.neonGlowLines;
-                        state.neonGlowConnections = state.neonGlowLines;
-                        delete state.neonGlowLines;
-                    }
-                    
-                    // Validate loaded state
-                    state.numPoints = Math.max(1, Math.min(36, state.numPoints || 8));
-                    state.pointSize = Math.max(1, Math.min(60, state.pointSize || 14));
-                    state.labelOffset = Math.max(0, Math.min(150, state.labelOffset || 25));
-                    state.labelFontSize = Math.max(8, Math.min(32, state.labelFontSize || 16));
-                    state.titleFontSize = Math.max(16, Math.min(48, state.titleFontSize || 28));
-                    state.exportSize = [1080, 2048, 3840, 5120, 7680, 8192].includes(state.exportSize) ? state.exportSize : 8192;
-                    state.title = state.title || 'Level-Up Circle';
-                    state.theme = ['dark', 'light'].includes(state.theme) ? state.theme : 'dark';
-                    state.neonGlowTitle = state.neonGlowTitle !== undefined ? state.neonGlowTitle : true;
-                    state.neonGlowPoints = state.neonGlowPoints !== undefined ? state.neonGlowPoints : true;
-                    state.neonGlowLabels = state.neonGlowLabels !== undefined ? state.neonGlowLabels : true;
-                    state.neonGlowCircle = state.neonGlowCircle !== undefined ? state.neonGlowCircle : true;
-                    state.neonGlowConnections = state.neonGlowConnections !== undefined ? state.neonGlowConnections : true;
-                    state.showGuideLines = state.showGuideLines !== undefined ? state.showGuideLines : true;
-                    state.metaCopyright = state.metaCopyright || 'Copyright Richard Crane. All Rights Reserved.';
-                    state.metaAuthor = state.metaAuthor || 'Richard Crane';
-                    state.metaDescription = state.metaDescription || '';
-                    state.metaKeywords = state.metaKeywords || '';
-
-                    // Update UI with validated values
-                    document.getElementById('title').value = state.title;
-                    document.getElementById('theme').value = state.theme;
-                    document.getElementById('points').value = state.numPoints;
-                    document.getElementById('exportSize').value = state.exportSize;
-                    document.getElementById('neonGlowTitle').checked = state.neonGlowTitle;
-                    document.getElementById('neonGlowPoints').checked = state.neonGlowPoints;
-                    document.getElementById('neonGlowLabels').checked = state.neonGlowLabels;
-                    document.getElementById('neonGlowCircle').checked = state.neonGlowCircle;
-                    document.getElementById('neonGlowConnections').checked = state.neonGlowConnections;
-                    document.getElementById('showConnections').checked = state.showConnections;
-                    document.getElementById('showGuideLines').checked = state.showGuideLines !== false;
-                    document.getElementById('metaCopyright').value = state.metaCopyright;
-                    document.getElementById('metaAuthor').value = state.metaAuthor;
-                    document.getElementById('metaDescription').value = state.metaDescription;
-                    document.getElementById('metaKeywords').value = state.metaKeywords;
-                    document.getElementById('pointSize').value = state.pointSize;
-                    document.getElementById('labelOffset').value = state.labelOffset;
-                    document.getElementById('labelFontSize').value = state.labelFontSize;
-                    document.getElementById('titleFontSize').value = state.titleFontSize;
-                    updatePointList();
-                } else {
+                const saved = JSON.parse(localStorage.getItem('levelUpCircleState'));
+                if (!saved || typeof saved !== 'object') {
                     loadExample();
+                    return;
                 }
+                // Handle backward compatibility - migrate old properties
+                if (saved.neonGlow !== undefined && saved.neonGlowPoints === undefined) {
+                    saved.neonGlowPoints = saved.neonGlow;
+                    saved.neonGlowLabels = saved.neonGlow;
+                    saved.neonGlowCircle = saved.neonGlow;
+                    saved.neonGlowConnections = saved.neonGlow;
+                }
+                // Migrate from combined neonGlowPointsLabels to separate properties
+                if (saved.neonGlowPointsLabels !== undefined && saved.neonGlowPoints === undefined) {
+                    saved.neonGlowPoints = saved.neonGlowPointsLabels;
+                    saved.neonGlowLabels = saved.neonGlowPointsLabels;
+                }
+                // Migrate from combined neonGlowLines to separate properties
+                if (saved.neonGlowLines !== undefined && saved.neonGlowCircle === undefined) {
+                    saved.neonGlowCircle = saved.neonGlowLines;
+                    saved.neonGlowConnections = saved.neonGlowLines;
+                }
+                state = normalizeState(saved);
+                syncUIFromState();
             } catch (e) {
                 console.error('Failed to load state:', e);
                 loadExample();
             }
         }
         
-        function drawCircle(ctx, size, isExport = false) {
+        function drawCircle(ctx, size) {
             // Theme colors
             const isDark = state.theme === 'dark';
             const bgColor = isDark ? '#000' : '#fff';
@@ -2296,44 +2373,30 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             const labelOutlineColor = isDark ? '#000' : '#fff';
             
             // Clear canvas with background
+            ctx.save();
             ctx.fillStyle = bgColor;
             ctx.fillRect(0, 0, size, size);
             
-            // Calculate dimensions - adaptive padding for different screen sizes
-            // Use more padding on smaller screens to prevent label clipping
-            const basePadding = size * 0.26; // 26% padding to accommodate wrapped labels
-            const minPadding = 60; // Minimum padding in pixels for very small screens
-            const padding = Math.max(basePadding, minPadding);
+            // Draw in an 800×800 logical space so preview and export are uniform scalings of each other.
+            // measureText ignores the transform, so labels wrap identically at every output size.
+            ctx.scale(size / 800, size / 800);
+            size = 800;
+            // shadowBlur is measured in device pixels and ignores the transform; scale it by pixels per unit
+            const blurScale = ctx.getTransform().a;
+            
+            const padding = size * 0.26; // 26% padding to accommodate wrapped labels
             
             const centerX = size / 2;
             const centerY = size / 2;
             const circleRadius = (size - padding * 2) / 2;
             
-            // Adaptive scale factor based on canvas size
-            // Reference size is 800px - scale proportionally for other sizes
-            const referenceSize = 800;
-            const displayScaleFactor = size / referenceSize;
-            const dpr = window.devicePixelRatio || 1;
-            const previewLogicalSize = canvas.width / dpr;
-            const exportScaleFactor = isExport ? size / previewLogicalSize : 1;
-            const scaleFactor = isExport ? exportScaleFactor : Math.max(0.5, Math.min(1.5, displayScaleFactor));
-            
-            const pointRadius = state.pointSize * scaleFactor;
-            const labelOffsetScaled = state.labelOffset * scaleFactor;
-            
-            // Font settings - scale with canvas size
-            // For exports, scale freely; for display, apply min/max limits
-            const baseFontSize = state.labelFontSize || 16;
-            const baseTitleSize = state.titleFontSize || 28;
-            const fontSize = isExport 
-                ? baseFontSize * scaleFactor 
-                : Math.max(8, Math.min(32, baseFontSize * scaleFactor));
-            const titleFontSize = isExport 
-                ? baseTitleSize * scaleFactor 
-                : Math.max(16, Math.min(48, baseTitleSize * scaleFactor));
+            const pointRadius = state.pointSize;
+            const labelOffsetScaled = state.labelOffset;
+            const fontSize = state.labelFontSize;
+            const titleFontSize = state.titleFontSize;
             const lineHeight = fontSize * 1.2; // Proportional line height
-            const labelPadding = Math.max(4, 6 * scaleFactor); // Padding for bounding box
-            const maxLabelWidth = Math.min(180 * scaleFactor, size * 0.22); // Slightly reduced for mobile
+            const labelPadding = 6; // Padding for bounding box
+            const maxLabelWidth = Math.min(180, size * 0.22);
             
             // Draw title with proper spacing
             ctx.save();
@@ -2346,13 +2409,13 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             
             if (state.neonGlowTitle) {
                 ctx.strokeStyle = labelOutlineColor;
-                ctx.lineWidth = 4 * scaleFactor;
+                ctx.lineWidth = 4;
                 ctx.strokeText(state.title, centerX, titleY);
                 // Multi-layer glow: wide soft, medium, tight bright
                 const glowLayers = [
-                    { blur: 30 * scaleFactor, alpha: 0.3 },
-                    { blur: 15 * scaleFactor, alpha: 0.5 },
-                    { blur: 6 * scaleFactor, alpha: 1.0 },
+                    { blur: 30 * blurScale, alpha: 0.3 },
+                    { blur: 15 * blurScale, alpha: 0.5 },
+                    { blur: 6 * blurScale, alpha: 1.0 },
                 ];
                 for (const layer of glowLayers) {
                     ctx.shadowColor = glowColor;
@@ -2371,13 +2434,13 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             // Draw outer ring
             ctx.save();
             ctx.strokeStyle = circleColor;
-            ctx.lineWidth = state.neonGlowCircle ? 2.5 * scaleFactor : 1.5 * scaleFactor;
+            ctx.lineWidth = state.neonGlowCircle ? 2.5 : 1.5;
             if (state.neonGlowCircle) {
                 // Multi-layer ring glow
                 const ringGlowLayers = [
-                    { blur: 20 * scaleFactor, alpha: 0.25 },
-                    { blur: 10 * scaleFactor, alpha: 0.5 },
-                    { blur: 4 * scaleFactor, alpha: 1.0 },
+                    { blur: 20 * blurScale, alpha: 0.25 },
+                    { blur: 10 * blurScale, alpha: 0.5 },
+                    { blur: 4 * blurScale, alpha: 1.0 },
                 ];
                 for (const layer of ringGlowLayers) {
                     ctx.shadowColor = glowColor;
@@ -2408,7 +2471,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             // Draw connection lines if enabled
             if (state.showConnections) {
                 ctx.save();
-                ctx.lineWidth = 1 * scaleFactor;
+                ctx.lineWidth = 1;
                 ctx.globalAlpha = 0.35;
 
                 for (let i = 0; i < positions.length; i++) {
@@ -2423,7 +2486,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
 
                         if (state.neonGlowConnections) {
                             ctx.shadowColor = state.points[i].color;
-                            ctx.shadowBlur = 4 * scaleFactor;
+                            ctx.shadowBlur = 4 * blurScale;
                         }
 
                         ctx.beginPath();
@@ -2439,16 +2502,15 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             positions.forEach((pos, index) => {
                 const point = state.points[index];
                 
-                // Adaptive point size for small screens
-                const adaptivePointRadius = Math.max(6, pointRadius);
+                                const adaptivePointRadius = pointRadius;
                 
                 // Draw the point with radial gradient for 3D glass look
                 ctx.save();
                 if (state.neonGlowPoints) {
                     // Multi-layer point glow
                     const ptGlowLayers = [
-                        { blur: 25 * scaleFactor, alpha: 0.3 },
-                        { blur: 12 * scaleFactor, alpha: 0.6 },
+                        { blur: 25 * blurScale, alpha: 0.3 },
+                        { blur: 12 * blurScale, alpha: 0.6 },
                     ];
                     for (const layer of ptGlowLayers) {
                         ctx.shadowColor = point.color;
@@ -2476,7 +2538,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 ctx.fill();
                 // Subtle outline using darkened point color
                 ctx.strokeStyle = shadeColor(point.color, -60);
-                ctx.lineWidth = Math.max(1, 1.5 * scaleFactor);
+                ctx.lineWidth = 1.5;
                 ctx.stroke();
                 ctx.restore();
                 
@@ -2500,11 +2562,11 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 // Add extra offset based on font size increase from base (16px)
                 // When font size is larger, labels need more space from the circle
                 // Also add extra offset based on point size increase from base (14px)
-                const baseFontSizeScaled = 16 * scaleFactor;
-                const basePointSizeScaled = 14 * scaleFactor;
+                const baseFontSizeScaled = 16;
+                const basePointSizeScaled = 14;
                 const fontSizeExtra = Math.max(0, (fontSize - baseFontSizeScaled) * 0.5);
                 const pointSizeExtra = Math.max(0, (adaptivePointRadius - basePointSizeScaled) * 0.5);
-                const adaptiveLabelOffset = Math.max(15 * scaleFactor, labelOffsetScaled) + fontSizeExtra + pointSizeExtra;
+                const adaptiveLabelOffset = Math.max(15, labelOffsetScaled) + fontSizeExtra + pointSizeExtra;
                 const effectiveOuterRadius = circleRadius + adaptivePointRadius;
                 // Project bounding box onto radial direction so the inner edge clears the point
                 // For left/right points the width matters; for top/bottom the height matters
@@ -2540,15 +2602,15 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 if (state.showGuideLines) {
                     ctx.save();
                     ctx.strokeStyle = point.color;
-                    ctx.lineWidth = Math.max(0.5, 0.5 * scaleFactor);
+                    ctx.lineWidth = 0.5;
                     ctx.globalAlpha = 0.4;
 
                     if (state.neonGlowConnections) {
                         ctx.shadowColor = point.color;
-                        ctx.shadowBlur = Math.max(1, 2 * scaleFactor);
+                        ctx.shadowBlur = 2 * blurScale;
                     }
 
-                    const lineStartRadius = circleRadius + adaptivePointRadius + 1 * scaleFactor;
+                    const lineStartRadius = circleRadius + adaptivePointRadius + 1;
                     const lineEndRadius = boxCenterDistance + halfRadialSize;
 
                     ctx.beginPath();
@@ -2584,7 +2646,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 if (state.neonGlowLabels) {
                     // Outline for readability (opposite of background)
                     ctx.strokeStyle = labelOutlineColor;
-                    ctx.lineWidth = 3 * scaleFactor;
+                    ctx.lineWidth = 3;
                     lines.forEach((line, lineIndex) => {
                         const textY = boxTop + labelPadding + lineIndex * lineHeight + lineHeight / 2;
                         ctx.strokeText(line, textX, textY);
@@ -2592,9 +2654,9 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
 
                     // Multi-layer label glow
                     const lblGlowLayers = [
-                        { blur: 20 * scaleFactor, alpha: 0.3 },
-                        { blur: 8 * scaleFactor, alpha: 0.6 },
-                        { blur: 3 * scaleFactor, alpha: 1.0 },
+                        { blur: 20 * blurScale, alpha: 0.3 },
+                        { blur: 8 * blurScale, alpha: 0.6 },
+                        { blur: 3 * blurScale, alpha: 1.0 },
                     ];
                     ctx.fillStyle = point.color;
                     for (const layer of lblGlowLayers) {
@@ -2622,6 +2684,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 }
                 ctx.restore();
             });
+            ctx.restore();
         }
         
         // Debounced redraw for resize events
@@ -2637,6 +2700,8 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             canvas.style.height = size + 'px';
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
             drawCircle(ctx, size);
+            canvas.setAttribute('aria-label',
+                `Level-Up Circle diagram: ${state.title}. ${state.points.length} focus areas: ${state.points.map(p => p.label).join(', ')}.`);
             
             // Update preview area background to match theme
             const preview = document.querySelector('.preview');
@@ -2657,7 +2722,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
         // Image metadata helpers
         // ============================================================
 
-        function getImageMetadata() {
+        function getImageMetadata(exportedSize) {
             const labels = state.points.map(p => p.label).join(', ');
             return {
                 title: state.title || 'Level-Up Circle',
@@ -2666,7 +2731,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 author: state.metaAuthor || 'Level-Up Circle Generator',
                 software: 'Level-Up Circle Generator (https://chiefinnovator.github.io/levelupcircle/)',
                 copyright: state.metaCopyright || `Copyright ${new Date().getFullYear()} Richard Crane. All Rights Reserved.`,
-                comment: `${state.points.length} focus areas | ${state.theme} theme | ${state.exportSize}px | Generated ${new Date().toISOString()}`
+                comment: `${state.points.length} focus areas | ${state.theme} theme | ${exportedSize}px | Generated ${new Date().toISOString()}`
             };
         }
 
@@ -2780,67 +2845,94 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             return result.buffer;
         }
 
-        // ---- EXIF builder for WebP / AVIF ----
-        // Supports ASCII (type=2), SHORT (type=3), and RATIONAL (type=5) fields
         // ============================================================
         // Export
         // ============================================================
 
-        async function exportImage() {
-            const format = document.getElementById('exportFormat').value;
-            const mime = formatMimeTypes[format] || 'image/png';
-            const ext = formatExtensions[format] || 'png';
-            const size = parseInt(state.exportSize);
-            const quality = format === 'png' ? undefined : parseInt(document.getElementById('exportQuality').value) / 100;
-
+        // Draw the export at `size`; returns a blob, or null when the device cannot allocate the canvas
+        async function renderExportBlob(size, mime, quality) {
             const exportCanvas = document.createElement('canvas');
-            const exportCtx = exportCanvas.getContext('2d');
-            exportCanvas.width = size;
-            exportCanvas.height = size;
-
-            drawCircle(exportCtx, size, true);
-
-            const blob = await new Promise(resolve => {
-                exportCanvas.toBlob(resolve, mime, quality);
-            });
-            if (!blob) {
-                showToast(`${ext.toUpperCase()} export failed.`, 'error');
-                return;
-            }
-
-            // Verify WebP didn't silently fall back to PNG
-            let actualExt = ext;
-            let actualMime = mime;
-            const rawBuffer = await blob.arrayBuffer();
-            const bytes = new Uint8Array(rawBuffer);
-
-            if (format === 'webp') {
-                const isPng = bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4E && bytes[3] === 0x47;
-                if (isPng) {
-                    showToast('Your browser does not support WebP export. Saving as PNG instead.', 'error');
-                    actualExt = 'png';
-                    actualMime = 'image/png';
-                }
-            }
-
-            const meta = getImageMetadata();
-            let finalBuffer;
-
+            const release = () => { exportCanvas.width = 0; exportCanvas.height = 0; };
             try {
-                if (actualExt === 'png') {
-                    finalBuffer = injectPngMetadata(rawBuffer, meta);
-                } else {
+                exportCanvas.width = size;
+                exportCanvas.height = size;
+                const exportCtx = exportCanvas.getContext('2d');
+                if (!exportCtx) { release(); return null; }
+                drawCircle(exportCtx, size);
+                // The background is opaque, so a transparent pixel means the canvas is unusable
+                if (exportCtx.getImageData(0, 0, 1, 1).data[3] === 0) { release(); return null; }
+                const blob = await new Promise(resolve => exportCanvas.toBlob(resolve, mime, quality));
+                release();
+                return blob;
+            } catch (e) {
+                console.error(`Export at ${size}px failed:`, e);
+                release();
+                return null;
+            }
+        }
+
+        async function exportImage() {
+            const exportBtn = document.getElementById('exportBtn');
+            const btnLabel = exportBtn.innerHTML;
+            exportBtn.disabled = true;
+            exportBtn.textContent = 'Exporting…';
+            try {
+                const format = state.exportFormat;
+                const mime = formatMimeTypes[format] || 'image/png';
+                const ext = formatExtensions[format] || 'png';
+                const requested = state.exportSize;
+                const quality = format === 'png' ? undefined : state.exportQuality / 100;
+
+                // Try the requested size, then each smaller menu size (iOS limits a canvas to 4096×4096)
+                let size = null;
+                let blob = null;
+                for (const candidate of [...validExportSizes].reverse().filter(s => s <= requested)) {
+                    blob = await renderExportBlob(candidate, mime, quality);
+                    if (blob) { size = candidate; break; }
+                }
+                if (!blob) {
+                    showToast(`${ext.toUpperCase()} export failed: this device could not create the image.`, 'error');
+                    return;
+                }
+
+                // Verify WebP didn't silently fall back to PNG
+                let actualExt = ext;
+                let actualMime = mime;
+                const rawBuffer = await blob.arrayBuffer();
+                const bytes = new Uint8Array(rawBuffer);
+
+                if (format === 'webp') {
+                    const isPng = bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4E && bytes[3] === 0x47;
+                    if (isPng) {
+                        showToast('Your browser does not support WebP export. Saving as PNG instead.', 'error');
+                        actualExt = 'png';
+                        actualMime = 'image/png';
+                    }
+                }
+
+                const meta = getImageMetadata(size);
+                let finalBuffer;
+
+                try {
+                    if (actualExt === 'png') {
+                        finalBuffer = injectPngMetadata(rawBuffer, meta);
+                    } else {
+                        finalBuffer = rawBuffer;
+                    }
+                } catch (e) {
+                    console.error('Metadata injection failed, exporting without metadata:', e);
                     finalBuffer = rawBuffer;
                 }
-            } catch (e) {
-                console.error('Metadata injection failed, exporting without metadata:', e);
-                finalBuffer = rawBuffer;
-            }
 
-            const finalBlob = new Blob([finalBuffer], { type: actualMime });
-            const sizeMB = (finalBlob.size / (1024 * 1024)).toFixed(1);
-            downloadBlob(finalBlob, `level-up-circle-${size}x${size}.${actualExt}`);
-            showToast(`Exported ${size}×${size} ${actualExt.toUpperCase()} (${sizeMB} MB)`, 'success');
+                const finalBlob = new Blob([finalBuffer], { type: actualMime });
+                const sizeMB = (finalBlob.size / (1024 * 1024)).toFixed(1);
+                downloadBlob(finalBlob, `level-up-circle-${size}x${size}.${actualExt}`);
+                const capped = size < requested ? ` ${requested} is too large for this device.` : '';
+                showToast(`Exported ${size}×${size} ${actualExt.toUpperCase()} (${sizeMB} MB).${capped}`, 'success');
+            } finally {
+                exportBtn.disabled = false;
+                exportBtn.innerHTML = btnLabel;
+            }
         }
 
         function downloadBlob(blob, filename) {
@@ -2848,8 +2940,11 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             const a = document.createElement('a');
             a.href = url;
             a.download = filename;
+            document.body.appendChild(a);
             a.click();
-            URL.revokeObjectURL(url);
+            a.remove();
+            // Revoking in the same task can cancel the download in some browsers
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
         }
         
         // Event listeners with validation
@@ -2858,20 +2953,16 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             redraw();
         });
         
-        document.getElementById('points').addEventListener('input', (e) => {
-            let value = parseInt(e.target.value);
-            
-            // Validate range 1-36
-            if (isNaN(value)) {
-                value = 8; // Default
-            } else if (value < 1) {
-                value = 1;
-                e.target.value = 1;
-            } else if (value > 36) {
-                value = 36;
-                e.target.value = 36;
+        // Commit on change (Enter, blur, spinner), never per keystroke: typing "12" must not pass through 1
+        document.getElementById('points').addEventListener('change', (e) => {
+            const value = clampInt(e.target.value, 1, 36, state.numPoints);
+            // Ask before dropping points the user has renamed
+            const named = state.points.slice(value).filter((p, i) => p.label !== `Point ${value + i + 1}`);
+            if (named.length && !confirm(`Remove ${named.length} named point${named.length > 1 ? 's' : ''} (${named.map(p => p.label).join(', ')})?`)) {
+                e.target.value = state.numPoints;
+                return;
             }
-            
+            e.target.value = value;
             state.numPoints = value;
             updatePointList();
         });
@@ -2886,19 +2977,19 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
                 state.exportSize = 8192;
                 e.target.value = 8192;
             }
+            debouncedAutoSave();
         });
 
         document.getElementById('exportFormat').addEventListener('change', (e) => {
-            const qualityGroup = document.getElementById('qualityGroup');
-            if (e.target.value === 'png') {
-                qualityGroup.classList.add('hidden');
-            } else {
-                qualityGroup.classList.remove('hidden');
-            }
+            state.exportFormat = e.target.value === 'png' ? 'png' : 'webp';
+            document.getElementById('qualityGroup').classList.toggle('hidden', state.exportFormat === 'png');
+            debouncedAutoSave();
         });
 
         document.getElementById('exportQuality').addEventListener('input', (e) => {
-            document.getElementById('qualityValue').textContent = e.target.value;
+            state.exportQuality = clampInt(e.target.value, 50, 100, 100);
+            document.getElementById('qualityValue').textContent = state.exportQuality;
+            debouncedAutoSave();
         });
         
         document.getElementById('theme').addEventListener('change', (e) => {
@@ -2958,80 +3049,41 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
             debouncedAutoSave();
         });
 
+        // Live preview for in-range values only; the blur handler clamps and writes back
         document.getElementById('pointSize').addEventListener('input', (e) => {
-            let value = parseInt(e.target.value);
-            
-            // Validate range 1-60
-            if (isNaN(value)) {
-                value = 14; // Default
-            } else if (value < 1) {
-                value = 1;
-                e.target.value = 1;
-            } else if (value > 60) {
-                value = 60;
-                e.target.value = 60;
+            const value = toInt(e.target.value, NaN);
+            if (value >= 1 && value <= 60) {
+                state.pointSize = value;
+                redraw();
             }
-            
-            state.pointSize = value;
-            redraw();
         });
         
         document.getElementById('labelOffset').addEventListener('input', (e) => {
-            const value = parseInt(e.target.value) || 25;
+            const value = toInt(e.target.value, 25);
             document.getElementById('labelOffsetValue').textContent = value;
             state.labelOffset = value;
             redraw();
         });
         
+        // Live preview for in-range values only; the blur handler clamps and writes back
         document.getElementById('labelFontSize').addEventListener('input', (e) => {
-            let value = parseInt(e.target.value);
-            
-            // Validate range 8-32
-            if (isNaN(value)) {
-                value = 16; // Default
-            } else if (value < 8) {
-                value = 8;
-                e.target.value = 8;
-            } else if (value > 32) {
-                value = 32;
-                e.target.value = 32;
+            const value = toInt(e.target.value, NaN);
+            if (value >= 8 && value <= 32) {
+                state.labelFontSize = value;
+                redraw();
             }
-            
-            state.labelFontSize = value;
-            redraw();
         });
         
+        // Live preview for in-range values only; the blur handler clamps and writes back
         document.getElementById('titleFontSize').addEventListener('input', (e) => {
-            let value = parseInt(e.target.value);
-            
-            // Validate range 16-48
-            if (isNaN(value)) {
-                value = 28; // Default
-            } else if (value < 16) {
-                value = 16;
-                e.target.value = 16;
-            } else if (value > 48) {
-                value = 48;
-                e.target.value = 48;
+            const value = toInt(e.target.value, NaN);
+            if (value >= 16 && value <= 48) {
+                state.titleFontSize = value;
+                redraw();
             }
-            
-            state.titleFontSize = value;
-            redraw();
         });
         
         // Add blur handlers to enforce limits when focus leaves the input
-        document.getElementById('points').addEventListener('blur', (e) => {
-            let value = parseInt(e.target.value);
-            if (isNaN(value) || value < 1) {
-                e.target.value = 1;
-                state.numPoints = 1;
-            } else if (value > 36) {
-                e.target.value = 36;
-                state.numPoints = 36;
-            }
-            updatePointList();
-        });
-        
         document.getElementById('pointSize').addEventListener('blur', (e) => {
             let value = parseInt(e.target.value);
             if (isNaN(value) || value < 1) {
