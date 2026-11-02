@@ -13,9 +13,9 @@ Interactive single-page tool for designing and exporting a "Level-Up Circle" —
 - Automatic multi-line smart label wrapping with semantic split points
 - Adjustable point size, label offset spacing, label font size, and title font size
 - Complete connection mesh toggle (show/hide lines between all points)
-- High-resolution PNG export (1080, 2048, 3840 square)
+- High-resolution PNG and WebP export (1080 to 8192 square), with embedded metadata (PNG)
 - Deep linking with compressed URL state sharing (lz-string)
-- Fullscreen mode for presentations and embedding
+- Panel toggle that cycles both/left/right/none panels to show only the circle for presentations and embedding
 - Social sharing buttons (Copy Link, Twitter/X, Facebook)
 - Ask ChatGPT for personalized strategic advice on your focus areas
 - Auto-save to `localStorage` on every change
@@ -78,16 +78,16 @@ Interactive single-page tool for designing and exporting a "Level-Up Circle" —
 
 | Button | Description |
 |--------|-------------|
-| Copy Link | Copy shareable URL to clipboard (includes fullscreen state) |
+| Copy Link | Copy shareable URL to clipboard (adds `&fs=1` when both panels are hidden) |
 | Twitter/X | Share to Twitter/X with pre-filled text |
 | Facebook | Share to Facebook |
 | ChatGPT | Ask ChatGPT for strategic advice on your focus areas |
-| Fullscreen | Toggle fullscreen presentation mode (hides controls) |
+| Panel Toggle | Cycle panel visibility: both, left only, right only, none |
 
 ## Sharing & Deep Links
 
 - **Copy Share Link**: Copies a URL containing your entire circle configuration. Recipients see your exact circle.
-- **Fullscreen Mode**: Toggle fullscreen to hide controls and show only the circle. Share links preserve this mode with `&fs=1`.
+- **Panel Toggle**: Cycle the side panels through both/left/right/none; "none" shows only the circle. A share link with `&fs=1` opens with both panels hidden.
 - **Twitter/X & Facebook**: Share directly to social platforms (requires deployed URL, not localhost).
 - **Ask ChatGPT**: Opens a new browser tab with a personalized strategy prompt based on your circle's title and focus areas.
 
