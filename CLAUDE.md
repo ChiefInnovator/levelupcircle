@@ -6,7 +6,7 @@ A single-file HTML5 Canvas web app that creates radial synergy diagrams (Level-U
 
 ## Architecture
 
-- **Single-file app**: All HTML, CSS, and JS live in `levelup-circle-generator.html` (~3,015 lines)
+- **Single-file app**: All HTML, CSS, and JS live in `levelup-circle-generator.html` (~3,000 lines)
 - **index.html**: Redirect page that sends users to the generator
 - **about.html**: About page explaining the strategic frameworks behind the tool
 - **articles.html**: Article listing page
@@ -21,7 +21,7 @@ A single-file HTML5 Canvas web app that creates radial synergy diagrams (Level-U
 - HTML5 Canvas with HiDPI/Retina support (`devicePixelRatio`)
 - CSS Grid 3-column layout: left settings panel, center preview, right point config
 - Panel visibility cycles through 4 modes: both/left/right/none via CSS class toggling
-- Export supports PNG, WebP, AVIF up to 8192x8192 at 300 DPI with embedded metadata
+- Export supports PNG and WebP up to 8192x8192 at 300 DPI with embedded metadata (PNG)
 
 ### State Management
 
@@ -33,11 +33,10 @@ A single-file HTML5 Canvas web app that creates radial synergy diagrams (Level-U
 ### Canvas Rendering Pipeline (draw order matters)
 
 1. Clear canvas (theme background color)
-2. Draw connection lines (optional neon glow)
+2. Draw title (optional neon glow)
 3. Draw outer circle ring (optional neon glow)
-4. Draw point dots (optional neon glow)
-5. Draw smart-wrapped labels with leader lines (optional neon glow)
-6. Draw title (optional neon glow)
+4. Draw connection lines (optional neon glow)
+5. For each point in order: dot, guide line, smart-wrapped label (optional neon glow)
 
 ## File Structure
 

@@ -19,7 +19,7 @@ The "Ask ChatGPT" feature allows users to get personalized strategic advice abou
 | Color | `#10a37f` (OpenAI brand green) |
 | Hover State | Lighten to `#12b886` |
 | Size | 36x36 pixels |
-| Position | After Facebook button, before Fullscreen toggle |
+| Position | After Facebook button, before the panel toggle |
 
 ## Prompt Template
 
@@ -49,7 +49,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
 ### URL Construction
 
 ```
-https://chat.openai.com/?q={URL_ENCODED_PROMPT}
+https://chatgpt.com/?q={URL_ENCODED_PROMPT}
 ```
 
 ### Value Extraction Logic
@@ -69,7 +69,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
 4. Highlights potential conflicts or trade-offs to watch for
 5. Provides specific next actions for each focus area`;
 
-    const chatGptUrl = `https://chat.openai.com/?q=${encodeURIComponent(prompt)}`;
+    const chatGptUrl = `https://chatgpt.com/?q=${encodeURIComponent(prompt)}`;
     window.open(chatGptUrl, '_blank');
 }
 ```
@@ -111,7 +111,7 @@ Analyze how these areas can create synergy and compound growth. Provide a strate
 ### Generated URL
 
 ```
-https://chat.openai.com/?q=I%20have%20created%20a%20Level-Up%20Circle%20called%20%222025%20Goals%22%20with%20these%208%20focus%20areas%3A%20MILL5%2C%20Card%20Game%2C%20Webinars%2C%20Casual%20Apps%2C%20Inventing%20Fire%20with%20AI%2C%20Rich%20Crane%2C%20Xmas%20Store%2C%20Purdue%20Course.%0A%0AAnalyze%20how%20these%20areas%20can%20create%20synergy%20and%20compound%20growth...
+https://chatgpt.com/?q=I%20have%20created%20a%20Level-Up%20Circle%20called%20%222025%20Goals%22%20with%20these%208%20focus%20areas%3A%20MILL5%2C%20Card%20Game%2C%20Webinars%2C%20Casual%20Apps%2C%20Inventing%20Fire%20with%20AI%2C%20Rich%20Crane%2C%20Xmas%20Store%2C%20Purdue%20Course.%0A%0AAnalyze%20how%20these%20areas%20can%20create%20synergy%20and%20compound%20growth...
 ```
 
 ## Implementation
@@ -142,4 +142,4 @@ Potential improvements for future versions:
 - **Copy Share Link** - Copy a shareable URL with circle configuration
 - **Share to Facebook** - Post circle to Facebook
 - **Share to X/Twitter** - Post circle to X (Twitter)
-- **Fullscreen Mode** - View circle in presentation mode
+- **Panel Toggle** - Hide one or both side panels to view only the circle

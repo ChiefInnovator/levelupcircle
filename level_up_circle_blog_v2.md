@@ -92,7 +92,7 @@ Every shared link reconstructs the exact circle — same labels, same colors, sa
 
 ### Export Quality You Can Print
 
-Export your Level-Up Circle as **PNG, WebP, or AVIF** at resolutions up to **8192x8192 pixels** at 300 DPI. That's print-quality output from a free browser tool. Every export includes embedded metadata: title, description, keywords, author, and copyright.
+Export your Level-Up Circle as **PNG or WebP** at resolutions up to **8192x8192 pixels** at 300 DPI. That's print-quality output from a free browser tool. PNG exports include embedded metadata: title, description, keywords, author, and copyright.
 
 ---
 
@@ -141,3 +141,5 @@ Stop treating your goals like a checklist. Start treating them like a flywheel.
 ---
 
 *The Level-Up Circle Generator is a free, open-source tool created by [Richard Crane](https://github.com/chiefinnovator), Founder & Chief AI Officer at MILL5. It combines Jim Collins' Flywheel Effect, Martin Eppler's Synergy Mapping, and the Hedgehog Concept into an interactive goal visualization experience. No sign-up, no data collection, no limits.*
+
+*Correction (2026-11-02): an earlier version of this post listed AVIF export and metadata in every format; the tool exports PNG and WebP, with metadata in PNG.*

@@ -7,7 +7,7 @@ The Level-Up Circle Generator supports deep linking via compressed URL parameter
 ## URL Format
 
 ```
-https://chiefinnovator.github.io/levelupcircle/levelup-circle-generator.html?s={compressed_state}&fs={fullscreen}
+https://chiefinnovator.github.io/levelupcircle/levelup-circle-generator.html?s={compressed_state}[&fs=1]
 ```
 
 ### Parameters
@@ -15,7 +15,7 @@ https://chiefinnovator.github.io/levelupcircle/levelup-circle-generator.html?s={
 | Parameter | Required | Description |
 |-----------|----------|-------------|
 | `s` | Yes | lz-string compressed, URI-encoded state JSON |
-| `fs` | No | `1` to open in fullscreen mode |
+| `fs` | No | `1` to open with both panels hidden (formerly "fullscreen") |
 
 ## Compression
 
@@ -38,7 +38,7 @@ The URL state uses abbreviated keys to minimize URL length:
   "es": 3840,
   "th": "dark",
   "ps": 14,
-  "lo": 35,
+  "lo": 25,
   "fs": 16,
   "tfs": 28,
   "gt": 1,
@@ -47,6 +47,7 @@ The URL state uses abbreviated keys to minimize URL length:
   "gc": 1,
   "gn": 1,
   "sc": 1,
+  "sg": 1,
   "p": [
     ["MILL5", "FF6B6B"],
     ["Card Game", "4ECDC4"]
@@ -60,10 +61,10 @@ The URL state uses abbreviated keys to minimize URL length:
 |-------------|-------------------|------|
 | `t` | `title` | string |
 | `n` | `numPoints` | number (1–36) |
-| `es` | `exportSize` | number (1080, 2048, 3840) |
+| `es` | `exportSize` | number (1080, 2048, 3840, 5120, 7680, 8192; default 8192) |
 | `th` | `theme` | string (`"dark"` or `"light"`) |
 | `ps` | `pointSize` | number (1–60) |
-| `lo` | `labelOffset` | number (0–100) |
+| `lo` | `labelOffset` | number (0–150; default 25. Legacy `p=` links without `lo` use 35) |
 | `fs` | `labelFontSize` | number (8–32) |
 | `tfs` | `titleFontSize` | number (16–48) |
 | `gt` | `neonGlowTitle` | 0 or 1 |
@@ -72,6 +73,7 @@ The URL state uses abbreviated keys to minimize URL length:
 | `gc` | `neonGlowCircle` | 0 or 1 |
 | `gn` | `neonGlowConnections` | 0 or 1 |
 | `sc` | `showConnections` | 0 or 1 |
+| `sg` | `showGuideLines` | 0 or 1 |
 | `p` | `points` | array of `[label, colorHexWithout#]` |
 
 ### Points Array
@@ -90,7 +92,7 @@ encodeStateToURL()
 ├── JSON.stringify()
 ├── LZString.compressToEncodedURIComponent()
 ├── Construct URL with ?s= parameter
-└── Append &fs=1 if fullscreen is active
+└── Append &fs=1 if both panels are hidden
 ```
 
 ## Decoding Flow

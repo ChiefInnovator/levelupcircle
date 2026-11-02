@@ -4,7 +4,7 @@ Technical overview of the Level-Up Circle Generator.
 
 ## Single-File Application
 
-The entire application is contained in `levelup-circle-generator.html` (~2,500 lines). This includes:
+The entire application is contained in `levelup-circle-generator.html` (~3,000 lines). This includes:
 
 - **HTML** — UI structure, form controls, canvas element
 - **CSS** — Styling, responsive layout, animations, themes
@@ -28,13 +28,13 @@ Within `levelup-circle-generator.html`, the code is structured in this order:
 ### 2. CSS (lines 22–900)
 
 - Reset and base styles
-- Grid layout (`.container`: 400px sidebar | 1fr preview)
+- Three-panel grid layout (`.container`: 320px settings | 1fr preview | 320px point config)
 - Form control styling (inputs, selects, sliders, checkboxes)
 - Button grid with gradient hover effects
 - Collapsible `<details>/<summary>` sections
 - Toast notification system (slide-in from right)
 - Floating share bar (positioned top-right of preview)
-- Fullscreen mode overrides
+- Panel visibility classes (`hide-left`, `hide-right`, `hide-both`) for the panel toggle
 - Responsive breakpoints at 900px and 600px
 
 ### 3. HTML Body (lines 900–910)
@@ -43,7 +43,7 @@ Within `levelup-circle-generator.html`, the code is structured in this order:
 - Controls panel with collapsible sections
 - Point list container with add button
 - Canvas element with `role="img"` and `aria-label`
-- Floating share bar with 5 buttons (Copy Link, Twitter, Facebook, ChatGPT, Fullscreen)
+- Floating share bar with 5 buttons (Copy Link, Twitter, Facebook, ChatGPT, Panel Toggle)
 
 ### 4. JavaScript (lines 911–end)
 
@@ -53,26 +53,40 @@ Within `levelup-circle-generator.html`, the code is structured in this order:
 - Bounding box calculation for labels
 - Point management (add, delete, update label/color)
 - Canvas rendering (`drawCircle`)
-- Export to PNG (`exportPNG`)
+- Export to PNG or WebP (`exportImage`; metadata embedded in PNG only)
 - State persistence (localStorage auto-save, manual save/clear)
 - URL encoding/decoding for sharing (`encodeStateToURL`, `decodeStateFromCompressed`)
 - Social sharing functions (clipboard, Twitter, Facebook, ChatGPT)
-- Fullscreen toggle
+- Panel toggle (`cyclePanelMode`: both → left → right → none; replaces the old fullscreen button)
 - ResizeObserver for responsive redraw
 - Event listeners and initialization
 
 ## Rendering Pipeline
 
-The canvas rendering flow in `drawCircle(ctx, size, isExport)`:
+`drawCircle(ctx, size)` draws everything in an 800×800 logical space under a single `ctx.scale(size / 800, size / 800)`, using the authored values (`pointSize`, `labelOffset`, `labelFontSize`, `titleFontSize`) directly. `shadowBlur` is not affected by the transform, so each glow radius is multiplied by `ctx.getTransform().a` (current pixels per unit, including the device pixel ratio). The preview and every export are therefore uniform scalings of the same drawing; line breaks are identical at every size.
+
+Draw order:
 
 1. **Clear canvas** — Fill with theme-appropriate background color
-2. **Draw connection lines** — If enabled, draw lines between all point pairs with optional neon glow
+2. **Draw title** — Centered title text at top with optional neon glow
 3. **Draw outer circle** — Ring around the center with optional neon glow
-4. **Draw points** — Colored dots at radial positions with optional neon glow
-5. **Draw labels** — Smart-wrapped text with leader lines, positioned radially outside the circle
-6. **Draw title** — Centered title text at top with optional neon glow
+4. **Draw connection lines** — If enabled, draw lines between all point pairs with optional neon glow
+5. **For each point, in order** — Draw the colored dot, then its guide (leader) line, then its smart-wrapped label, each with optional neon glow
 
-For export, an off-screen canvas is created at the target resolution (1080/2048/3840). All sizes, fonts, and effects scale proportionally using a `scale` factor derived from `exportSize / previewSize`.
+For export, `exportImage()` creates an off-screen canvas at the target resolution (1080/2048/3840/5120/7680/8192) and calls the same `drawCircle(ctx, exportSize)`.
+
+## State Flow
+
+All load paths converge on one normalizer and one form sync:
+
+```text
+URL s=… (decodeCompressed) ─┐
+URL p=… (decodeLegacy) ─────┤
+localStorage (JSON.parse) ──┼─► normalizeState(raw) ─► state ─► syncUIFromState() ─► updatePointList() ─► redraw()
+Clear / Load Example ───────┘
+```
+
+`normalizeState` clamps and defaults every field (see [state-management.md](state-management.md)); `syncUIFromState` writes every control and readout.
 
 ## Color Generation
 
@@ -109,7 +123,7 @@ The layout uses CSS Grid with two responsive breakpoints:
 
 | Breakpoint | Layout |
 |------------|--------|
-| > 900px (desktop) | `400px \| 1fr` two-column grid |
+| > 900px (desktop) | `320px \| 1fr \| 320px` three-panel grid |
 | 600–900px (tablet) | Stacked, controls collapse to 40vh max-height |
 | < 600px (mobile) | Compact padding, 2-column button grid, full-width toasts |
 
@@ -126,5 +140,6 @@ No other external dependencies. All rendering uses native Canvas 2D API. All per
 ## Security
 
 - Point labels are HTML-escaped before insertion into the DOM to prevent XSS
-- Color values are validated against a hex regex (`/^#[0-9A-Fa-f]{6}$/`)
+- Color values are validated as 6-digit hex (`/^#[0-9A-Fa-f]{6}$/`) at every input boundary (URL decoders, localStorage, color inputs)
+- Toast messages are set with `textContent`, never `innerHTML`
 - URL state is parsed through `JSON.parse` of decompressed lz-string data with error handling
